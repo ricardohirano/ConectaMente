@@ -1,12 +1,42 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pagina Inicial</title>
-    <link rel="Stylesheet" href="..\public\style.css">
-</head>
-<body>
-    bkdfksdbfsdbjkfs
-</body>
-</html>
+<%- include('partials/header') %>
+<%- include('partials/navbar') %>
+
+<main class="container">
+  <section class="hero">
+    <div class="hero-texto">
+      <h1>Bem-vindo ao ConectaMente</h1>
+      <p>
+        Um jogo educativo desenvolvido para auxiliar pessoas com Síndrome de Down
+        nas tarefas diárias de forma lúdica, acessível e interativa.
+      </p>
+      <a href="/sobre" class="btn">Saiba mais</a>
+    </div>
+
+    <div class="hero-imagem">
+      <img src="/img/banner.png" alt="Imagem principal do jogo">
+    </div>
+  </section>
+
+  <section class="beneficios">
+    <h2>Benefícios do jogo</h2>
+
+    <div class="cards">
+      <div class="card">
+        <h3>Autonomia</h3>
+        <p>Ajuda no desenvolvimento da independência nas atividades do dia a dia.</p>
+      </div>
+
+      <div class="card">
+        <h3>Aprendizagem</h3>
+        <p>Estimula o aprendizado com desafios simples e objetivos claros.</p>
+      </div>
+
+      <div class="card">
+        <h3>Inclusão</h3>
+        <p>Promove uma experiência amigável e acessível para diferentes perfis de usuários.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<%- include('partials/footer') %>
