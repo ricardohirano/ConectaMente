@@ -1,0 +1,24 @@
+{
+  "name": "conectamente",
+  "version": "1.0.0",
+  "description": "Jogo sério para auxiliar pessoas com Síndrome de Down nas tarefas diárias.",
+  "homepage": "https://github.com/ricardohirano/ConectaMente#readme",
+  "bugs": {
+    "url": "https://github.com/ricardohirano/ConectaMente/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ricardohirano/ConectaMente.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "ejs": "^5.0.1",
+    "express": "^5.2.1"
+  }
+}
