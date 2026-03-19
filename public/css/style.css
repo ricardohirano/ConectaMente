@@ -6,7 +6,7 @@
 }
 
 body {
-  background-color: #0260C8;
+  background-color: #0081DE;
   color: #222;
 }
 
@@ -51,6 +51,7 @@ nav {
   width: 90%;
   max-width: 1200px;
   margin: 30px auto;
+  
 }
 
 .container-beneficios {
@@ -60,7 +61,10 @@ nav {
 }
 
 .hero {
-  background-color: #111;
+  background-image: url(/public/img/fundoConecta.svg);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   color: #fff;
   border-radius: 16px;
   padding: 40px;
@@ -192,4 +196,54 @@ footer {
   padding: 20px;
   text-align: center;
   background-color: #ffffff;
+}
+
+
+/*Sobre o Jogo*/
+
+.sobre-jogo h1 {
+  font-family: "Luckiest Guy";
+  text-align: center;
+  font-size: 96px;
+  margin-bottom: 30px;
+  color: #0260C8;
+  -webkit-text-stroke: 2px white;
+}
+
+.destaque {
+  background: #f2f2f2;
+  border-radius: 25px;
+  padding: 25px;
+  margin-bottom: 25px;
+  font-size: 22px;
+  line-height: 1.6;
+}
+
+.blocos-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.card {
+  background: #f2f2f2;
+  border-radius: 20px;
+  padding: 25px;
+  margin-bottom: 20px;
+}
+
+.card h2 {
+  color: #0a58ca;
+  margin-bottom: 15px;
+}
+
+.card ul,
+.card ol {
+  padding-left: 20px;
+  line-height: 1.8;
+}
+
+.diferenciais {
+  max-width: 700px;
+  margin: 0 auto;
 }
