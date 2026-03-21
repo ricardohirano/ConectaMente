@@ -107,16 +107,16 @@ nav {
   border-radius: 12px;
 }
 
-.btn-jogar-sobre-imagem {
+.btn-jogar{
   position: absolute;
-  left: 50%;
-  top: 50%;
+  left: 33%;
+  top: 53%;
   transform: translate(-50%, -50%);
   display: inline-block;
 }
 
-.btn-jogar-sobre-imagem img {
-  width: 110px;
+.btn-jogar img {
+  width: 145px;
   height: auto;
   display: block;
 }
@@ -380,3 +380,6 @@ nav {
     max-width: 100%;
   }
 }
+
+/*GAME */
+

@@ -21,6 +21,14 @@ app.get('/equipe', (req, res) => {
   res.render('equipe');
 });
 
+app.get('/equipe', (req, res) => {
+  res.render('equipe');
+});
+
+app.get('/game', (req, res) => {
+  res.render('game/index');
+});
+
 app.listen(port, () => {
   console.log(`Servidor rodando em http://localhost:${port}`);
 });
