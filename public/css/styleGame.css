@@ -34,7 +34,7 @@ body {
 }
 
 .game-logo img {
-  width: 220px;
+  width: 320px;
   max-width: 80vw;
   display: block;
 }
@@ -44,7 +44,7 @@ body {
   flex-direction: column;
   gap: 18px;
   align-items: center;
-  
+  margin-top: 200px; 
 }
 
 .game-btn {
@@ -64,4 +64,85 @@ body {
   border-radius: 6px;
 
   box-shadow: 0 2px 0 rgba(0, 0, 0, 0.12);
+}
+
+/* telas antes do jogos */
+
+.titulo-tela {
+  margin-top: 20px;
+  margin-bottom: 70px;
+  text-align: center;
+
+  font-family: "Luckiest Guy", cursive;
+  font-weight: 400;
+  font-size: 80px;
+  line-height: 100%;
+  letter-spacing: 0;
+
+  color: #1e8ff0;
+  -webkit-text-stroke: 2px #ffffff;
+}
+
+.form-padrao {
+  width: 100%;
+  max-width: 520px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.campo-form {
+  width: 100%;
+  background-color: #0b73bd;
+  border-radius: 12px;
+  padding: 14px 18px;
+
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.campo-form label {
+  min-width: 200px;
+  color: #ffffff;
+
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  font-size: 36px;
+  line-height: 100%;
+  letter-spacing: 0;
+}
+
+.campo-form input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: #ffffff;
+
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  font-size: 28px;
+  line-height: 100%;
+  letter-spacing: 0;
+}
+
+.btn-form {
+  margin-top: 10px;
+  min-width: 240px;
+  height: 70px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+
+  background-color: #7cc7d4;
+  color: #ffffff;
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.18);
+
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  font-size: 36px;
+  line-height: 100%;
+  letter-spacing: 0;
 }
