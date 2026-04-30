@@ -6,7 +6,7 @@ const connection = new Sequelize({
   port: 3306, /*mudar para 3306 na fatec  e outros lugares*/
   username: "root",
   password: "",
-  database: "conectamente",
+ database: "conectamente",
   timezone: "-03:00"
 });
 
