@@ -1,47 +1,35 @@
-import Usuario from "../models/usuario.js";
-import bcrypt from "bcryptjs";
+import express from "express";
+import Usuario from "../models/Usuario.js";
 
-const abrirGame = (req, res) => {
+const router = express.Router();
+
+// ROTA TELA INICIAL DO JOGO
+router.get("/game", (req, res) => {
   res.render("game/index");
-};
+});
 
-const abrirCriarConta = (req, res) => {
+// ROTA TELA CRIAR CONTA
+router.get("/game/criar-conta", (req, res) => {
   res.render("game/criar-conta");
-};
+});
 
-const cadastrarConta = async (req, res) => {
-  const { nome, email, senha, confirmarSenha } = req.body;
+// ROTA TELA CARREGAR CONTA
+router.get("/game/carregar-conta", (req, res) => {
+  res.render("game/carregar-conta");
+});
 
-  try {
-    if (senha !== confirmarSenha) {
-      return res.redirect("/game/criar-conta?erro=senha");
-    }
+// ROTA PERFIL
+router.get("/game/perfil/:id", (req, res) => {
+  const id = req.params.id;
 
-    const usuarioExistente = await Usuario.findOne({
-      where: { email: email }
+  Usuario.findByPk(id).then(usuario => {
+    res.render("game/perfil", {
+      usuario: usuario
     });
-
-    if (usuarioExistente) {
-      return res.redirect("/game/criar-conta?erro=email");
-    }
-
-    const senhaHash = await bcrypt.hash(senha, 10);
-
-    await Usuario.create({
-      nome: nome,
-      email: email,
-      senha: senhaHash
-    });
-
+  }).catch(error => {
+    console.log("Ocorreu um erro ao carregar o perfil. " + error);
     res.redirect("/game");
-  } catch (error) {
-    console.log(error);
-    res.status(500).send("Erro ao cadastrar conta.");
-  }
-};
+  });
+});
 
-export default {
-  abrirGame,
-  abrirCriarConta,
-  cadastrarConta
-};
+export default router;

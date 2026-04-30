@@ -1,46 +1,36 @@
 import express from "express";
-import path from "path";
-import { fileURLToPath } from "url";
-
 import connection from "./config/sequelize-config.js";
-import gameRoutes from "./routes/gameRoutes.js";
+
+import HomeController from "./controllers/HomeController.js";
+import GameController from "./controllers/GameController.js";
+import UsuarioController from "./controllers/UsuarioController.js";
 
 const app = express();
-const port = 3000;
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
+// View engine
 app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "views"));
 
-app.use(express.static(path.join(__dirname, "public")));
+// Arquivos estáticos
+app.use(express.static("public"));
 
+// Permite receber dados de formulários
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
-connection.authenticate()
-  .then(() => {
-    console.log("Conexão com o banco feita com sucesso!");
-  })
-  .catch((error) => {
-    console.log(error);
-  });
-
-app.get("/", (req, res) => {
-  res.render("index");
+// Conexão com o banco
+connection.authenticate().then(() => {
+  console.log("Conexão com o banco feita com sucesso!");
+}).catch((error) => {
+  console.log("Erro ao conectar no banco: " + error);
 });
 
-app.get("/sobre", (req, res) => {
-  res.render("sobre");
-});
+// Controllers
+app.use("/", HomeController);
+app.use("/", GameController);
+app.use("/", UsuarioController);
 
-app.get("/equipe", (req, res) => {
-  res.render("equipe");
-});
-
-app.use("/", gameRoutes);
-
+// Servidor
+const port = 3000;
 app.listen(port, () => {
   console.log(`Servidor rodando em http://localhost:${port}`);
 });
