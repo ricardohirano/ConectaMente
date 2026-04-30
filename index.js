@@ -6,7 +6,6 @@ import GameController from "./controllers/GameController.js";
 import UsuarioController from "./controllers/UsuarioController.js";
 
 const app = express();
-const port = 3000;
 
 // VIEW ENGINE
 app.set("view engine", "ejs");
@@ -38,6 +37,7 @@ app.use("/", GameController);
 app.use("/", UsuarioController);
 
 // INICIANDO O SERVIDOR
+const port = 3000;
 app.listen(port, () => {
   console.log(`Servidor rodando em http://localhost:${port}`);
 });

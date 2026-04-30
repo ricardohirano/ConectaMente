@@ -1,48 +1,96 @@
-<%- include('partials/header') %>
-<%- include('partials/navbar') %>
+<%- include("partials/header.ejs") %>
+<%- include("partials/navbar.ejs") %>
 
-<main class="container">
-  <section class="hero">
-    <div class="hero-texto">
-      <h1>Divirta-se e Aprenda</h1>
+<main class="home-page">
+  <section class="hero-home">
+    <div class="hero-home__content">
+      <div class="hero-home__text">
+        <h1>
+          Aprenda organizando sua rotina de forma
+          <span>divertida!</span>
+        </h1>
 
-      <div class="card-jogo">
-        <img src="img/rotinaDivertida.png" alt="Capa do jogo">
+        <p>
+          O ConectaMente ajuda crianças a desenvolverem responsabilidade,
+          organização e autonomia no dia a dia através de desafios e recompensas.
+        </p>
 
-        <a href="/game" class="btn-jogar">
-          <img src="img/botaoJogar.svg" alt="Jogar agora">
-        </a>
+        <div class="hero-home__actions">
+          <a href="/game" class="btn-home btn-home--primary">Começar agora</a>
+          <a href="/sobre" class="btn-home btn-home--link">Saiba mais sobre o jogo</a>
+        </div>
+      </div>
+
+      <div class="hero-home__image">
+        <img src="/img/website/imgGame.svg" alt="Casa com os cômodos do jogo">
+      </div>
+    </div>
+  </section>
+
+  <section class="home-highlights container">
+    <div class="home-highlights__card">
+      <div class="home-highlights__icon">
+        <img src="/img/icone-habilidades.png" alt="Habilidades">
+      </div>
+      <div>
+        <h3>Desenvolve habilidades</h3>
+        <p>Estimula a organização e responsabilidade no cotidiano.</p>
+      </div>
+    </div>
+
+    <div class="home-highlights__card">
+      <div class="home-highlights__icon">
+        <img src="/img/icone-estrela.png" alt="Aprendizado">
+      </div>
+      <div>
+        <h3>Aprendizado divertido</h3>
+        <p>Jogos e desafios tornam o aprendizado leve e prazeroso.</p>
+      </div>
+    </div>
+
+    <div class="home-highlights__card">
+      <div class="home-highlights__icon">
+        <img src="/img/icone-seguro.png" alt="Seguro">
+      </div>
+      <div>
+        <h3>Seguro e educativo</h3>
+        <p>Conteúdo pensado especialmente para o público infantil.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="beneficios-home container">
+    <div class="section-title">
+      <h2>Benefícios do jogo</h2>
+      <span></span>
+    </div>
+
+    <div class="beneficios-home__grid">
+      <div class="beneficio-card">
+        <img src="/img/icone-escolhas.png" alt="Escolhas">
+        <h3>Escolhas inteligentes</h3>
+        <p>Ajuda a criança a tomar decisões no dia a dia.</p>
+      </div>
+
+      <div class="beneficio-card">
+        <img src="/img/icone-responsabilidade.png" alt="Responsabilidade">
+        <h3>Estimula a responsabilidade</h3>
+        <p>Incentiva a responsabilidade com suas tarefas.</p>
+      </div>
+
+      <div class="beneficio-card">
+        <img src="/img/icone-rotina.png" alt="Rotina">
+        <h3>Rotina organizada</h3>
+        <p>Auxilia na criação de hábitos saudáveis e produtivos.</p>
+      </div>
+
+      <div class="beneficio-card">
+        <img src="/img/icone-recompensa.png" alt="Recompensas">
+        <h3>Recompensas motivadoras</h3>
+        <p>Sistema de pontos e recompensas que incentiva o esforço.</p>
       </div>
     </div>
   </section>
 </main>
-<main class="container-beneficios">
- <section class="beneficios">
-  <h2>BENEFÍCIOS DO JOGO</h2>
 
-  <div class="cards-beneficios">
-    <div class="card-beneficio">
-      <img src="img/organizacao.svg" alt="Ícone escolha e organização">
-      <span>Escolha organização</span>
-    </div>
-
-    <div class="card-beneficio">
-      <img src="img/responsabilidade.svg" alt="Ícone estímulo e responsabilidade">
-      <span>Estímulo responsabilidade</span>
-    </div>
-
-    <div class="card-beneficio">
-      <img src="img/rotina.svg" alt="Ícone rotina diária">
-      <span>Ajuda na rotina diária</span>
-    </div>
-
-    <div class="card-beneficio">
-      <img src="/img/memoria.svg" alt="Ícone rotina diária">
-      <span>Trabalha memória e lógica</span>
-    </div>
-
-  </div>
-</section>
-</main>
-
-<%- include('partials/footer') %>
+<%- include("partials/footer.ejs") %>

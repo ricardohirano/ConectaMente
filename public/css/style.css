@@ -1,385 +1,252 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: Arial, sans-serif;
+.home-page {
+  background: #f5f5f5;
 }
 
-body {
-  background-color: #0081DE;
-  color: #222;
+.hero-home {
+  background: linear-gradient(180deg, #0d5bd7 0%, #063e9e 100%);
+  padding: 48px 0 36px;
+  overflow: hidden;
 }
 
-header {
-  background-color: #ffffff;
-  padding: 15px 30px;
-  
-}
-
-nav {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.logo-header {
-  height: 56px;
-  width: auto;
-  display: block;
-  object-fit: contain;
-}
-.logo a {
-  text-decoration: none;
-  color: #000;
-  font-size: 24px;
-  font-weight: bold;
-}
-
-.menu {
-  display: flex;
-  list-style: none;
-  gap: 20px;
-  font-family: "Poppins";
-}
-
-.menu a {
-  text-decoration: none;
-  color: #000;
-  font-weight: bold;
-}
-
-.container {
+.hero-home__content {
   width: 90%;
-  max-width: 1200px;
-  margin: 30px auto;
-  
-}
-
-.container-beneficios {
-  width: 90%;
-  max-width: 1344px;
-  margin: 30px auto;
-}
-
-.hero {
-  background-image: url("/img/fundoConecta.svg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  border-radius: 16px;
-  padding: 40px 20px 60px;
-  min-height: 520px;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.hero-texto {
-  width: 100%;
-  text-align: center;
-}
-
-.hero-texto h1 {
-  font-family: "Luckiest Guy", cursive;
-  font-size: 36px;
-  margin-bottom: 20px;
-  color: #0A84D6;
-  line-height: 1.1;
-  -webkit-text-stroke: 1px #F6E300;
-  text-shadow:
-    1px 1px 0 #F6E300,
-    -1px 1px 0 #F6E300,
-    1px -1px 0 #F6E300,
-    -1px -1px 0 #F6E300,
-    0 3px 0 rgba(0, 0, 0, 0.25);
-}
-
-.card-jogo {
-  position: relative;
-  width: 100%;
-  max-width: 720px;
+  max-width: 1240px;
   margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
 }
 
-.card-jogo img {
-  width: 100%;
-  display: block;
-  border-radius: 12px;
+.hero-home__text {
+  flex: 1;
+  max-width: 460px;
+  color: #ffffff;
 }
 
-.btn-jogar{
-  position: absolute;
-  left: 33%;
-  top: 53%;
-  transform: translate(-50%, -50%);
+.hero-home__text h1 {
+  font-family: "Poppins", sans-serif;
+  font-size: 3rem;
+  font-weight: 800;
+  line-height: 1.15;
+  margin-bottom: 18px;
+}
+
+.hero-home__text h1 span {
+  color: #ffd200;
+}
+
+.hero-home__text p {
+  font-family: "Poppins", sans-serif;
+  font-size: 1rem;
+  line-height: 1.7;
+  margin-bottom: 24px;
+}
+
+.hero-home__actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.btn-home {
+  text-decoration: none;
+  font-family: "Poppins", sans-serif;
+  transition: 0.2s ease;
+}
+
+.btn-home--primary {
+  background: #ffd200;
+  color: #0d3d9b;
+  font-weight: 700;
+  padding: 12px 28px;
+  border-radius: 999px;
   display: inline-block;
 }
 
-.btn-jogar img {
-  width: 145px;
-  height: auto;
-  display: block;
+.btn-home--primary:hover {
+  transform: translateY(-2px);
 }
 
-.beneficios {
-  background: #e9e9e9;
-  border-radius: 22px;
-  padding: 28px 22px 40px;
-  margin-top: 30px;
+.btn-home--link {
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 500;
 }
 
-.beneficios h2 {
-  font-family: "Luckiest Guy", "cursive";
-  font-size: 2rem;
-  text-align: center;
-  margin: 0 0 24px;
-  color: #49b64a;
-  line-height: 1.1;
-  -webkit-text-stroke: 1px #111;
-  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
-}
-
-.cards-beneficios {
+.hero-home__image {
+  flex: 1;
   display: flex;
   justify-content: center;
-  gap: 14px;
-  flex-wrap: wrap;
 }
 
-.card-beneficio {
-  width: 300px;
-  min-height: 104px;
-  background: #d9d9d9;
-  border-radius: 4px;
-  padding: 10px 12px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  box-sizing: border-box;
-}
-
-.card-beneficio img {
-  width: 42px;
-  height: 42px;
-  object-fit: contain;
-  display: block;
-  flex-shrink: 0;
-}
-
-.card-beneficio span {
-  font-family: "Poppins";
-  font-size: 24px;
-  font-weight: 700;
-  line-height: 1.1;
-  color: #111;
-}
-
-
-.pagina p {
-  margin-bottom: 15px;
-  line-height: 1.6;
-}
-/*footer*/
-
-
-.footer {
+.hero-home__image img {
   width: 100%;
-  background-color: #e9e9e9;
-  padding: 20px 0 40px;
+  max-width: 680px;
+  display: block;
+  border-radius: 10px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
 }
 
-.footer-container {
-  width: 90%;
-  max-width: 900px;
-  margin: 0 auto;
+.home-highlights {
+  margin-top: -34px;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  overflow: hidden;
+  position: relative;
+  z-index: 2;
+}
+
+.home-highlights__card {
+  padding: 24px 20px;
   display: flex;
-  justify-content: space-between;
-  align-items: stretch;
-  gap: 20px;
-  flex-wrap: wrap;
+  gap: 16px;
+  align-items: flex-start;
+  border-right: 1px solid #e9e9e9;
 }
 
-.footer-box {
-  flex: 1;
-  min-width: 280px;
-  background-color: #d9d9d9;
-  padding: 20px;
-  border-radius: 4px;
-  text-align: center;
+.home-highlights__card:last-child {
+  border-right: none;
 }
 
-.footer-box h3 {
+.home-highlights__icon img {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+}
+
+.home-highlights__card h3 {
   font-family: "Poppins", sans-serif;
-  font-size: 24px;
+  font-size: 1rem;
   font-weight: 700;
-  color: #111;
-  margin-bottom: 20px;
+  color: #083b95;
+  margin-bottom: 6px;
 }
 
-.footer-box p {
+.home-highlights__card p {
+  font-family: "Poppins", sans-serif;
+  font-size: 0.9rem;
+  color: #4a4a4a;
+  line-height: 1.5;
   margin: 0;
 }
 
-.footer-box p a {
-  text-decoration: none;
-  color: #111;
-  font-size: 18px;
-  font-weight: 500;
-  word-break: break-word;
+.beneficios-home {
+  padding: 64px 0 70px;
 }
 
-.redes-sociais {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 16px;
-}
-
-.redes-sociais a {
-  display: inline-flex;
-}
-
-.redes-sociais img {
-  width: 42px;
-  height: 42px;
-  object-fit: contain;
-}
-/* =========================
-   SOBRE O JOGO
-   ========================= */
-
-.sobre-jogo {
-  padding: 10px 0 40px;
-}
-
-.sobre-jogo h1 {
-  font-family: "Luckiest Guy", cursive;
+.section-title {
   text-align: center;
-  font-size: 64px;
-  margin-bottom: 22px;
-  color: #0260C8;
-  -webkit-text-stroke: 2px #ffffff;
-  line-height: 1;
+  margin-bottom: 32px;
 }
 
-/* card branco do topo */
-.destaque {
-  background: #f2f2f2;
-  border-radius: 28px;
-  padding: 20px 26px;
-  margin: 0 auto 22px;
-  max-width: 980px;
-  font-size: 18px;
-  line-height: 1.5;
+.section-title h2 {
+  font-family: "Poppins", sans-serif;
+  font-size: 2rem;
+  font-weight: 800;
+  color: #083b95;
+  margin-bottom: 8px;
 }
 
-.destaque strong {
-  color: #005ed3;
+.section-title span {
+  display: inline-block;
+  width: 72px;
+  height: 4px;
+  border-radius: 999px;
+  background: #1f8fff;
 }
 
-/* grade principal */
-.blocos-grid {
+.beneficios-home__grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: repeat(3, auto);
-  gap: 20px;
-  max-width: 980px;
-  margin: 0 auto;
-  align-items: start;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 22px;
 }
 
-/* estilo base dos cards amarelos */
-.card-objetivo,
-.card-funcionamento,
-.diferenciais {
-  background: #f2b544;
-  border: 3px solid #ffffff;
-  border-radius: 12px;
-  padding: 18px 20px;
-  color: #ffffff;
-  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
-  width: 100%;
+.beneficio-card {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 28px 20px;
+  text-align: center;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
 }
 
-/* títulos internos */
-.card-objetivo h2,
-.card-funcionamento h2,
-.diferenciais h2 {
-  font-family: "Poppins", Arial, sans-serif;
-  font-size: 20px;
+.beneficio-card img {
+  width: 52px;
+  height: 52px;
+  object-fit: contain;
+  margin-bottom: 16px;
+}
+
+.beneficio-card h3 {
+  font-family: "Poppins", sans-serif;
+  font-size: 1rem;
   font-weight: 700;
-  color: #0260C8;
-  -webkit-text-stroke: 0.6px #ffffff;
+  color: #083b95;
   margin-bottom: 10px;
 }
 
-/* subtítulo dos diferenciais */
-.diferenciais .subtitulo {
-  font-weight: 700;
-  color: #0260C8;
-  margin-bottom: 10px;
-}
-
-/* textos e listas */
-.card-objetivo p,
-.card-funcionamento p,
-.diferenciais p {
-  font-family: "Poppins";
-  color: #FFFFFF;
-  margin-bottom: 10px;
+.beneficio-card p {
+  font-family: "Poppins", sans-serif;
+  font-size: 0.9rem;
+  color: #4a4a4a;
   line-height: 1.5;
+  margin: 0;
 }
 
-.card-objetivo ul,
-.card-funcionamento ol,
-.diferenciais ul {
-  font-family: "Poppins";
-  color: #FFFFFF;
-  padding-left: 20px;
-  line-height: 1.7;
-}
-
-/* posições */
-.card-objetivo {
-  
-  grid-column: 1 / 4;
-  grid-row: 1;
-}
-
-.card-funcionamento {
-  
-  grid-column: 3 / 6;
-  grid-row: 2;
-}
-
-.diferenciais {
-  grid-column: 2 / 5;
-  grid-row: 3;
-}
-
-/* responsivo */
-@media (max-width: 900px) {
-  .sobre-jogo h1 {
-    font-size: 46px;
+@media (max-width: 991px) {
+  .hero-home__content {
+    flex-direction: column;
+    text-align: center;
   }
 
-  .destaque {
-    font-size: 16px;
-    padding: 16px 18px;
-  }
-
-  .blocos-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .card-funcionamento {
-    margin-top: 0;
-  }
-
-  .diferenciais {
+  .hero-home__text {
     max-width: 100%;
   }
+
+  .hero-home__actions {
+    align-items: center;
+  }
+
+  .home-highlights {
+    grid-template-columns: 1fr;
+    margin-top: 24px;
+  }
+
+  .home-highlights__card {
+    border-right: none;
+    border-bottom: 1px solid #e9e9e9;
+  }
+
+  .home-highlights__card:last-child {
+    border-bottom: none;
+  }
+
+  .beneficios-home__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
-/*GAME */
+.footer-social__icon {
+  width: 34px;
+  height: 34px;
+  display: block;
+  transition: transform 0.2s ease;
+}
 
+.footer-social__icon:hover {
+  transform: scale(1.08);
+}
+@media (max-width: 575px) {
+  .hero-home__text h1 {
+    font-size: 2.1rem;
+  }
+
+  .beneficios-home__grid {
+    grid-template-columns: 1fr;
+  }
+}
