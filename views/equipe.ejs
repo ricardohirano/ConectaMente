@@ -1,27 +1,96 @@
-<%- include('partials/header') %>
-<%- include('partials/navbar') %>
+<%- include("partials/header.ejs") %>
+<%- include("partials/navbar.ejs") %>
 
-<main class="container">
-  <section class="pagina">
-    <h1>Nossa equipe</h1>
+<main class="pagina-equipe">
+  <section class="equipe-hero">
+    <div class="container">
+      <div class="equipe-hero__box">
+        <h1 class="titulo-pagina">Sobre nós</h1>
+        <p class="equipe-hero__texto">
+          Somos uma equipe de estudantes desenvolvendo o projeto
+          <strong>ConectaMente</strong>, um jogo educativo pensado para auxiliar
+          crianças no aprendizado de tarefas diárias de forma interativa,
+          divertida e acessível.
+        </p>
+      </div>
+    </div>
+  </section>
 
-    <div class="cards">
-      <div class="card">
-        <h3>Camile Vitória Marques Dias</h3>
-        <p>Integrante da equipe de desenvolvimento do projeto.</p>
+  <section class="equipe-membros container">
+    <div class="row g-4 justify-content-center">
+
+      <div class="col-md-6 col-lg-4">
+        <div class="card-equipe">
+          <div class="card-equipe__imagem">
+            <img src="/img/website/equipe/camile.png" alt="Camile Vitória Marques Dias">
+          </div>
+          <h2>Camile Vitória Marques Dias</h2>
+          <p class="cargo-equipe">Integrante da equipe</p>
+          <p>
+            Participa do desenvolvimento do projeto ConectaMente, colaborando na
+            construção da proposta educacional e no planejamento do sistema.
+          </p>
+        </div>
       </div>
 
-      <div class="card">
-        <h3>João Pedro da Silva Vassão dos Santos</h3>
-        <p>Integrante da equipe de desenvolvimento do projeto.</p>
+      <div class="col-md-6 col-lg-4">
+        <div class="card-equipe">
+          <div class="card-equipe__imagem">
+            <img src="/img/website/equipe/joao.png" alt="João Pedro da Silva Vassão dos Santos">
+          </div>
+          <h2>João Pedro da Silva Vassão dos Santos</h2>
+          <p class="cargo-equipe">Integrante da equipe</p>
+          <p>
+            Atua no desenvolvimento do projeto, contribuindo com ideias,
+            organização e construção das funcionalidades do jogo.
+          </p>
+        </div>
       </div>
 
-      <div class="card">
-        <h3>Lorenzo Lopes</h3>
-        <p>Integrante da equipe de desenvolvimento do projeto.</p>
+      <div class="col-md-6 col-lg-4">
+        <div class="card-equipe">
+          <div class="card-equipe__imagem">
+            <img src="/img/website/equipe/lorenzo.png" alt="Lorenzo Lopes David">
+          </div>
+          <h2>Lorenzo Lopes David</h2>
+          <p class="cargo-equipe">Integrante da equipe</p>
+          <p>
+            Colabora na elaboração do projeto e no desenvolvimento das soluções
+            que fazem parte do jogo e da experiência do usuário.
+          </p>
+        </div>
       </div>
+
+      <div class="col-md-6 col-lg-4">
+        <div class="card-equipe">
+          <div class="card-equipe__imagem">
+            <img src="/img/website/equipe/lucas.png" alt="Lucas Rodrigues Ferreira">
+          </div>
+          <h2>Lucas Rodrigues Ferreira</h2>
+          <p class="cargo-equipe">Integrante da equipe</p>
+          <p>
+            Participa da concepção e desenvolvimento do sistema, ajudando na
+            organização das etapas e no aprimoramento do projeto.
+          </p>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4">
+        <div class="card-equipe">
+          <div class="card-equipe__imagem">
+            <img src="/img/website/equipe/ricardo.png" alt="Ricardo Kaeriyama Hirano">
+          </div>
+          <h2>Ricardo Kaeriyama Hirano</h2>
+          <p class="cargo-equipe">Integrante da equipe</p>
+          <p>
+            Atua no desenvolvimento do projeto, contribuindo com a estruturação
+            das telas, organização do sistema e implementação das funcionalidades.
+          </p>
+        </div>
+      </div>
+
     </div>
   </section>
 </main>
 
-<%- include('partials/footer') %>
+<%- include("partials/footer.ejs") %>
