@@ -3,7 +3,10 @@
 }
 
 .hero-home {
-  background: linear-gradient(180deg, #0d5bd7 0%, #063e9e 100%);
+  background-image: url("/img/website/fundo.svg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
   padding: 48px 0 36px;
   overflow: hidden;
 }
@@ -197,7 +200,14 @@
   line-height: 1.5;
   margin: 0;
 }
-
+.nav-link-custom {
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+  font-size: 30px;
+  line-height: 100%;
+  letter-spacing: 0;
+  color: #28618B !important;
+}
 @media (max-width: 991px) {
   .hero-home__content {
     flex-direction: column;
