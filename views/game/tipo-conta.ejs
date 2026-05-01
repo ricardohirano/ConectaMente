@@ -1,0 +1,34 @@
+<%- include('partials/headerGame') %>
+
+<main class="pagina-login">
+  <a href="/game" class="btn-voltar-site" aria-label="Voltar para o login">
+    <img src="/img/game/voltar.svg" alt="Voltar">
+  </a>
+
+  <div class="tipo-conta-box">
+    <div class="logo-login">
+      <img src="/img/website/logo-conectamente.png" alt="ConectaMente">
+    </div>
+
+    <h1 class="titulo-login">Tipo de Conta</h1>
+
+    <form class="form-tipo-conta" action="/game/criar-conta" method="GET">
+      <label class="opcao-conta">
+        <input type="radio" name="tipo" value="responsavel" required>
+        <span class="marcador-opcao"></span>
+        <span class="texto-opcao">Conta Responsável</span>
+      </label>
+
+      <label class="opcao-conta">
+        <input type="radio" name="tipo" value="infantil" required>
+        <span class="marcador-opcao"></span>
+        <span class="texto-opcao">Conta Infantil</span>
+      </label>
+
+      <button type="submit" class="btn-entrar">Continuar</button>
+    </form>
+  </div>
+</main>
+
+</body>
+</html>

@@ -3,19 +3,17 @@ import Usuario from "../models/usuario.js";
 
 const router = express.Router();
 
-// ROTA TELA INICIAL DO JOGO
+// ROTA LOGIN DO JOGO
 router.get("/game", (req, res) => {
-  res.render("game/index");
+  res.render("game/login");
 });
-
-// ROTA TELA CRIAR CONTA
+// ROTA TIPO DE CONTA
+router.get("/game/tipo-conta", (req, res) => {
+  res.render("game/tipo-conta");
+});
+// ROTA CRIAR CONTA
 router.get("/game/criar-conta", (req, res) => {
   res.render("game/criar-conta");
-});
-
-// ROTA TELA CARREGAR CONTA
-router.get("/game/carregar-conta", (req, res) => {
-  res.render("game/carregar-conta");
 });
 
 // ROTA PERFIL

@@ -1,96 +1,114 @@
-<%- include("partials/header.ejs") %>
-<%- include("partials/navbar.ejs") %>
+<%- include('partials/header') %>
+<%- include('partials/navbar') %>
 
 <main class="pagina-equipe">
-  <section class="equipe-hero">
-    <div class="container">
-      <div class="equipe-hero__box">
-        <h1 class="titulo-pagina">Sobre nós</h1>
-        <p class="equipe-hero__texto">
-          Somos uma equipe de estudantes desenvolvendo o projeto
-          <strong>ConectaMente</strong>, um jogo educativo pensado para auxiliar
-          crianças no aprendizado de tarefas diárias de forma interativa,
-          divertida e acessível.
+  <section class="sobre-nos-topo">
+    <div class="sobre-nos-logos">
+      <img src="/img/website/equipe/logoSinapse.svg" alt="Sinapse" class="logo-sinapse">
+      <h1>Sobre nós</h1>
+      <img src="/img/website/equipe/logoConectamente.svg" alt="ConectaMente" class="logo-conectamente">
+    </div>
+
+    <div class="sobre-nos-texto">
+      <p>
+        A Sinapse é uma empresa dedicada ao desenvolvimento de soluções
+        digitais educacionais que tornam o aprendizado mais interativo,
+        acessível e divertido.
+      </p>
+    </div>
+
+    <div class="sobre-nos-cards">
+      <div class="card-info">
+        <img src="/img/website/equipe/missao.svg" alt="Missão">
+        <h2>Missão</h2>
+        <p>
+          Desenvolver tecnologias educacionais que auxiliem no aprendizado
+          e no desenvolvimento infantil de forma criativa e eficaz.
         </p>
+      </div>
+
+      <div class="card-info">
+        <img src="/img/website/equipe/visao.svg" alt="Visão">
+        <h2>Visão</h2>
+        <p>
+          Ser referência na criação de experiências educativas digitais
+          inovadoras e transformadoras.
+        </p>
+      </div>
+
+      <div class="card-info">
+        <img src="/img/website/equipe/valores.svg" alt="Valores">
+        <h2>Valores</h2>
+        <ul>
+          <li>Inovação</li>
+          <li>Educação</li>
+          <li>Criatividade</li>
+          <li>Compromisso</li>
+          <li>Acessibilidade</li>
+        </ul>
       </div>
     </div>
   </section>
 
-  <section class="equipe-membros container">
-    <div class="row g-4 justify-content-center">
+  <section class="bloco-equipe">
+    <div class="icone-equipe-topo">
+      <img src="/img/website/equipe/equipe.svg" alt="Equipe">
+    </div>
 
-      <div class="col-md-6 col-lg-4">
-        <div class="card-equipe">
-          <div class="card-equipe__imagem">
-            <img src="/img/website/equipe/camile.png" alt="Camile Vitória Marques Dias">
-          </div>
-          <h2>Camile Vitória Marques Dias</h2>
-          <p class="cargo-equipe">Integrante da equipe</p>
-          <p>
-            Participa do desenvolvimento do projeto ConectaMente, colaborando na
-            construção da proposta educacional e no planejamento do sistema.
-          </p>
-        </div>
+    <h2>Nossa equipe</h2>
+
+    <p class="descricao-equipe">
+      Nossa equipe é formada por profissionais apaixonados por tecnologia e educação,
+      trabalhando juntos para criar soluções que impactam positivamente a vida das crianças.
+    </p>
+
+    <div class="membros-equipe">
+      <div class="membro-card">
+        <img src="/img/website/equipe/joao.png" alt="João Silva">
+        <h3>João Silva</h3>
+        <p class="cargo">Designer</p>
       </div>
 
-      <div class="col-md-6 col-lg-4">
-        <div class="card-equipe">
-          <div class="card-equipe__imagem">
-            <img src="/img/website/equipe/joao.png" alt="João Pedro da Silva Vassão dos Santos">
-          </div>
-          <h2>João Pedro da Silva Vassão dos Santos</h2>
-          <p class="cargo-equipe">Integrante da equipe</p>
-          <p>
-            Atua no desenvolvimento do projeto, contribuindo com ideias,
-            organização e construção das funcionalidades do jogo.
-          </p>
-        </div>
+      <div class="membro-card">
+        <img src="/img/website/equipe/camile.png" alt="Camile">
+        <h3>camile</h3>
+        <p class="cargo">Documentação</p>
       </div>
 
-      <div class="col-md-6 col-lg-4">
-        <div class="card-equipe">
-          <div class="card-equipe__imagem">
-            <img src="/img/website/equipe/lorenzo.png" alt="Lorenzo Lopes David">
-          </div>
-          <h2>Lorenzo Lopes David</h2>
-          <p class="cargo-equipe">Integrante da equipe</p>
-          <p>
-            Colabora na elaboração do projeto e no desenvolvimento das soluções
-            que fazem parte do jogo e da experiência do usuário.
-          </p>
-        </div>
+      <div class="membro-card">
+        <img src="/img/website/equipe/lucas.png" alt="Lucas">
+        <h3>Lucas</h3>
+        <p class="cargo">Ajuda a criança a tomar decisões melhores no dia a dia.</p>
       </div>
 
-      <div class="col-md-6 col-lg-4">
-        <div class="card-equipe">
-          <div class="card-equipe__imagem">
-            <img src="/img/website/equipe/lucas.png" alt="Lucas Rodrigues Ferreira">
-          </div>
-          <h2>Lucas Rodrigues Ferreira</h2>
-          <p class="cargo-equipe">Integrante da equipe</p>
-          <p>
-            Participa da concepção e desenvolvimento do sistema, ajudando na
-            organização das etapas e no aprimoramento do projeto.
-          </p>
-        </div>
+      <div class="membro-card">
+        <img src="/img/website/equipe/lorenzo.png" alt="Lorenzo">
+        <h3>lorenzo</h3>
+        <p class="cargo">Designer</p>
       </div>
 
-      <div class="col-md-6 col-lg-4">
-        <div class="card-equipe">
-          <div class="card-equipe__imagem">
-            <img src="/img/website/equipe/ricardo.png" alt="Ricardo Kaeriyama Hirano">
-          </div>
-          <h2>Ricardo Kaeriyama Hirano</h2>
-          <p class="cargo-equipe">Integrante da equipe</p>
-          <p>
-            Atua no desenvolvimento do projeto, contribuindo com a estruturação
-            das telas, organização do sistema e implementação das funcionalidades.
-          </p>
-        </div>
+      <div class="membro-card">
+        <img src="/img/website/equipe/ricardo.png" alt="Ricardo">
+        <h3>Ricardo</h3>
+        <p class="cargo">Full Stack</p>
+      </div>
+    </div>
+
+    <div class="contato-box">
+      <div class="contato-icone">
+        <img src="/img/website/equipe/email.png" alt="Email">
       </div>
 
+      <div class="contato-texto">
+        <h3>Quer saber mais?</h3>
+        <p>
+          Entre em contato conosco e saiba como podemos transformar a educação
+          através da tecnologia!
+        </p>
+        <a href="#" class="btn-fale-conosco">Fale conosco</a>
+      </div>
     </div>
   </section>
 </main>
 
-<%- include("partials/footer.ejs") %>
+<%- include('partials/footer') %>

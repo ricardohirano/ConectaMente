@@ -34,10 +34,10 @@ router.post("/usuarios/new", async (req, res) => {
       senha: senhaHash
     });
 
-    return res.redirect("/game/carregar-conta");
+    res.redirect("/game");
   } catch (error) {
     console.log("Ocorreu um erro ao cadastrar o usuário. " + error);
-    return res.redirect("/game/criar-conta?erro=servidor");
+    res.redirect("/game/criar-conta?erro=servidor");
   }
 });
 
@@ -54,19 +54,19 @@ router.post("/usuarios/login", async (req, res) => {
     });
 
     if (!usuario) {
-      return res.redirect("/game/carregar-conta?erro=email");
+      return res.redirect("/game?erro=email");
     }
 
     const senhaCorreta = await bcrypt.compare(senha, usuario.senha);
 
     if (!senhaCorreta) {
-      return res.redirect("/game/carregar-conta?erro=senha");
+      return res.redirect("/game?erro=senha");
     }
 
-    return res.redirect(`/game/perfil/${usuario.id}`);
+    res.redirect(`/game/perfil/${usuario.id}`);
   } catch (error) {
     console.log("Ocorreu um erro ao fazer login. " + error);
-    return res.redirect("/game/carregar-conta?erro=servidor");
+    res.redirect("/game?erro=servidor");
   }
 });
 
