@@ -1,4 +1,7 @@
-/*login*/
+/* =======================================================
+   CONFIGURAÇÕES GERAIS DAS TELAS DE ACESSO DO JOGO
+======================================================= */
+
 html,
 body {
   margin: 0;
@@ -9,10 +12,11 @@ body {
 
 body {
   margin: 0;
+  font-family: "Poppins", sans-serif;
 }
 
-.pagina-login {
-  width: 100%;
+/* Fundo padrão usado antes de entrar no jogo */
+.pagina-acesso-game {
   min-height: 100vh;
   background-image: url("/img/game/fundoPainel.svg");
   background-repeat: no-repeat;
@@ -21,50 +25,68 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
   padding: 40px 20px;
   box-sizing: border-box;
 }
 
+/* Botão de voltar */
+.btn-voltar-site {
+  position: absolute;
+  top: 30px;
+  left: 30px;
+  display: inline-flex;
+  z-index: 10;
+}
+
+.btn-voltar-site img {
+  width: 46px;
+  height: 46px;
+  object-fit: contain;
+}
+
+/* =======================================================
+   TELA DE LOGIN
+======================================================= */
+
 .login-box {
   width: 100%;
-  max-width: 700px;
+  max-width: 760px;
   text-align: center;
 }
 
 .logo-login img {
-  width: 320px;
+  width: 360px;
   max-width: 80%;
-  margin-bottom: 30px;
+  margin-bottom: 25px;
 }
 
 .titulo-login {
-  font-family: "Poppins", sans-serif;
   font-weight: 700;
   font-size: 64px;
   color: #ffffff;
-  margin-bottom: 34px;
+  margin-bottom: 35px;
 }
 
 .form-login {
   display: flex;
   flex-direction: column;
-  gap: 26px;
+  gap: 28px;
 }
 
 .campo-login {
   background: #f2f2f2;
-  border-radius: 32px;
-  padding: 22px 28px;
+  border-radius: 34px;
+  padding: 24px 30px;
   text-align: left;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.18);
+  box-shadow: 0 8px 14px rgba(0, 0, 0, 0.18);
 }
 
 .campo-login label {
   display: block;
-  font-family: "Poppins", sans-serif;
   font-weight: 700;
-  font-size: 28px;
-  color: #18185a;
+  font-size: 30px;
+  color: #17175a;
   margin-bottom: 10px;
 }
 
@@ -73,14 +95,13 @@ body {
   border: none;
   outline: none;
   background: transparent;
-  font-family: "Poppins", sans-serif;
-  font-size: 26px;
-  color: #8c8c8c;
+  font-size: 28px;
+  color: #8d8d8d;
+  box-sizing: border-box;
 }
 
 .link-esqueceu {
   text-align: left;
-  font-family: "Poppins", sans-serif;
   font-size: 20px;
   color: #ffffff;
   text-decoration: none;
@@ -90,34 +111,23 @@ body {
   background: #f5bf00;
   color: #000000;
   border: none;
-  border-radius: 32px;
+  border-radius: 34px;
   padding: 24px;
-  font-family: "Poppins", sans-serif;
   font-size: 34px;
   font-weight: 700;
   cursor: pointer;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-}
-.btn-voltar-site {
-  position: absolute;
-  top: 35px;
-  left: 35px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 10;
+  box-shadow: 0 8px 14px rgba(0, 0, 0, 0.18);
+  transition: 0.2s ease;
 }
 
-.btn-voltar-site img {
-  width: 48px;
-  height: 48px;
-  object-fit: contain;
+.btn-entrar:hover {
+  transform: translateY(-2px);
 }
+
 .link-cadastro {
-  font-family: "Poppins", sans-serif;
-  font-size: 24px;
+  font-size: 22px;
   color: #ffffff;
-  margin-top: 6px;
+  margin-top: 4px;
 }
 
 .link-cadastro a {
@@ -126,8 +136,141 @@ body {
   font-weight: 700;
 }
 
+/* =======================================================
+   TELA DE CRIAR CONTA
+======================================================= */
+
+.cadastro-box {
+  width: 100%;
+  max-width: 760px;
+  text-align: center;
+}
+
+.logo-cadastro img {
+  width: 360px;
+  max-width: 80%;
+  margin-bottom: 20px;
+}
+
+.titulo-cadastro {
+  font-weight: 700;
+  font-size: 64px;
+  color: #ffffff;
+  margin-bottom: 28px;
+}
+
+.form-cadastro {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.campo-cadastro {
+  background: #f2f2f2;
+  border-radius: 34px;
+  padding: 22px 28px;
+  text-align: left;
+  box-shadow: 0 8px 14px rgba(0, 0, 0, 0.18);
+}
+
+.campo-cadastro label {
+  display: block;
+  font-weight: 700;
+  font-size: 26px;
+  color: #19195f;
+  margin-bottom: 8px;
+}
+
+.campo-cadastro input {
+  width: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 24px;
+  color: #8d8d8d;
+  box-sizing: border-box;
+}
+
+/* Toggle do tipo de conta */
+.toggle-tipo-conta {
+  width: 100%;
+  background: #e9edf3;
+  border-radius: 38px;
+  padding: 6px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  box-shadow: 0 8px 14px rgba(0, 0, 0, 0.18);
+  box-sizing: border-box;
+}
+
+.opcao-tipo {
+  display: block;
+  cursor: pointer;
+}
+
+.opcao-tipo input {
+  display: none;
+}
+
+.opcao-tipo__box {
+  border-radius: 32px;
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  transition: 0.2s ease;
+}
+
+.opcao-tipo__icone img {
+  width: 38px;
+  height: 38px;
+  object-fit: contain;
+}
+
+.opcao-tipo__texto {
+  font-weight: 700;
+  font-size: 22px;
+  color: #19195f;
+  line-height: 1.2;
+}
+
+.opcao-tipo input:checked + .opcao-tipo__box {
+  background: linear-gradient(180deg, #2f87ff 0%, #0f5be0 100%);
+}
+
+.opcao-tipo input:checked + .opcao-tipo__box .opcao-tipo__texto {
+  color: #ffffff;
+}
+
+.btn-continuar-cadastro {
+  align-self: center;
+  width: 100%;
+  max-width: 600px;
+  background: #f5bf00;
+  color: #0e2d67;
+  border: none;
+  border-radius: 32px;
+  padding: 20px;
+  font-size: 32px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 8px 14px rgba(0, 0, 0, 0.18);
+  transition: 0.2s ease;
+}
+
+.btn-continuar-cadastro:hover {
+  transform: translateY(-2px);
+}
+
+/* =======================================================
+   RESPONSIVIDADE
+======================================================= */
+
 @media (max-width: 768px) {
-  .titulo-login {
+  .titulo-login,
+  .titulo-cadastro {
     font-size: 46px;
   }
 
@@ -139,12 +282,38 @@ body {
     font-size: 20px;
   }
 
+  .campo-cadastro label {
+    font-size: 20px;
+  }
+
+  .campo-cadastro input {
+    font-size: 18px;
+  }
+
+  .toggle-tipo-conta {
+    grid-template-columns: 1fr;
+  }
+
+  .opcao-tipo__texto {
+    font-size: 20px;
+  }
+
   .btn-entrar {
     font-size: 28px;
     padding: 18px;
   }
 
+  .btn-continuar-cadastro {
+    font-size: 26px;
+    padding: 18px;
+  }
+
   .link-cadastro {
-    font-size: 20px;
+    font-size: 18px;
+  }
+
+  .logo-login img,
+  .logo-cadastro img {
+    width: 280px;
   }
 }

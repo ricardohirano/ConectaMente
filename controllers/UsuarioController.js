@@ -70,4 +70,39 @@ router.post("/usuarios/login", async (req, res) => {
   }
 });
 
+// rota cadastro 
+router.post("/usuarios/new", async (req, res) => {
+  const nome = req.body.nome;
+  const email = req.body.email;
+  const senha = req.body.senha;
+  const confirmarSenha = req.body.confirmarSenha;
+  const tipoConta = req.body.tipoConta;
+
+  try {
+    if (senha !== confirmarSenha) {
+      return res.redirect("/game/criar-conta?erro=senha");
+    }
+
+    const usuarioExistente = await Usuario.findOne({
+      where: { email: email }
+    });
+
+    if (usuarioExistente) {
+      return res.redirect("/game/criar-conta?erro=email");
+    }
+
+    await Usuario.create({
+      nome: nome,
+      email: email,
+      senha: senha,
+      tipoConta: tipoConta
+    });
+
+    res.redirect("/game");
+  } catch (error) {
+    console.log("Ocorreu um erro ao cadastrar o usuário. " + error);
+    res.redirect("/game/criar-conta?erro=servidor");
+  }
+});
+
 export default router;

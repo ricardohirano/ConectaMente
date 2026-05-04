@@ -7,10 +7,7 @@ const router = express.Router();
 router.get("/game", (req, res) => {
   res.render("game/login");
 });
-// ROTA TIPO DE CONTA
-router.get("/game/tipo-conta", (req, res) => {
-  res.render("game/tipo-conta");
-});
+
 // ROTA CRIAR CONTA
 router.get("/game/criar-conta", (req, res) => {
   res.render("game/criar-conta");

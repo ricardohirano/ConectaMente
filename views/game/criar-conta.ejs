@@ -1,34 +1,63 @@
 <%- include('partials/headerGame') %>
+<main class="pagina-acesso-game">
+  <a href="/game" class="btn-voltar-site" aria-label="Voltar para o login">
+    <img src="/img/game/voltar.svg" alt="Voltar">
+  </a>
 
-    <main class="game-home">
-        <h1 class="titulo-tela">NOVA CONTA</h1>
-        <form id="formCadastro" class="form-padrao" action="/game/criar-conta" method="POST">
-  <div class="campo-form">
-    <label for="nome">Nome:</label>
-    <input type="text" id="nome" name="nome" required>
+  <div class="cadastro-box">
+    <div class="logo-cadastro">
+      <img src="/img/website/index/logoConectamente.png" alt="ConectaMente">
+    </div>
+
+    <h1 class="titulo-cadastro">Criar conta</h1>
+
+    <form class="form-cadastro" action="/usuarios/new" method="POST">
+      <div class="campo-cadastro">
+        <label for="nome">Nome completo</label>
+        <input type="text" id="nome" name="nome" required>
+      </div>
+
+      <div class="campo-cadastro">
+        <label for="email">E-mail</label>
+        <input type="email" id="email" name="email" required>
+      </div>
+
+      <div class="campo-cadastro">
+        <label for="senha">Senha:</label>
+        <input type="password" id="senha" name="senha" required>
+      </div>
+
+      <div class="campo-cadastro">
+        <label for="confirmarSenha">Confirmar Senha:</label>
+        <input type="password" id="confirmarSenha" name="confirmarSenha" required>
+      </div>
+
+      <div class="toggle-tipo-conta">
+        <label class="opcao-tipo">
+          <input type="radio" name="tipoConta" value="responsavel" checked>
+          <span class="opcao-tipo__box">
+            <span class="opcao-tipo__icone">
+              <img src="/img/game/responsavel.svg" alt="Responsável">
+            </span>
+            <span class="opcao-tipo__texto">Responsável</span>
+          </span>
+        </label>
+
+        <label class="opcao-tipo">
+          <input type="radio" name="tipoConta" value="crianca">
+          <span class="opcao-tipo__box">
+            <span class="opcao-tipo__icone">
+              <img src="/img/game/crianca.svg" alt="Criança">
+            </span>
+            <span class="opcao-tipo__texto">Criança</span>
+          </span>
+        </label>
+      </div>
+
+      <button type="submit" class="btn-continuar-cadastro">Continuar</button>
+    </form>
   </div>
+</main>
 
-  <div class="campo-form">
-    <label for="email">Email:</label>
-    <input type="email" id="email" name="email" required>
-  </div>
-
-  <div class="campo-form">
-    <label for="senha">Senha:</label>
-    <input type="password" id="senha" name="senha" required>
-  </div>
-
-  <div class="campo-form">
-    <label for="confirmarSenha">Confirmar Senha:</label>
-    <input type="password" id="confirmarSenha" name="confirmarSenha" required>
-  </div>
-
-  <button type="submit" class="btn-form">Criar Conta</button>
-</form>
-
-<script src="/js/criarConta.js"></script>
-
-<script src="js/criarConta.js"></script>
-    </main>
 </body>
 </html>
