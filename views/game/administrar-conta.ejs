@@ -1,0 +1,91 @@
+<%- include('partials/headerGame') %>
+
+<main class="pagina-acesso-game">
+  <a href="javascript:history.back()" class="btn-voltar-site" aria-label="Voltar">
+    <img src="/img/game/voltar.svg" alt="Voltar">
+  </a>
+
+  <section class="painel-contas">
+    <img src="/img/website/logo-conectamente.png" alt="ConectaMente" class="logo-painel">
+
+    <div class="bloco-contas">
+      <div class="topo-contas centralizado">
+        <h1>Conta</h1>
+      </div>
+
+      <% if (conta) { %>
+        <div class="card-conta card-conta-admin">
+          <div class="avatar-conta">
+            <img src="<%= conta.avatar %>" alt="Avatar">
+          </div>
+
+          <div class="info-conta">
+            <h2><%= conta.nome %></h2>
+            <p><%= conta.email %></p>
+            <p style="color: black;">permissao_ativa: <%= conta.permissao_ativa %></p>
+          </div>
+
+          <div class="acoes-admin">
+            <a href="#" class="btn-admin azul">Limite de tempo por dia</a>
+            <% if (conta && conta.permissao_ativa) { %>
+            <a href="/game/desativar-conta/<%= conta.id %>" class="btn-admin azul">
+              Desativar Conta
+            </a>
+          <% } else { %>
+            <a href="/game/ativar-conta/<%= conta.id %>" class="btn-admin azul">
+              Ativar Conta
+            </a>
+          <% } %>
+            <button type="button" class="btn-admin vermelho" id="abrirModalExcluir">
+              Excluir Conta
+            </button>
+          </div>
+        </div>
+
+        <!-- MODAL DE CONFIRMAÇÃO -->
+        <div class="modal-excluir" id="modalExcluir">
+          <div class="modal-excluir__caixa">
+            <h2>Você tem certeza que<br>quer excluir essa conta ?</h2>
+
+            <div class="modal-excluir__acoes">
+              <button type="button" class="btn-modal nao" id="fecharModalExcluir">NÃO</button>
+
+              <form action="/game/excluir-conta/<%= conta.id %>" method="POST">
+                <button type="submit" class="btn-modal sim">SIM</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      <% } else { %>
+        <div class="contas-vazias">
+          <p>Conta não encontrada.</p>
+        </div>
+      <% } %>
+    </div>
+  </section>
+</main>
+
+<% if (conta) { %>
+<script>
+  const modalExcluir = document.getElementById("modalExcluir");
+  const abrirModalExcluir = document.getElementById("abrirModalExcluir");
+  const fecharModalExcluir = document.getElementById("fecharModalExcluir");
+
+  abrirModalExcluir.addEventListener("click", function () {
+    modalExcluir.classList.add("ativo");
+  });
+
+  fecharModalExcluir.addEventListener("click", function () {
+    modalExcluir.classList.remove("ativo");
+  });
+
+  modalExcluir.addEventListener("click", function (event) {
+    if (event.target === modalExcluir) {
+      modalExcluir.classList.remove("ativo");
+    }
+  });
+</script>
+<% } %>
+
+</body>
+</html>

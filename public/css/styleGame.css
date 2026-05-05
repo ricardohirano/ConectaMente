@@ -576,6 +576,78 @@ body {
   color: #4f4f4f;
   margin: 0;
 }
+
+/* =======================================================
+   MODAL EXCLUIR CONTA
+======================================================= */
+
+.modal-excluir {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(180, 210, 245, 0.55);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.modal-excluir.ativo {
+  display: flex;
+}
+
+.modal-excluir__caixa {
+  width: 100%;
+  max-width: 740px;
+  background: #f5f5f5;
+  border: 8px solid #0d63d8;
+  border-radius: 8px;
+  padding: 48px 40px 40px;
+  text-align: center;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
+}
+
+.modal-excluir__caixa h2 {
+  font-family: "Poppins", sans-serif;
+  font-size: 34px;
+  font-weight: 700;
+  color: #000000;
+  line-height: 1.35;
+  margin: 0 0 36px 0;
+}
+
+.modal-excluir__acoes {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.btn-modal {
+  min-width: 230px;
+  height: 68px;
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  font-family: "Luckiest Guy", cursive;
+  font-size: 28px;
+  color: #ffffff;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.18);
+}
+
+.btn-modal.nao {
+  background: #c90000;
+}
+
+.btn-modal.sim {
+  background: #0a5f11;
+}
+
+.btn-modal:hover {
+  opacity: 0.92;
+}
 /* =======================================================
    RESPONSIVIDADE
 ======================================================= */

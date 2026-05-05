@@ -64,24 +64,38 @@ router.get("/game/adicionar-conta/:id", (req, res) => {
 });
 
 // CADASTRAR VÍNCULO DE CONTA
-router.post("/game/adicionar-conta/:id", (req, res) => {
+router.post("/game/adicionar-conta/:id", async (req, res) => {
   const id = req.params.id;
   const email = req.body.email;
   const senha = req.body.senha;
 
-  /*
-    Aqui por enquanto vamos apenas simular a conta vinculada.
-    Depois isso pode buscar no banco e validar login/ligação real.
-  */
-  contasVinculadas.push({
-    id: contasVinculadas.length + 1,
-    nome: "Lorenzo",
-    email: email,
-    avatar: "/img/game/avatar-menino.png"
-  });
+  try {
+    const usuarioEncontrado = await Usuario.findOne({
+      where: {
+        email: email,
+        tipoConta: "crianca"
+      }
+    });
 
-  res.redirect(`/game/contas-acessiveis/${id}`);
+    if (!usuarioEncontrado) {
+      return res.redirect(`/game/adicionar-conta/${id}?erro=crianca`);
+    }
+
+    contasVinculadas.push({
+  id: usuarioEncontrado.id,
+  nome: usuarioEncontrado.nome,
+  email: usuarioEncontrado.email,
+  avatar: "/img/game/avatar-menino.png",
+  permissao_ativa: usuarioEncontrado.permissao_ativa
 });
+
+    return res.redirect(`/game/contas-acessiveis/${id}`);
+  } catch (error) {
+    console.log("Erro ao adicionar conta vinculada: " + error);
+    return res.redirect(`/game/adicionar-conta/${id}?erro=servidor`);
+  }
+});
+
 
 // TELA ADMINISTRAR CONTA
 router.get("/game/administrar-conta/:id", (req, res) => {
@@ -92,6 +106,14 @@ router.get("/game/administrar-conta/:id", (req, res) => {
   res.render("game/administrar-conta", {
     conta: conta
   });
+});
+// ROTA EXCLUIR CONTA CRIANCA
+router.post("/game/excluir-conta/:id", (req, res) => {
+  const id = req.params.id;
+
+  contasVinculadas = contasVinculadas.filter(conta => conta.id != id);
+
+  res.redirect("/game/contas-acessiveis/1");
 });
 
 //ROTA CRIANCA
@@ -124,12 +146,50 @@ router.get("/game/adicionar-conta/:id", (req, res) => {
   });
 });
 
-router.get("/game/administrar-conta/:id", (req, res) => {
+router.get("/game/administrar-conta/:id", async (req, res) => {
   const id = req.params.id;
 
-  res.render("game/administrar-conta", {
-    idConta: id
-  });
-});
+  try {
+    const conta = await Usuario.findByPk(id);
 
+    console.log("Conta carregada:", conta);
+
+    return res.render("game/administrar-conta", {
+      conta: conta
+    });
+  } catch (error) {
+    console.log("Erro ao carregar conta: " + error);
+    return res.redirect("/game");
+  }
+});
+router.get("/game/ativar-conta/:id", async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    await Usuario.update(
+      { permissao_ativa: true },
+      { where: { id: id } }
+    );
+
+    return res.redirect(`/game/administrar-conta/${id}`);
+  } catch (error) {
+    console.log("Erro ao ativar conta: " + error);
+    return res.redirect("/game");
+  }
+});
+router.get("/game/desativar-conta/:id", async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    await Usuario.update(
+      { permissao_ativa: false },
+      { where: { id: id } }
+    );
+
+    return res.redirect(`/game/administrar-conta/${id}`);
+  } catch (error) {
+    console.log("Erro ao desativar conta: " + error);
+    return res.redirect("/game");
+  }
+});
 export default router;

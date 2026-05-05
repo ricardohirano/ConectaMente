@@ -18,6 +18,11 @@ const Usuario = connection.define("usuarios", {
   tipoConta: {
     type: Sequelize.STRING,
     allowNull: false
+  },
+  permissao_ativa: {
+    type: Sequelize.BOOLEAN,
+    allowNull: false,
+    defaultValue: true
   }
 });
 

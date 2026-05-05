@@ -33,11 +33,18 @@ router.post("/usuarios/new", async (req, res) => {
 
     const senhaHash = await bcrypt.hash(senha, 10);
 
+    let permissaoAtiva = true;
+
+    if (tipoConta === "crianca") {
+      permissaoAtiva = false;
+    }
+
     await Usuario.create({
       nome: nome,
       email: email,
       senha: senhaHash,
-      tipoConta: tipoConta
+      tipoConta: tipoConta,
+      permissao_ativa: permissaoAtiva
     });
 
     return res.redirect("/game");
