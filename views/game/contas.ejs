@@ -1,0 +1,45 @@
+<%- include('partials/headerGame') %>
+
+<main class="pagina-acesso-game">
+  <a href="/game/responsavel/<%= idResponsavel %>" class="btn-voltar-site" aria-label="Voltar">
+    <img src="/img/game/voltar.svg" alt="Voltar">
+  </a>
+
+  <section class="painel-contas">
+    <img src="/img/website/logo-conectamente.png" alt="ConectaMente" class="logo-painel">
+
+    <div class="bloco-contas">
+      <div class="topo-contas">
+        <h1>Contas</h1>
+
+        <a href="/game/adicionar-conta/<%= idResponsavel %>" class="btn-adicionar-conta">+</a>
+      </div>
+
+      <% if (contas.length === 0) { %>
+        <div class="contas-vazias">
+          <p>Nenhuma conta vinculada no momento.</p>
+        </div>
+      <% } %>
+
+      <% contas.forEach(function(conta) { %>
+        <a href="/game/administrar-conta/<%= conta.id %>" class="card-conta">
+          <div class="avatar-conta">
+            <img src="<%= conta.avatar %>" alt="Avatar">
+          </div>
+
+          <div class="info-conta">
+            <h2><%= conta.nome %></h2>
+            <p><%= conta.email %></p>
+          </div>
+
+          <div class="ver-conta">
+            <img src="/img/game/olho.svg" alt="Visualizar">
+          </div>
+        </a>
+      <% }) %>
+    </div>
+  </section>
+</main>
+
+</body>
+</html>

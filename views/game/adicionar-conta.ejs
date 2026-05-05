@@ -1,0 +1,32 @@
+<%- include('partials/headerGame') %>
+
+<main class="pagina-acesso-game">
+  <a href="/game/contas-acessiveis/<%= idResponsavel %>" class="btn-voltar-site" aria-label="Voltar">
+    <img src="/img/game/voltar.svg" alt="Voltar">
+  </a>
+
+  <section class="cadastro-box">
+    <div class="logo-cadastro">
+      <img src="/img/website/logo-conectamente.png" alt="ConectaMente">
+    </div>
+
+    <h1 class="titulo-cadastro">Adicionar Conta</h1>
+
+    <form class="form-cadastro" action="/game/adicionar-conta/<%= idResponsavel %>" method="POST">
+      <div class="campo-cadastro">
+        <label for="email">E-mail</label>
+        <input type="email" id="email" name="email" required>
+      </div>
+
+      <div class="campo-cadastro">
+        <label for="senha">Senha:</label>
+        <input type="password" id="senha" name="senha" required>
+      </div>
+
+      <button type="submit" class="btn-continuar-cadastro">Continuar</button>
+    </form>
+  </section>
+</main>
+
+</body>
+</html>

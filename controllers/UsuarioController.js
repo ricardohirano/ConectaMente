@@ -10,10 +10,15 @@ router.post("/usuarios/new", async (req, res) => {
   const email = req.body.email;
   const senha = req.body.senha;
   const confirmarSenha = req.body.confirmarSenha;
+  const tipoConta = req.body.tipoConta;
 
   try {
     if (senha !== confirmarSenha) {
       return res.redirect("/game/criar-conta?erro=senha");
+    }
+
+    if (!tipoConta) {
+      return res.redirect("/game/criar-conta?erro=tipoconta");
     }
 
     const usuarioExistente = await Usuario.findOne({
@@ -31,13 +36,14 @@ router.post("/usuarios/new", async (req, res) => {
     await Usuario.create({
       nome: nome,
       email: email,
-      senha: senhaHash
+      senha: senhaHash,
+      tipoConta: tipoConta
     });
 
-    res.redirect("/game");
+    return res.redirect("/game");
   } catch (error) {
     console.log("Ocorreu um erro ao cadastrar o usuário. " + error);
-    res.redirect("/game/criar-conta?erro=servidor");
+    return res.redirect("/game/criar-conta?erro=servidor");
   }
 });
 
@@ -63,45 +69,18 @@ router.post("/usuarios/login", async (req, res) => {
       return res.redirect("/game?erro=senha");
     }
 
-    res.redirect(`/game/perfil/${usuario.id}`);
+    if (usuario.tipoConta === "responsavel") {
+      return res.redirect(`/game/responsavel/${usuario.id}`);
+    }
+
+    if (usuario.tipoConta === "crianca") {
+      return res.redirect(`/game/crianca/${usuario.id}`);
+    }
+
+    return res.redirect("/game");
   } catch (error) {
     console.log("Ocorreu um erro ao fazer login. " + error);
-    res.redirect("/game?erro=servidor");
-  }
-});
-
-// rota cadastro 
-router.post("/usuarios/new", async (req, res) => {
-  const nome = req.body.nome;
-  const email = req.body.email;
-  const senha = req.body.senha;
-  const confirmarSenha = req.body.confirmarSenha;
-  const tipoConta = req.body.tipoConta;
-
-  try {
-    if (senha !== confirmarSenha) {
-      return res.redirect("/game/criar-conta?erro=senha");
-    }
-
-    const usuarioExistente = await Usuario.findOne({
-      where: { email: email }
-    });
-
-    if (usuarioExistente) {
-      return res.redirect("/game/criar-conta?erro=email");
-    }
-
-    await Usuario.create({
-      nome: nome,
-      email: email,
-      senha: senha,
-      tipoConta: tipoConta
-    });
-
-    res.redirect("/game");
-  } catch (error) {
-    console.log("Ocorreu um erro ao cadastrar o usuário. " + error);
-    res.redirect("/game/criar-conta?erro=servidor");
+    return res.redirect("/game?erro=servidor");
   }
 });
 

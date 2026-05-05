@@ -1,0 +1,41 @@
+<%- include('partials/headerGame') %>
+
+<main class="pagina-acesso-game">
+  <section class="painel-responsavel">
+    <div class="topo-responsavel">
+      <img src="/img/website/logo-conectamente.png" alt="ConectaMente" class="logo-responsavel">
+
+      <div class="subtitulo-logo">Minha Rotina Divertida</div>
+
+      <h1 class="titulo-responsavel">PERFIL DO RESPONSÁVEL</h1>
+
+      <p class="descricao-responsavel">
+        Gerencie as informações e preferências<br>
+        para uma experiência personalizada.
+      </p>
+    </div>
+
+    <a href="/game/contas-acessiveis/<%= usuario.id %>" class="card-responsavel-opcao">
+        <div class="icone-opcao">
+            <img src="/img/game/icone-usuario.svg" alt="Usuário">
+        </div>
+
+        <div class="texto-opcao">
+            <h2>Contas Acessíveis</h2>
+            <p>Gerencie as contas que possui.</p>
+        </div>
+
+        <div class="seta-opcao">
+            <img src="/img/game/seta-direita.svg" alt="Abrir">
+        </div>
+        </a>
+
+    <a href="/game" class="btn-sair-conta">
+      <img src="/img/game/sair.svg" alt="Sair">
+      <span>SAIR DA CONTA</span>
+    </a>
+  </section>
+</main>
+
+</body>
+</html>
