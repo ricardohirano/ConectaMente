@@ -1,7 +1,7 @@
 <%- include('partials/headerGame') %>
 
 <main class="pagina-acesso-game">
-  <a href="javascript:history.back()" class="btn-voltar-site" aria-label="Voltar">
+  <a href="/game/contas-acessiveis/<%= idResponsavel %>" class="btn-voltar-site" aria-label="Voltar">
     <img src="/img/game/voltar.svg" alt="Voltar">
   </a>
 
@@ -16,41 +16,79 @@
       <% if (conta) { %>
         <div class="card-conta card-conta-admin">
           <div class="avatar-conta">
-            <img src="<%= conta.avatar %>" alt="Avatar">
+            <img src="<%= conta.avatar || '/img/game/avatar-menino.png' %>" alt="Avatar">
           </div>
 
           <div class="info-conta">
             <h2><%= conta.nome %></h2>
             <p><%= conta.email %></p>
-            <p style="color: black;">permissao_ativa: <%= conta.permissao_ativa %></p>
+
+            <p class="texto-limite">
+              <strong>Limite atual:</strong>
+              <% if (conta.limite_tempo_diario == 0) { %>
+                Sem limites
+              <% } else { %>
+                <%= conta.limite_tempo_diario %> minutos
+              <% } %>
+            </p>
           </div>
 
           <div class="acoes-admin">
-            <a href="#" class="btn-admin azul">Limite de tempo por dia</a>
-            <% if (conta && conta.permissao_ativa) { %>
-            <a href="/game/desativar-conta/<%= conta.id %>" class="btn-admin azul">
-              Desativar Conta
-            </a>
-          <% } else { %>
-            <a href="/game/ativar-conta/<%= conta.id %>" class="btn-admin azul">
-              Ativar Conta
-            </a>
-          <% } %>
+            <button type="button" class="btn-admin azul" id="abrirModalTempo">
+              Limite de tempo por dia
+            </button>
+
+            <% if (conta.permissao_ativa === true) { %>
+              <a href="/game/desativar-conta/<%= conta.id %>/<%= idResponsavel %>" class="btn-admin azul">
+                Desativar Conta
+              </a>
+            <% } else { %>
+              <a href="/game/ativar-conta/<%= conta.id %>/<%= idResponsavel %>" class="btn-admin azul">
+                Ativar Conta
+              </a>
+            <% } %>
+
             <button type="button" class="btn-admin vermelho" id="abrirModalExcluir">
               Excluir Conta
             </button>
           </div>
         </div>
 
-        <!-- MODAL DE CONFIRMAÇÃO -->
+        <!-- MODAL LIMITE DE TEMPO -->
+        <div class="modal-excluir" id="modalTempo">
+          <div class="modal-excluir__caixa modal-tempo">
+            <h2>Essa conta será limitada a quanto<br>tempo de jogo por dia? (Em Minutos)</h2>
+
+            <div class="modal-tempo__acoes">
+              <form action="/game/limite-tempo/<%= conta.id %>/<%= idResponsavel %>" method="POST">
+                <input type="hidden" name="limite" value="60">
+                <button type="submit" class="btn-modal azul">60 Minutos</button>
+              </form>
+
+              <form action="/game/limite-tempo/<%= conta.id %>/<%= idResponsavel %>" method="POST">
+                <input type="hidden" name="limite" value="90">
+                <button type="submit" class="btn-modal azul">90 Minutos</button>
+              </form>
+
+              <form action="/game/limite-tempo/<%= conta.id %>/<%= idResponsavel %>" method="POST">
+                <input type="hidden" name="limite" value="0">
+                <button type="submit" class="btn-modal azul">Sem Limites</button>
+              </form>
+            </div>
+
+            <button type="button" class="btn-fechar-modal" id="fecharModalTempo">Fechar</button>
+          </div>
+        </div>
+
+        <!-- MODAL EXCLUIR -->
         <div class="modal-excluir" id="modalExcluir">
           <div class="modal-excluir__caixa">
-            <h2>Você tem certeza que<br>quer excluir essa conta ?</h2>
+            <h2>Você tem certeza que<br>quer excluir essa conta?</h2>
 
             <div class="modal-excluir__acoes">
               <button type="button" class="btn-modal nao" id="fecharModalExcluir">NÃO</button>
 
-              <form action="/game/excluir-conta/<%= conta.id %>" method="POST">
+              <form action="/game/excluir-conta/<%= conta.id %>/<%= idResponsavel %>" method="POST">
                 <button type="submit" class="btn-modal sim">SIM</button>
               </form>
             </div>
@@ -65,27 +103,57 @@
   </section>
 </main>
 
-<% if (conta) { %>
 <script>
+  // modal excluir
   const modalExcluir = document.getElementById("modalExcluir");
   const abrirModalExcluir = document.getElementById("abrirModalExcluir");
   const fecharModalExcluir = document.getElementById("fecharModalExcluir");
 
-  abrirModalExcluir.addEventListener("click", function () {
-    modalExcluir.classList.add("ativo");
-  });
+  if (abrirModalExcluir) {
+    abrirModalExcluir.addEventListener("click", function () {
+      modalExcluir.classList.add("ativo");
+    });
+  }
 
-  fecharModalExcluir.addEventListener("click", function () {
-    modalExcluir.classList.remove("ativo");
-  });
-
-  modalExcluir.addEventListener("click", function (event) {
-    if (event.target === modalExcluir) {
+  if (fecharModalExcluir) {
+    fecharModalExcluir.addEventListener("click", function () {
       modalExcluir.classList.remove("ativo");
-    }
-  });
+    });
+  }
+
+  if (modalExcluir) {
+    modalExcluir.addEventListener("click", function (event) {
+      if (event.target === modalExcluir) {
+        modalExcluir.classList.remove("ativo");
+      }
+    });
+  }
+
+  // modal tempo
+  const modalTempo = document.getElementById("modalTempo");
+  const abrirModalTempo = document.getElementById("abrirModalTempo");
+  const fecharModalTempo = document.getElementById("fecharModalTempo");
+
+  if (abrirModalTempo) {
+    abrirModalTempo.addEventListener("click", function () {
+      modalTempo.classList.add("ativo");
+    });
+  }
+
+  if (fecharModalTempo) {
+    fecharModalTempo.addEventListener("click", function () {
+      modalTempo.classList.remove("ativo");
+    });
+  }
+
+  if (modalTempo) {
+    modalTempo.addEventListener("click", function (event) {
+      if (event.target === modalTempo) {
+        modalTempo.classList.remove("ativo");
+      }
+    });
+  }
 </script>
-<% } %>
 
 </body>
 </html>

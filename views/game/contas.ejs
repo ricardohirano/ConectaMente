@@ -22,7 +22,7 @@
       <% } %>
 
       <% contas.forEach(function(conta) { %>
-        <a href="/game/administrar-conta/<%= conta.id %>" class="card-conta">
+        <a href="/game/administrar-conta/<%= conta.id %>/<%= idResponsavel %>" class="card-conta">
           <div class="avatar-conta">
             <img src="<%= conta.avatar %>" alt="Avatar">
           </div>

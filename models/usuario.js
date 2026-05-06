@@ -22,7 +22,14 @@ const Usuario = connection.define("usuarios", {
   permissao_ativa: {
     type: Sequelize.BOOLEAN,
     allowNull: false,
-    defaultValue: true
+    defaultValue: false
+  },
+
+  // 0 = sem limite
+  limite_tempo_diario: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+    defaultValue: 0
   }
 });
 
