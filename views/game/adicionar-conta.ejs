@@ -11,7 +11,11 @@
     </div>
 
     <h1 class="titulo-cadastro">Adicionar Conta</h1>
+    <% const erro = query?.erro; %>
 
+    <% if (erro === "ja_vinculada") { %>
+      <p class="mensagem-erro">Essa criança já está vinculada a um responsável.</p>
+    <% } %>
     <form class="form-cadastro" action="/game/adicionar-conta/<%= idResponsavel %>" method="POST">
       <div class="campo-cadastro">
         <label for="email">E-mail</label>

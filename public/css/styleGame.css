@@ -136,6 +136,17 @@ body {
   font-weight: 700;
 }
 
+.mensagem-erro {
+  margin: 0 0 16px 0;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: rgba(200, 0, 0, 0.78);
+  color: #ffffff;
+  font-family: "Poppins", sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+}
 /* =======================================================
    TELA DE CRIAR CONTA
 ======================================================= */
@@ -708,10 +719,647 @@ body {
 .btn-modal:hover {
   opacity: 0.92;
 }
+
+/* =======================================================
+   TELA INICIAL DA CRIANÇA
+======================================================= */
+
+.painel-crianca {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.topo-crianca {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 28px;
+}
+
+.logo-crianca {
+  width: 420px;
+  max-width: 75%;
+}
+
+.avatar-topo-crianca {
+  position: absolute;
+  top: -10px;
+  right: 0;
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  border: 6px solid #ffffff;
+  background: #ffffff;
+  overflow: hidden;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.18);
+}
+
+.avatar-topo-crianca img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.saudacao-crianca {
+  text-align: center;
+  font-family: "Poppins", sans-serif;
+  font-size: 54px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 28px 0;
+}
+
+.menu-crianca {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.card-menu-crianca {
+  width: 100%;
+  background: #f2f2f2;
+  border-radius: 34px;
+  padding: 22px 26px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  text-decoration: none;
+  box-shadow: 0 10px 18px rgba(0, 0, 0, 0.22);
+  box-sizing: border-box;
+  transition: 0.2s ease;
+}
+
+.card-menu-crianca:hover {
+  transform: translateY(-3px);
+}
+
+.icone-menu-crianca {
+  width: 110px;
+  height: 110px;
+  border-radius: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.18);
+}
+
+.icone-menu-crianca img {
+  width: 58px;
+  height: 58px;
+  object-fit: contain;
+}
+
+.icone-cinza {
+  background: #a9acba;
+}
+
+.icone-azul {
+  background: linear-gradient(180deg, #1f66e5 0%, #0f4fcf 100%);
+}
+
+.texto-menu-crianca {
+  flex: 1;
+  font-family: "Poppins", sans-serif;
+  font-size: 46px;
+  font-weight: 700;
+  color: #19195f;
+}
+
+.seta-menu-crianca img {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+}
+/* =======================================================
+   ESCOLHA DE PERSONAGEM
+======================================================= */
+
+.painel-avatar {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.titulo-avatar h1 {
+  font-family: "Poppins", sans-serif;
+  font-size: 82px;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1;
+}
+
+.titulo-avatar h2 {
+  font-family: "Poppins", sans-serif;
+  font-size: 56px;
+  font-weight: 800;
+  color: #ffb300;
+  margin: -6px 0 30px 0;
+  line-height: 1;
+}
+
+.form-avatar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+}
+
+/* GÊNERO */
+.grupo-genero-radio {
+  display: flex;
+  justify-content: center;
+  gap: 90px;
+  flex-wrap: wrap;
+}
+
+.opcao-genero {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  cursor: pointer;
+}
+
+.opcao-genero input {
+  display: none;
+}
+
+.opcao-genero__texto {
+  font-family: "Poppins", sans-serif;
+  font-size: 34px;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.opcao-genero__bolinha {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 4px solid #ffffff;
+  display: inline-block;
+  transition: 0.2s ease;
+}
+
+.opcao-genero input:checked + .opcao-genero__texto + .opcao-genero__bolinha {
+  background: #ff1f1f;
+  border-color: #ff1f1f;
+}
+
+/* AVATARES */
+.grupo-avatares {
+  display: flex;
+  justify-content: center;
+  gap: 36px;
+  flex-wrap: wrap;
+}
+
+.grupo-avatares--oculto {
+  display: none;
+}
+
+.card-avatar-radio {
+  cursor: pointer;
+}
+
+.card-avatar-radio input {
+  display: none;
+}
+
+.card-avatar-radio__box {
+  width: 280px;
+  min-height: 420px;
+  background: #f2f2f2;
+  border: 6px solid #5a6a8f;
+  border-radius: 28px;
+  padding: 22px 18px 16px;
+  box-shadow: 0 10px 18px rgba(0, 0, 0, 0.28);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  transition: 0.2s ease;
+  box-sizing: border-box;
+}
+
+.card-avatar-radio__box img {
+  width: 78%;
+  max-height: 300px;
+  object-fit: contain;
+}
+
+.card-avatar-radio__nome {
+  width: 100%;
+  margin-top: 14px;
+  padding: 12px 14px;
+  border-radius: 18px;
+  background: #49648b;
+  color: #ffffff;
+  font-family: "Poppins", sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  box-sizing: border-box;
+}
+
+.card-avatar-radio input:checked + .card-avatar-radio__box {
+  border-color: #0d63d8;
+  transform: translateY(-4px);
+}
+
+.card-avatar-radio input:checked + .card-avatar-radio__box .card-avatar-radio__nome {
+  background: #0d63d8;
+}
+
+/* NOME DO AVATAR */
+.campo-nome-avatar {
+  width: 100%;
+  max-width: 500px;
+  text-align: left;
+}
+
+.campo-nome-avatar label {
+  display: block;
+  margin-bottom: 10px;
+  font-family: "Poppins", sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.campo-nome-avatar input {
+  width: 100%;
+  padding: 18px 20px;
+  border: none;
+  border-radius: 18px;
+  font-size: 20px;
+  font-family: "Poppins", sans-serif;
+  box-sizing: border-box;
+}
+
+/* BOTÃO */
+.btn-comecar-avatar {
+  margin-top: 6px;
+  border: none;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #ffd84a 0%, #f5be00 100%);
+  color: #5b3200;
+  font-family: "Poppins", sans-serif;
+  font-size: 34px;
+  font-weight: 800;
+  padding: 20px 70px;
+  box-shadow: 0 8px 0 #b96b00;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.btn-comecar-avatar:hover {
+  transform: translateY(-2px);
+}
+
+
+ /* =======================================================
+   PERFIL DA CRIANÇA
+======================================================= */
+
+.painel-perfil-crianca {
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+.topo-perfil-crianca {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.logo-perfil-crianca {
+  width: 380px;
+  max-width: 80%;
+}
+
+.cabecalho-perfil-crianca {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 28px;
+  align-items: start;
+  background: rgba(255, 255, 255, 0.92);
+  border-radius: 30px;
+  padding: 32px;
+  box-shadow: 0 10px 18px rgba(0, 0, 0, 0.18);
+  margin-bottom: 28px;
+}
+
+.bloco-identidade-crianca {
+  background: #78afe7;
+  border-radius: 22px;
+  padding: 24px 28px;
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  min-width: 0;
+}
+
+.avatar-perfil-crianca {
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 6px solid #ffffff;
+  overflow: hidden;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.18);
+  flex-shrink: 0;
+}
+
+.avatar-perfil-crianca img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.info-perfil-crianca {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.nome-avatar-box {
+  flex: 1;
+  min-width: 220px;
+  background: #a9cff3;
+  border-radius: 16px;
+  padding: 18px 22px;
+}
+
+.info-perfil-crianca h1 {
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+  font-size: 34px;
+  font-weight: 800;
+  color: #0d56b5;
+}
+
+.btn-editar-avatar {
+  background: #f6c400;
+  color: #ffffff;
+  border: none;
+  border-radius: 14px;
+  padding: 18px 38px;
+  font-family: "Poppins", sans-serif;
+  font-size: 18px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.14);
+}
+
+.coluna-acoes-perfil {
+  width: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  align-items: stretch;
+  justify-self: end;
+}
+
+.card-avatar-lateral {
+  width: 100%;
+  background: #e9e9e9;
+  border-radius: 28px;
+  padding: 24px 18px 20px;
+  box-shadow: 0 10px 18px rgba(0, 0, 0, 0.18);
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.card-avatar-lateral img {
+  width: 150px;
+  height: 210px;
+  object-fit: contain;
+  margin-bottom: 16px;
+}
+
+
+.btn-trocar-avatar {
+  display: inline-block;
+  background: #0b79d0;
+  color: #ffffff;
+  text-decoration: none;
+  border-radius: 14px;
+  padding: 10px 24px;
+  font-family: "Poppins", sans-serif;
+  font-size: 18px;
+  font-weight: 800;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.14);
+}
+
+.bloco-progresso-visual {
+  background: #78afe7;
+  border-radius: 22px;
+  padding: 28px;
+  margin-bottom: 22px;
+}
+
+.box-estrelas {
+  background: #dfe8ef;
+  border: 5px solid #35538f;
+  border-radius: 18px;
+  padding: 22px 26px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 28px;
+}
+
+.icone-estrela-box img {
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+}
+
+.conteudo-estrelas-box {
+  flex: 1;
+}
+
+.conteudo-estrelas-box h2 {
+  margin: 0 0 12px 0;
+  font-family: "Poppins", sans-serif;
+  font-size: 28px;
+  font-weight: 800;
+  color: #0c4da2;
+}
+
+.barra-estrelas {
+  width: 100%;
+  max-width: 360px;
+  height: 22px;
+  background: #f2f2f2;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.barra-estrelas__preenchimento {
+  height: 100%;
+  background: #f1db35;
+  border-radius: 999px;
+}
+
+.valor-estrelas {
+  display: inline-block;
+  margin-top: 8px;
+  font-family: "Poppins", sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.box-fases {
+  background: #dfe8ef;
+  border: 5px solid #35538f;
+  border-radius: 18px;
+  padding: 24px;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+}
+
+.card-fase-perfil {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.icone-fase-perfil {
+  width: 100%;
+  min-height: 108px;
+  background: #f2f2f2;
+  border: 4px solid #35538f;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.icone-fase-perfil img {
+  width: 54px;
+  height: 54px;
+  object-fit: contain;
+}
+
+.nome-fase-perfil {
+  font-family: "Poppins", sans-serif;
+  font-size: 18px;
+  font-weight: 800;
+  color: #ffffff;
+  background: #284b87;
+  border-radius: 8px;
+  width: 100%;
+  text-align: center;
+  padding: 6px 4px;
+  box-sizing: border-box;
+}
+
+.nome-fase-perfil.concluida {
+  color: #65ff52;
+}
+
+.dificuldades-fase-perfil {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+
+.tag-dificuldade {
+  background: #bfc7d4;
+  color: #1d2d4f;
+  border-radius: 8px;
+  text-align: center;
+  padding: 6px 4px;
+  font-family: "Poppins", sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.tag-dificuldade.concluida {
+  background: #1f8b2e;
+  color: #ffffff;
+}
+
+.barra-conclusao-geral {
+  margin-top: 18px;
+  width: 100%;
+  background: #284b87;
+  border-radius: 8px;
+  text-align: center;
+  padding: 10px 16px;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+  font-size: 18px;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.btn-jogos-salvos,
+.btn-sair-conta,
+.btn-salvar-alteracoes {
+  width: 100%;
+  max-width: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  text-decoration: none;
+  border: none;
+  background: #0b79d0;
+  color: #ffffff;
+  border-radius: 14px;
+  padding: 18px 20px;
+  font-family: "Poppins", sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.14);
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+
+.btn-jogos-salvos img,
+.btn-sair-conta img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+
+.btn-salvar-alteracoes {
+  margin-top: 18px;
+}
+
+
 /* =======================================================
    RESPONSIVIDADE
 ======================================================= */
+@media (max-width: 1100px) {
+  .cabecalho-perfil-crianca {
+    grid-template-columns: 1fr;
+  }
 
+  .coluna-acoes-perfil {
+    width: 100%;
+    justify-self: stretch;
+  }
+
+  .box-fases {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
 @media (max-width: 768px) {
   .titulo-login,
   .titulo-cadastro {
@@ -826,6 +1474,141 @@ body {
 
   .btn-admin {
     min-width: 220px;
+    font-size: 18px;
+  }
+
+  .avatar-topo-crianca {
+    width: 80px;
+    height: 80px;
+    right: 10px;
+  }
+
+  .saudacao-crianca {
+    font-size: 38px;
+  }
+
+  .card-menu-crianca {
+    padding: 18px 20px;
+    gap: 16px;
+  }
+
+  .icone-menu-crianca {
+    width: 84px;
+    height: 84px;
+    border-radius: 22px;
+  }
+
+  .icone-menu-crianca img {
+    width: 42px;
+    height: 42px;
+  }
+
+  .texto-menu-crianca {
+    font-size: 30px;
+  }
+.titulo-avatar h1 {
+    font-size: 52px;
+  }
+
+  .titulo-avatar h2 {
+    font-size: 34px;
+  }
+
+  .opcao-genero__texto {
+    font-size: 24px;
+  }
+
+  .opcao-genero__bolinha {
+    width: 30px;
+    height: 30px;
+  }
+
+  .card-avatar-radio__box {
+    width: 220px;
+    min-height: 340px;
+  }
+
+  .campo-nome-avatar label {
+    font-size: 20px;
+  }
+
+  .campo-nome-avatar input {
+    font-size: 18px;
+  }
+
+  .btn-comecar-avatar {
+    font-size: 24px;
+    padding: 16px 40px;
+  }
+   
+  .info-perfil-crianca h1 {
+    font-size: 34px;
+  }
+
+  .nome-comodo-fase {
+    font-size: 22px;
+  }
+
+  .nivel-fase {
+    font-size: 16px;
+  }
+
+  .btn-jogos-salvos {
+    font-size: 22px;
+    padding: 16px 30px;
+  }
+
+  .cabecalho-perfil-crianca {
+    grid-template-columns: 1fr;
+  }
+  
+  .coluna-acoes-perfil {
+    width: 100%;
+    justify-self: stretch;
+  }
+
+  .info-perfil-crianca h1 {
+    font-size: 34px;
+  }
+
+  .nome-comodo-fase {
+    font-size: 22px;
+  }
+
+  .nivel-fase {
+    font-size: 16px;
+  }
+
+  .btn-jogos-salvos {
+    font-size: 22px;
+    padding: 16px 30px;
+  }
+  .bloco-identidade-crianca {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .info-perfil-crianca {
+    justify-content: center;
+  }
+
+  .info-perfil-crianca h1 {
+    font-size: 28px;
+  }
+
+  .box-estrelas {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .box-fases {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .btn-jogos-salvos,
+  .btn-sair-conta,
+  .btn-salvar-alteracoes {
     font-size: 18px;
   }
 }

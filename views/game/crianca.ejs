@@ -1,0 +1,64 @@
+<%- include('partials/headerGame') %>
+
+<main class="pagina-acesso-game">
+  <a href="/game" class="btn-voltar-site" aria-label="Sair da conta">
+    <img src="/img/game/voltar.svg" alt="Sair da conta">
+  </a>
+
+  <section class="painel-crianca">
+    <div class="topo-crianca">
+      <img src="/img/website/logo-conectamente.png" alt="ConectaMente" class="logo-crianca">
+
+      <div class="avatar-topo-crianca">
+        <img src="/img/game/avatar-menino.png" alt="Avatar da criança">
+      </div>
+    </div>
+
+    <h1 class="saudacao-crianca">Olá, <%= usuario.nome %></h1>
+
+    <div class="menu-crianca">
+      <a href="/game/escolha-personagem/<%= usuario.id %>" class="card-menu-crianca">
+        <div class="icone-menu-crianca icone-cinza">
+          <img src="/img/game/mais.svg" alt="Novo jogo">
+        </div>
+
+        <div class="texto-menu-crianca">Novo Jogo</div>
+
+        <div class="seta-menu-crianca">
+          <img src="/img/game/seta-direita.svg" alt="Abrir">
+        </div>
+      </a>
+
+        <% if (temNovoJogoCriado) { %>
+        <a href="/game/perfil/<%= usuario.id %>" class="card-menu-crianca">
+            <div class="icone-menu-crianca icone-azul">
+            <img src="/img/game/icone-usuario.svg" alt="Perfil">
+            </div>
+
+            <div class="texto-menu-crianca">Perfil</div>
+
+            <div class="seta-menu-crianca">
+            <img src="/img/game/seta-direita.svg" alt="Abrir">
+            </div>
+        </a>
+        <% } %>
+
+      <% if (temJogoSalvo) { %>
+        <a href="/game/carregar-jogo/<%= usuario.id %>" class="card-menu-crianca">
+          <div class="icone-menu-crianca icone-azul">
+            <img src="/img/game/carregar.svg" alt="Carregar jogo">
+          </div>
+
+          <div class="texto-menu-crianca">Carregar Jogo</div>
+
+          <div class="seta-menu-crianca">
+            <img src="/img/game/seta-direita.svg" alt="Abrir">
+          </div>
+        </a>
+      <% } %>
+    </div>
+  </section>
+</main>
+
+</body>
+</html>

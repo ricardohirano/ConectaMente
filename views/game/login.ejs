@@ -12,6 +12,27 @@
 
     <h1 class="titulo-login">Login</h1>
 
+    <% const erro = query?.erro; %>
+
+    <% if (erro === "email_nao_cadastrado") { %>
+      <p class="mensagem-erro">E-mail não cadastrado.</p>
+    <% } %>
+
+    <% if (erro === "senha_incorreta") { %>
+      <p class="mensagem-erro">Senha incorreta.</p>
+    <% } %>
+
+    <% if (erro === "ativacao_responsavel") { %>
+      <p class="mensagem-erro">Essa conta infantil precisa ser ativada por um responsável.</p>
+    <% } %>
+
+    <% if (erro === "criar_responsavel") { %>
+      <p class="mensagem-erro">Não existe conta responsável cadastrada. Crie uma conta responsável para ativar esta conta infantil.</p>
+    <% } %>
+
+    <% if (erro === "servidor") { %>
+      <p class="mensagem-erro">Ocorreu um erro interno. Tente novamente.</p>
+    <% } %>
     <form class="form-login" action="/usuarios/login" method="POST">
       <div class="campo-login">
         <label for="email">E-mail</label>

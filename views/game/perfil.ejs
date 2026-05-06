@@ -1,0 +1,93 @@
+<%- include('partials/headerGame') %>
+
+<main class="pagina-acesso-game">
+  <a href="/game/crianca/<%= usuario.id %>" class="btn-voltar-site" aria-label="Voltar">
+    <img src="/img/game/voltar.svg" alt="Voltar">
+  </a>
+
+  <section class="painel-perfil-crianca">
+    <div class="topo-perfil-crianca">
+      <img src="/img/website/logo-conectamente.png" alt="ConectaMente" class="logo-perfil-crianca">
+    </div>
+
+    <div class="cabecalho-perfil-crianca">
+      <div class="bloco-identidade-crianca">
+        <div class="avatar-perfil-crianca">
+          <img src="/img/game/<%= crianca?.avatar || 'avatar-menino' %>.png" alt="Avatar">
+        </div>
+
+        <div class="info-perfil-crianca">
+          <div class="nome-avatar-box">
+            <h1><%= crianca?.nome_avatar || usuario.nome %></h1>
+          </div>
+
+          <button type="button" class="btn-editar-avatar">Editar</button>
+        </div>
+      </div>
+
+      <div class="coluna-acoes-perfil">
+        <div class="card-avatar-lateral">
+          <img src="/img/game/<%= crianca?.avatar || 'avatar-menino' %>.png" alt="Avatar grande">
+          <a href="/game/escolha-personagem/<%= usuario.id %>" class="btn-trocar-avatar">TROCAR</a>
+        </div>
+
+        <a href="/game/jogos-salvos/<%= usuario.id %>" class="btn-jogos-salvos">
+          JOGOS SALVOS
+        </a>
+
+        <a href="/game" class="btn-sair-conta">
+          SAIR DA CONTA
+        </a>
+
+        <button type="button" class="btn-salvar-alteracoes">
+          SALVAR ALTERAÇÕES
+        </button>
+      </div>
+    </div>
+
+    <div class="bloco-progresso-visual">
+      <div class="box-estrelas">
+        <div class="icone-estrela-box">
+          <img src="/img/game/estrela.svg" alt="Estrela">
+        </div>
+
+        <div class="conteudo-estrelas-box">
+          <h2>Suas Estrelas</h2>
+
+          <div class="barra-estrelas">
+            <div class="barra-estrelas__preenchimento" style="width: <%= porcentagemEstrelas || 0 %>%"></div>
+          </div>
+
+          <span class="valor-estrelas"><%= totalEstrelas %></span>
+        </div>
+      </div>
+
+      <div class="box-fases">
+        <% progressoFases.forEach(function(fase) { %>
+          <div class="card-fase-perfil">
+            <div class="icone-fase-perfil">
+              <img src="/img/game/<%= fase.icone %>" alt="<%= fase.comodo %>">
+            </div>
+
+            <div class="nome-fase-perfil <%= (fase.facil || fase.medio || fase.dificil) ? 'concluida' : '' %>">
+              <%= fase.comodo %>
+            </div>
+
+            <div class="dificuldades-fase-perfil">
+              <span class="tag-dificuldade <%= fase.facil ? 'concluida' : '' %>">Fácil</span>
+              <span class="tag-dificuldade <%= fase.medio ? 'concluida' : '' %>">Médio</span>
+              <span class="tag-dificuldade <%= fase.dificil ? 'concluida' : '' %>">Difícil</span>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+
+      <div class="barra-conclusao-geral">
+        <%= progressoFases.filter(f => f.facil || f.medio || f.dificil).length %>/<%= progressoFases.length %> concluídas
+      </div>
+    </div>
+  </section>
+</main>
+
+</body>
+</html>

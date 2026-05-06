@@ -1,37 +1,31 @@
 import Sequelize from "sequelize";
 import connection from "../config/sequelize-config.js";
 
-const Usuario = connection.define("usuarios", {
-  nome: {
+const ProgressoFase = connection.define("progresso_fase", {
+  id_crianca: {
+    type: Sequelize.INTEGER,
+    allowNull: false
+  },
+  nome_comodo: {
     type: Sequelize.STRING,
     allowNull: false
   },
-  email: {
-    type: Sequelize.STRING,
-    allowNull: false,
-    unique: true
-  },
-  senha: {
+  dificuldade: {
     type: Sequelize.STRING,
     allowNull: false
   },
-  tipoConta: {
-    type: Sequelize.STRING,
-    allowNull: false
-  },
-  permissao_ativa: {
+  concluida: {
     type: Sequelize.BOOLEAN,
     allowNull: false,
     defaultValue: false
   },
-  limite_tempo_diario: {
+  estrelas_coletadas: {
     type: Sequelize.INTEGER,
     allowNull: false,
     defaultValue: 0
   }
-  
 });
 
-Usuario.sync({ force: false });
+ProgressoFase.sync({ force: false });
 
-export default Usuario;
+export default ProgressoFase;

@@ -1,13 +1,18 @@
 import express from "express";
 import Usuario from "../models/usuario.js";
+import ResponsavelCrianca from "../models/ResponsavelCrianca.js";
+import Crianca from "../models/crianca.js";
+import ProgressoFase from "../models/ProgressoFase.js";
 
 const router = express.Router();
 
-let contasVinculadas = [];
+
 
 // LOGIN
 router.get("/game", (req, res) => {
-  res.render("game/login");
+  res.render("game/login", {
+    query: req.query
+  });
 });
 
 // CRIAR CONTA
@@ -16,18 +21,82 @@ router.get("/game/criar-conta", (req, res) => {
 });
 
 // PERFIL
-router.get("/game/perfil/:id", (req, res) => {
+router.get("/game/perfil/:id", async (req, res) => {
   const id = req.params.id;
 
-  Usuario.findByPk(id).then(usuario => {
-    res.render("game/perfil", {
-      usuario: usuario
+  try {
+    const usuario = await Usuario.findByPk(id);
+
+    if (!usuario) {
+      return res.redirect("/game");
+    }
+
+    const crianca = await Crianca.findOne({
+      where: {
+        id_usuario: id
+      }
     });
-  }).catch(error => {
-    console.log("Ocorreu um erro ao carregar o perfil. " + error);
-    res.redirect("/game");
-  });
+
+    if (!crianca) {
+      return res.redirect(`/game/crianca/${id}`);
+    }
+
+    const registrosProgresso = await ProgressoFase.findAll({
+      where: {
+        id_crianca: crianca.id
+      }
+    });
+
+   const estruturaBase = [
+  { comodo: "Quarto", icone: "icone-quarto.png", facil: false, medio: false, dificil: false },
+  { comodo: "Cozinha", icone: "icone-cozinha.png", facil: false, medio: false, dificil: false },
+  { comodo: "Sala", icone: "icone-sala.png", facil: false, medio: false, dificil: false },
+  { comodo: "Banheiro", icone: "icone-banheiro.png", facil: false, medio: false, dificil: false },
+  { comodo: "Extras", icone: "icone-extras.png", facil: false, medio: false, dificil: false }
+];
+
+const progressoFases = estruturaBase.map(item => ({ ...item }));
+
+let totalEstrelas = 0;
+
+registrosProgresso.forEach(registro => {
+  totalEstrelas += registro.estrelas_coletadas || 0;
+
+  const fase = progressoFases.find(f =>
+    f.comodo.toLowerCase() === String(registro.nome_comodo).toLowerCase()
+  );
+
+  if (!fase) return;
+
+  const dificuldade = String(registro.dificuldade).trim().toLowerCase();
+
+  if (dificuldade === "fácil" || dificuldade === "facil") {
+    fase.facil = !!registro.concluida;
+  }
+
+  if (dificuldade === "médio" || dificuldade === "medio") {
+    fase.medio = !!registro.concluida;
+  }
+
+  if (dificuldade === "difícil" || dificuldade === "dificil") {
+    fase.dificil = !!registro.concluida;
+  }
 });
+
+  const porcentagemEstrelas = 0;
+
+  return res.render("game/perfil", {
+    usuario,
+    crianca,
+    totalEstrelas,
+    progressoFases,
+    porcentagemEstrelas
+  });
+    } catch (error) {
+      console.log("Erro ao carregar perfil: " + error);
+      return res.redirect("/game");
+    }
+  });
 
 // RESPONSÁVEL
 router.get("/game/responsavel/:id", (req, res) => {
@@ -44,29 +113,63 @@ router.get("/game/responsavel/:id", (req, res) => {
 });
 
 // CRIANÇA
-router.get("/game/crianca/:id", (req, res) => {
+router.get("/game/crianca/:id", async (req, res) => {
   const id = req.params.id;
 
-  Usuario.findByPk(id).then(usuario => {
-    res.render("game/crianca", {
-      usuario: usuario
+  try {
+    const usuario = await Usuario.findByPk(id);
+    const crianca = await Crianca.findOne({
+      where: {
+        id_usuario: id
+      }
     });
-  }).catch(error => {
+
+    const temNovoJogoCriado = !!crianca?.avatar && !!crianca?.nome_avatar;
+    const temJogoSalvo = false;
+
+    return res.render("game/crianca", {
+      usuario: usuario,
+      crianca: crianca,
+      temNovoJogoCriado: temNovoJogoCriado,
+      temJogoSalvo: temJogoSalvo
+    });
+  } catch (error) {
     console.log("Ocorreu um erro ao carregar a tela da criança. " + error);
-    res.redirect("/game");
-  });
+    return res.redirect("/game");
+  }
 });
 
 // CONTAS ACESSÍVEIS
-router.get("/game/contas-acessiveis/:id", (req, res) => {
-  const id = req.params.id;
+router.get("/game/contas-acessiveis/:id", async (req, res) => {
+  const idResponsavel = req.params.id;
 
-  const contasDoResponsavel = contasVinculadas.filter(conta => conta.idResponsavel == id);
+  try {
+    const vinculos = await ResponsavelCrianca.findAll({
+      where: {
+        id_responsavel: idResponsavel
+      }
+    });
 
-  res.render("game/contas", {
-    idResponsavel: id,
-    contas: contasDoResponsavel
-  });
+    const idsCriancas = vinculos.map(vinculo => vinculo.id_crianca);
+
+    let contas = [];
+
+    if (idsCriancas.length > 0) {
+      contas = await Usuario.findAll({
+        where: {
+          id: idsCriancas
+        }
+      });
+    }
+
+    return res.render("game/contas", {
+      idResponsavel: idResponsavel,
+      contas: contas
+    });
+  } catch (error) {
+    console.log("Erro ao carregar contas acessíveis: " + error);
+    return res.redirect("/game");
+  }
 });
 
 // ADICIONAR CONTA
@@ -74,12 +177,13 @@ router.get("/game/adicionar-conta/:id", (req, res) => {
   const id = req.params.id;
 
   res.render("game/adicionar-conta", {
-    idResponsavel: id
+    idResponsavel: id,
+    query: req.query
   });
 });
 
 router.post("/game/adicionar-conta/:id", async (req, res) => {
-  const id = req.params.id;
+  const idResponsavel = req.params.id;
   const email = req.body.email;
 
   try {
@@ -91,28 +195,28 @@ router.post("/game/adicionar-conta/:id", async (req, res) => {
     });
 
     if (!usuarioEncontrado) {
-      return res.redirect(`/game/adicionar-conta/${id}?erro=crianca`);
+      return res.redirect(`/game/adicionar-conta/${idResponsavel}?erro=crianca`);
     }
 
-    const contaJaVinculada = contasVinculadas.find(conta =>
-      conta.idResponsavel == id && conta.id == usuarioEncontrado.id
-    );
+    const vinculoExistente = await ResponsavelCrianca.findOne({
+      where: {
+        id_crianca: usuarioEncontrado.id
+      }
+    });
 
-    if (!contaJaVinculada) {
-      contasVinculadas.push({
-        idResponsavel: id,
-        id: usuarioEncontrado.id,
-        nome: usuarioEncontrado.nome,
-        email: usuarioEncontrado.email,
-        avatar: "/img/game/avatar-menino.png",
-        permissao_ativa: usuarioEncontrado.permissao_ativa
-      });
+    if (vinculoExistente) {
+      return res.redirect(`/game/adicionar-conta/${idResponsavel}?erro=ja_vinculada`);
     }
 
-    return res.redirect(`/game/contas-acessiveis/${id}`);
+    await ResponsavelCrianca.create({
+      id_responsavel: idResponsavel,
+      id_crianca: usuarioEncontrado.id
+    });
+
+    return res.redirect(`/game/contas-acessiveis/${idResponsavel}`);
   } catch (error) {
     console.log("Erro ao adicionar conta vinculada: " + error);
-    return res.redirect(`/game/adicionar-conta/${id}?erro=servidor`);
+    return res.redirect(`/game/adicionar-conta/${idResponsavel}?erro=servidor`);
   }
 });
 
@@ -151,7 +255,23 @@ router.get("/game/ativar-conta/:idConta/:idResponsavel", async (req, res) => {
     return res.redirect("/game");
   }
 });
+router.post("/game/limite-tempo/:idConta/:idResponsavel", async (req, res) => {
+  const idConta = req.params.idConta;
+  const idResponsavel = req.params.idResponsavel;
+  const limite = req.body.limite;
 
+  try {
+    await Usuario.update(
+      { limite_tempo_diario: limite },
+      { where: { id: idConta } }
+    );
+
+    return res.redirect(`/game/administrar-conta/${idConta}/${idResponsavel}`);
+  } catch (error) {
+    console.log("Erro ao salvar limite de tempo: " + error);
+    return res.redirect("/game");
+  }
+});
 // DESATIVAR CONTA
 router.get("/game/desativar-conta/:idConta/:idResponsavel", async (req, res) => {
   const idConta = req.params.idConta;
@@ -171,32 +291,81 @@ router.get("/game/desativar-conta/:idConta/:idResponsavel", async (req, res) => 
 });
 
 // EXCLUIR CONTA VINCULADA
-router.post("/game/excluir-conta/:idConta/:idResponsavel", (req, res) => {
+router.post("/game/excluir-conta/:idConta/:idResponsavel", async (req, res) => {
   const idConta = req.params.idConta;
   const idResponsavel = req.params.idResponsavel;
-
-  contasVinculadas = contasVinculadas.filter(conta =>
-    !(conta.idResponsavel == idResponsavel && conta.id == idConta)
-  );
-
-  res.redirect(`/game/contas-acessiveis/${idResponsavel}`);
-});
-
-router.post("/game/limite-tempo/:idConta/:idResponsavel", async (req, res) => {
-  const idConta = req.params.idConta;
-  const idResponsavel = req.params.idResponsavel;
-  const limite = req.body.limite;
 
   try {
-    await Usuario.update(
-      { limite_tempo_diario: limite },
-      { where: { id: idConta } }
-    );
+    await ResponsavelCrianca.destroy({
+      where: {
+        id_responsavel: idResponsavel,
+        id_crianca: idConta
+      }
+    });
 
-    return res.redirect(`/game/administrar-conta/${idConta}/${idResponsavel}`);
+    return res.redirect(`/game/contas-acessiveis/${idResponsavel}`);
   } catch (error) {
-    console.log("Erro ao salvar limite de tempo: " + error);
+    console.log("Erro ao excluir vínculo da conta: " + error);
     return res.redirect("/game");
   }
 });
+
+// ROTA ESCOLHA-PERSONAGEM
+
+router.get("/game/escolha-personagem/:id", async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    const usuario = await Usuario.findByPk(id);
+    const crianca = await Crianca.findOne({
+      where: {
+        id_usuario: id
+      }
+    });
+
+    return res.render("game/escolha-personagem", {
+      usuario: usuario,
+      crianca: crianca
+    });
+  } catch (error) {
+    console.log("Erro ao carregar escolha de personagem: " + error);
+    return res.redirect("/game");
+  }
+});
+
+router.post("/game/escolha-personagem/:id", async (req, res) => {
+  const id = req.params.id;
+  const avatarEscolhido = req.body.avatarEscolhido;
+  const nomeAvatar = req.body.nomeAvatar;
+
+  try {
+    const crianca = await Crianca.findOne({
+      where: {
+        id_usuario: id
+      }
+    });
+
+    if (!crianca) {
+      return res.redirect(`/game/escolha-personagem/${id}`);
+    }
+
+    await Crianca.update(
+      {
+        avatar: avatarEscolhido,
+        nome_avatar: nomeAvatar
+      },
+      {
+        where: {
+          id_usuario: id
+        }
+      }
+    );
+
+    return res.redirect(`/game/crianca/${id}`);
+  } catch (error) {
+    console.log("Erro ao salvar avatar e nome do avatar: " + error);
+    return res.redirect(`/game/escolha-personagem/${id}`);
+  }
+});
+
 export default router;

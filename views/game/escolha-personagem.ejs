@@ -1,0 +1,117 @@
+<%- include('partials/headerGame') %>
+
+<main class="pagina-acesso-game">
+  <a href="/game/crianca/<%= usuario.id %>" class="btn-voltar-site" aria-label="Voltar">
+    <img src="/img/game/voltar.svg" alt="Voltar">
+  </a>
+
+  <section class="painel-avatar">
+    <div class="titulo-avatar">
+      <h1>Escolha seu</h1>
+      <h2>Personagem</h2>
+    </div>
+
+    <form action="/game/escolha-personagem/<%= usuario.id %>" method="POST" class="form-avatar">
+      <!-- ESCOLHA DO GÊNERO -->
+      <div class="grupo-genero-radio">
+        <label class="opcao-genero">
+          <input type="radio" name="genero" value="masc" checked>
+          <span class="opcao-genero__texto">MASC.</span>
+          <span class="opcao-genero__bolinha"></span>
+        </label>
+
+        <label class="opcao-genero">
+          <input type="radio" name="genero" value="fem">
+          <span class="opcao-genero__texto">FEM.</span>
+          <span class="opcao-genero__bolinha"></span>
+        </label>
+      </div>
+
+      <!-- AVATARES MASCULINOS -->
+      <div class="grupo-avatares" id="grupo-masc">
+        <label class="card-avatar-radio">
+          <input type="radio" name="avatarEscolhido" value="masc1" checked>
+          <span class="card-avatar-radio__box">
+            <img src="/img/game/avatar-masc-1.png" alt="Personagem masculino 1">
+            <span class="card-avatar-radio__nome">Personagem 1</span>
+          </span>
+        </label>
+
+        <label class="card-avatar-radio">
+          <input type="radio" name="avatarEscolhido" value="masc2">
+          <span class="card-avatar-radio__box">
+            <img src="/img/game/avatar-masc-2.png" alt="Personagem masculino 2">
+            <span class="card-avatar-radio__nome">Personagem 2</span>
+          </span>
+        </label>
+      </div>
+
+      <!-- AVATARES FEMININOS -->
+      <div class="grupo-avatares grupo-avatares--oculto" id="grupo-fem">
+        <label class="card-avatar-radio">
+          <input type="radio" name="avatarEscolhido" value="fem1">
+          <span class="card-avatar-radio__box">
+            <img src="/img/game/avatar-fem-1.png" alt="Personagem feminino 1">
+            <span class="card-avatar-radio__nome">Personagem 3</span>
+          </span>
+        </label>
+
+        <label class="card-avatar-radio">
+          <input type="radio" name="avatarEscolhido" value="fem2">
+          <span class="card-avatar-radio__box">
+            <img src="/img/game/avatar-fem-2.png" alt="Personagem feminino 2">
+            <span class="card-avatar-radio__nome">Personagem 4</span>
+          </span>
+        </label>
+      </div>
+
+      <!-- NOME DO AVATAR -->
+      <div class="campo-nome-avatar">
+        <label for="nomeAvatar">Nome do personagem</label>
+        <input
+          type="text"
+          id="nomeAvatar"
+          name="nomeAvatar"
+          maxlength="20"
+          placeholder="Digite um nome"
+          required
+        >
+      </div>
+
+      <button type="submit" class="btn-comecar-avatar">COMEÇAR</button>
+    </form>
+  </section>
+</main>
+
+<script>
+  const radiosGenero = document.querySelectorAll('input[name="genero"]');
+  const grupoMasc = document.getElementById("grupo-masc");
+  const grupoFem = document.getElementById("grupo-fem");
+
+  function atualizarGenero() {
+    const generoSelecionado = document.querySelector('input[name="genero"]:checked').value;
+
+    if (generoSelecionado === "masc") {
+      grupoMasc.classList.remove("grupo-avatares--oculto");
+      grupoFem.classList.add("grupo-avatares--oculto");
+
+      const radioMasc = grupoMasc.querySelector('input[name="avatarEscolhido"]');
+      if (radioMasc) radioMasc.checked = true;
+    } else {
+      grupoFem.classList.remove("grupo-avatares--oculto");
+      grupoMasc.classList.add("grupo-avatares--oculto");
+
+      const radioFem = grupoFem.querySelector('input[name="avatarEscolhido"]');
+      if (radioFem) radioFem.checked = true;
+    }
+  }
+
+  radiosGenero.forEach(radio => {
+    radio.addEventListener("change", atualizarGenero);
+  });
+
+  atualizarGenero();
+</script>
+
+</body>
+</html>

@@ -1,6 +1,8 @@
 import express from "express";
 import bcrypt from "bcryptjs";
 import Usuario from "../models/usuario.js";
+import ResponsavelCrianca from "../models/ResponsavelCrianca.js";
+import Crianca from "../models/crianca.js";
 
 const router = express.Router();
 
@@ -39,13 +41,19 @@ router.post("/usuarios/new", async (req, res) => {
       permissaoAtiva = false;
     }
 
-    await Usuario.create({
+    const novoUsuario = await Usuario.create({
       nome: nome,
       email: email,
       senha: senhaHash,
       tipoConta: tipoConta,
       permissao_ativa: permissaoAtiva
     });
+
+    if (tipoConta === "crianca") {
+      await Crianca.create({
+        id_usuario: novoUsuario.id
+      });
+    }
 
     return res.redirect("/game");
   } catch (error) {
@@ -66,22 +74,40 @@ router.post("/usuarios/login", async (req, res) => {
       }
     });
 
+    // 1. e-mail não cadastrado
     if (!usuario) {
-      return res.redirect("/game?erro=email");
+      return res.redirect("/game?erro=email_nao_cadastrado");
     }
 
+    // 2. senha incorreta
     const senhaCorreta = await bcrypt.compare(senha, usuario.senha);
 
     if (!senhaCorreta) {
-      return res.redirect("/game?erro=senha");
+      return res.redirect("/game?erro=senha_incorreta");
     }
 
+    // 3. login da criança
+    if (usuario.tipoConta === "crianca") {
+      const vinculoResponsavel = await ResponsavelCrianca.findOne({
+        where: {
+          id_crianca: usuario.id
+        }
+      });
+
+      if (!usuario.permissao_ativa) {
+        if (!vinculoResponsavel) {
+          return res.redirect("/game?erro=criar_responsavel");
+        }
+
+        return res.redirect("/game?erro=ativacao_responsavel");
+      }
+
+      return res.redirect(`/game/crianca/${usuario.id}`);
+    }
+
+    // 4. login do responsável
     if (usuario.tipoConta === "responsavel") {
       return res.redirect(`/game/responsavel/${usuario.id}`);
-    }
-
-    if (usuario.tipoConta === "crianca") {
-      return res.redirect(`/game/crianca/${usuario.id}`);
     }
 
     return res.redirect("/game");
