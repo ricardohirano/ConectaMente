@@ -7,6 +7,15 @@ import UsuarioController from "./controllers/UsuarioController.js";
 
 const app = express();
 
+
+//importando os models
+import Usuario from "./models/usuario.js";
+import Crianca from "./models/criancas.js";
+import Fase from "./models/fase.js";
+import Acao from "./models/acao.js";
+import OpcaoResposta from "./models/opcaoResposta.js";
+import ProgressoFase from "./models/ProgressoFase.js";
+
 // VIEW ENGINE
 app.set("view engine", "ejs");
 
@@ -17,13 +26,21 @@ app.use(express.static("public"));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
-// CONEXÃO COM O BANCO
-connection.authenticate().then(() => {
-  console.log("Conexão com o banco de dados feita com sucesso!");
-}).catch((error) => {
-  console.log("Erro ao conectar no banco de dados: " + error);
-});
 
+connection.authenticate().then(async () => {
+  console.log("Conexão com o banco de dados feita com sucesso!");
+
+  await Usuario.sync({ force: false });
+  await Crianca.sync({ force: false });
+  await Fase.sync({ force: false });
+  await Acao.sync({ force: false });
+  await OpcaoResposta.sync({ force: false });
+  await ProgressoFase.sync({ force: false });
+
+  console.log("Tabelas sincronizadas com sucesso.");
+}).catch((error) => {
+  console.log("Erro ao conectar no banco de dados: "+error);
+});
 // CRIANDO O BANCO DE DADOS SE NÃO EXISTIR
 connection.query(`CREATE DATABASE IF NOT EXISTS conectamente;`).then(() => {
   console.log("O banco de dados está criado.");

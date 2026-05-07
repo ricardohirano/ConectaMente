@@ -57,37 +57,45 @@
 
         <div class="conteudo-estrelas-box">
           <h2>Suas Estrelas</h2>
-
-          <div class="barra-estrelas">
-            <div class="barra-estrelas__preenchimento" style="width: <%= porcentagemEstrelas || 0 %>%"></div>
-          </div>
-
           <span class="valor-estrelas"><%= totalEstrelas %></span>
         </div>
       </div>
 
       <div class="box-fases">
         <% progressoFases.forEach(function(fase) { %>
-          <div class="card-fase-perfil">
+          <div class="card-fase-perfil <%= !fase.liberado ? 'bloqueada' : '' %>">
             <div class="icone-fase-perfil">
               <img src="/img/game/<%= fase.icone %>" alt="<%= fase.comodo %>">
             </div>
 
-            <div class="nome-fase-perfil <%= (fase.facil || fase.medio || fase.dificil) ? 'concluida' : '' %>">
+            <div class="nome-fase-perfil <%= fase.concluidoTotal ? 'concluida' : '' %>">
               <%= fase.comodo %>
             </div>
 
             <div class="dificuldades-fase-perfil">
-              <span class="tag-dificuldade <%= fase.facil ? 'concluida' : '' %>">Fácil</span>
-              <span class="tag-dificuldade <%= fase.medio ? 'concluida' : '' %>">Médio</span>
-              <span class="tag-dificuldade <%= fase.dificil ? 'concluida' : '' %>">Difícil</span>
+              <% if (fase.liberado) { %>
+                <a href="/game/fase/<%= usuario.id %>/<%= fase.slug %>/facil"
+                   class="tag-dificuldade-botao <%= fase.facil ? 'concluida' : '' %>">
+                  Fácil
+                </a>
+
+                <a href="/game/fase/<%= usuario.id %>/<%= fase.slug %>/medio"
+                   class="tag-dificuldade-botao <%= fase.medio ? 'concluida' : '' %>">
+                  Médio
+                </a>
+
+                <a href="/game/fase/<%= usuario.id %>/<%= fase.slug %>/dificil"
+                   class="tag-dificuldade-botao <%= fase.dificil ? 'concluida' : '' %>">
+                  Difícil
+                </a>
+              <% } else { %>
+                <span class="tag-dificuldade-botao bloqueado">Fácil</span>
+                <span class="tag-dificuldade-botao bloqueado">Médio</span>
+                <span class="tag-dificuldade-botao bloqueado">Difícil</span>
+              <% } %>
             </div>
           </div>
         <% }) %>
-      </div>
-
-      <div class="barra-conclusao-geral">
-        <%= progressoFases.filter(f => f.facil || f.medio || f.dificil).length %>/<%= progressoFases.length %> concluídas
       </div>
     </div>
   </section>

@@ -1024,7 +1024,6 @@ body {
  /* =======================================================
    PERFIL DA CRIANÇA
 ======================================================= */
-
 .painel-perfil-crianca {
   width: 100%;
   max-width: 1180px;
@@ -1050,7 +1049,7 @@ body {
   padding: 32px;
   box-shadow: 0 10px 18px rgba(0, 0, 0, 0.18);
   margin-bottom: 26px;
-  align-items: start;
+  align-items: stretch;
 }
 
 .lado-esquerdo-perfil {
@@ -1160,7 +1159,7 @@ body {
 
 .card-avatar-lateral {
   width: 100%;
-  min-height: 340px;
+  min-height: 100%;
   background: #e9e9e9;
   border-radius: 28px;
   padding: 24px 18px 20px;
@@ -1231,26 +1230,10 @@ body {
   color: #0c4da2;
 }
 
-.barra-estrelas {
-  width: 100%;
-  max-width: 360px;
-  height: 22px;
-  background: #f2f2f2;
-  border-radius: 999px;
-  overflow: hidden;
-}
-
-.barra-estrelas__preenchimento {
-  height: 100%;
-  background: #f1db35;
-  border-radius: 999px;
-}
-
 .valor-estrelas {
   display: inline-block;
-  margin-top: 8px;
   font-family: "Poppins", sans-serif;
-  font-size: 22px;
+  font-size: 30px;
   font-weight: 800;
   color: #ffffff;
 }
@@ -1270,6 +1253,11 @@ body {
   flex-direction: column;
   align-items: center;
   gap: 10px;
+  transition: 0.2s ease;
+}
+
+.card-fase-perfil.bloqueada {
+  opacity: 0.45;
 }
 
 .icone-fase-perfil {
@@ -1315,39 +1303,37 @@ body {
   width: 100%;
 }
 
-.tag-dificuldade {
+.tag-dificuldade-botao {
   background: #bfc7d4;
   color: #1d2d4f;
   border-radius: 8px;
   text-align: center;
-  padding: 6px 4px;
+  padding: 8px 4px;
   font-family: "Poppins", sans-serif;
   font-size: 14px;
   font-weight: 700;
+  text-decoration: none;
+  transition: 0.2s ease;
 }
 
-.tag-dificuldade.concluida {
+.tag-dificuldade-botao:hover {
+  background: #9eabc0;
+}
+
+.tag-dificuldade-botao.concluida {
   background: #1f8b2e;
   color: #ffffff;
 }
 
-.barra-conclusao-geral {
-  margin-top: 18px;
-  width: 100%;
-  background: #284b87;
-  border-radius: 8px;
-  text-align: center;
-  padding: 10px 16px;
-  box-sizing: border-box;
-  font-family: "Poppins", sans-serif;
-  font-size: 18px;
-  font-weight: 800;
-  color: #ffffff;
+.tag-dificuldade-botao.bloqueado {
+  background: #c9ced8;
+  color: #6c7380;
+  cursor: not-allowed;
 }
 
-@media (max-width: 1100px) {
- 
-}
+
+
+
 
 /* =======================================================
    RESPONSIVIDADE
@@ -1613,6 +1599,23 @@ body {
 
   .box-fases {
     grid-template-columns: repeat(3, 1fr);
+  }
+  .bloco-identidade-crianca {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .info-perfil-crianca {
+    justify-content: center;
+  }
+
+  .box-estrelas {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .box-fases {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 

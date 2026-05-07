@@ -3,6 +3,7 @@ import Usuario from "../models/usuario.js";
 import ResponsavelCrianca from "../models/ResponsavelCrianca.js";
 import Crianca from "../models/criancas.js";
 import ProgressoFase from "../models/ProgressoFase.js";
+import Fase from "../models/fase.js"
 
 const router = express.Router();
 
@@ -44,73 +45,77 @@ router.get("/game/perfil/:id", async (req, res) => {
     const registrosProgresso = await ProgressoFase.findAll({
       where: {
         id_crianca: crianca.id
+      },
+      include: [
+        {
+          model: Fase
+        }
+      ]
+    });
+
+    const estruturaBase = [
+      { comodo: "Quarto", slug: "quarto", icone: "icone-quarto.png", ordem: 1, facil: false, medio: false, dificil: false },
+      { comodo: "Banheiro", slug: "banheiro", icone: "icone-banheiro.png", ordem: 2, facil: false, medio: false, dificil: false },
+      { comodo: "Cozinha", slug: "cozinha", icone: "icone-cozinha.png", ordem: 3, facil: false, medio: false, dificil: false },
+      { comodo: "Sala", slug: "sala", icone: "icone-sala.png", ordem: 4, facil: false, medio: false, dificil: false },
+      { comodo: "Extras", slug: "extras", icone: "icone-extras.png", ordem: 5, facil: false, medio: false, dificil: false }
+    ];
+
+    const progressoFases = estruturaBase.map(item => ({ ...item }));
+    let totalEstrelas = 0;
+
+    registrosProgresso.forEach(registro => {
+      totalEstrelas += registro.estrelas_coletadas || 0;
+
+      if (!registro.fase) {
+        return;
+      }
+
+      const fase = progressoFases.find(f => f.slug === registro.fase.slug);
+
+      if (!fase) {
+        return;
+      }
+
+      const dificuldade = String(registro.dificuldade).trim().toLowerCase();
+
+      if (dificuldade === "fácil" || dificuldade === "facil") {
+        fase.facil = !!registro.concluida;
+      }
+
+      if (dificuldade === "médio" || dificuldade === "medio") {
+        fase.medio = !!registro.concluida;
+      }
+
+      if (dificuldade === "difícil" || dificuldade === "dificil") {
+        fase.dificil = !!registro.concluida;
       }
     });
 
-   const estruturaBase = [
-  { comodo: "Quarto", icone: "icone-quarto.png", facil: false, medio: false, dificil: false },
-  { comodo: "Cozinha", icone: "icone-cozinha.png", facil: false, medio: false, dificil: false },
-  { comodo: "Sala", icone: "icone-sala.png", facil: false, medio: false, dificil: false },
-  { comodo: "Banheiro", icone: "icone-banheiro.png", facil: false, medio: false, dificil: false },
-  { comodo: "Extras", icone: "icone-extras.png", facil: false, medio: false, dificil: false }
-];
+    progressoFases.sort((a, b) => a.ordem - b.ordem);
 
-const progressoFases = estruturaBase.map(item => ({ ...item }));
+    progressoFases.forEach((fase, index) => {
+      fase.concluidoTotal = fase.facil && fase.medio && fase.dificil;
 
-let totalEstrelas = 0;
-
-registrosProgresso.forEach(registro => {
-  totalEstrelas += registro.estrelas_coletadas || 0;
-
-  const fase = progressoFases.find(f =>
-    f.comodo.toLowerCase() === String(registro.nome_comodo).toLowerCase()
-  );
-
-  if (!fase) return;
-
-  const dificuldade = String(registro.dificuldade).trim().toLowerCase();
-
-  if (dificuldade === "fácil" || dificuldade === "facil") {
-    fase.facil = !!registro.concluida;
-  }
-
-  if (dificuldade === "médio" || dificuldade === "medio") {
-    fase.medio = !!registro.concluida;
-  }
-
-  if (dificuldade === "difícil" || dificuldade === "dificil") {
-    fase.dificil = !!registro.concluida;
-  }
-});
-
-  const porcentagemEstrelas = 0;
-
-  return res.render("game/perfil", {
-    usuario,
-    crianca,
-    totalEstrelas,
-    progressoFases,
-    porcentagemEstrelas
-  });
-    } catch (error) {
-      console.log("Erro ao carregar perfil: " + error);
-      return res.redirect("/game");
-    }
-  });
-
-// RESPONSÁVEL
-router.get("/game/responsavel/:id", (req, res) => {
-  const id = req.params.id;
-
-  Usuario.findByPk(id).then(usuario => {
-    res.render("game/responsavel", {
-      usuario: usuario
+      if (index === 0) {
+        fase.liberado = true;
+      } else {
+        fase.liberado = progressoFases[index - 1].concluidoTotal;
+      }
     });
-  }).catch(error => {
-    console.log("Ocorreu um erro ao carregar a tela do responsável. " + error);
-    res.redirect("/game");
-  });
+
+    return res.render("game/perfil", {
+      usuario: usuario,
+      crianca: crianca,
+      totalEstrelas: totalEstrelas,
+      progressoFases: progressoFases
+    });
+  } catch (error) {
+    console.log("Erro ao carregar perfil: " + error);
+    return res.redirect("/game");
+  }
 });
+
 
 // CRIANÇA
 router.get("/game/crianca/:id", async (req, res) => {
@@ -139,6 +144,25 @@ router.get("/game/crianca/:id", async (req, res) => {
   }
 });
 
+//Rota Responsavel
+router.get("/game/responsavel/:id", async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    const usuario = await Usuario.findByPk(id);
+
+    if (!usuario) {
+      return res.redirect("/game");
+    }
+
+    return res.render("game/responsavel", {
+      usuario: usuario
+    });
+  } catch (error) {
+    console.log("Ocorreu um erro ao carregar a tela do responsável. " + error);
+    return res.redirect("/game");
+  }
+});
 // CONTAS ACESSÍVEIS
 router.get("/game/contas-acessiveis/:id", async (req, res) => {
   const idResponsavel = req.params.id;
@@ -373,5 +397,25 @@ router.post("/game/escolha-personagem/:id", async (req, res) => {
     return res.redirect(`/game/escolha-personagem/${id}`);
   }
 });
+//Rota fase
+router.get("/game/:slug", async (req, res) => {
+  const slug = req.params.slug;
 
+  try {
+    const fase = await Fase.findOne({
+      where: {
+        slug: slug
+      }
+    });
+
+    if (!fase) {
+      return res.redirect("/game");
+    }
+
+    return res.send(`Fase encontrada: ${fase.nome}`);
+  } catch (error) {
+    console.log("Erro ao carregar fase: " + error);
+    return res.redirect("/game");
+  }
+});
 export default router;
