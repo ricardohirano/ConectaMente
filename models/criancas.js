@@ -1,10 +1,15 @@
 import Sequelize from "sequelize";
 import connection from "../config/sequelize-config.js";
+import Usuario from "./usuario.js";
 
 const Crianca = connection.define("criancas", {
   id_usuario: {
     type: Sequelize.INTEGER,
-    allowNull: false
+    allowNull: false,
+    references: {
+      model: Usuario,
+      key: "id"
+    }
   },
   data_nascimento: {
     type: Sequelize.DATEONLY,
@@ -23,6 +28,14 @@ const Crianca = connection.define("criancas", {
     allowNull: false,
     defaultValue: 0
   }
+});
+
+Usuario.hasOne(Crianca, {
+  foreignKey: "id_usuario"
+});
+
+Crianca.belongsTo(Usuario, {
+  foreignKey: "id_usuario"
 });
 
 Crianca.sync({ force: false });

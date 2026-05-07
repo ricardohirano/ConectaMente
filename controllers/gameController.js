@@ -1,7 +1,7 @@
 import express from "express";
 import Usuario from "../models/usuario.js";
 import ResponsavelCrianca from "../models/ResponsavelCrianca.js";
-import Crianca from "../models/crianca.js";
+import Crianca from "../models/criancas.js";
 import ProgressoFase from "../models/ProgressoFase.js";
 
 const router = express.Router();
@@ -338,12 +338,18 @@ router.post("/game/escolha-personagem/:id", async (req, res) => {
   const avatarEscolhido = req.body.avatarEscolhido;
   const nomeAvatar = req.body.nomeAvatar;
 
+  console.log("ID usuário:", id);
+  console.log("Avatar escolhido:", avatarEscolhido);
+  console.log("Nome avatar:", nomeAvatar);
+
   try {
     const crianca = await Crianca.findOne({
       where: {
         id_usuario: id
       }
     });
+
+    console.log("Registro encontrado em criancas:", crianca);
 
     if (!crianca) {
       return res.redirect(`/game/escolha-personagem/${id}`);

@@ -11,37 +11,41 @@
     </div>
 
     <div class="cabecalho-perfil-crianca">
-      <div class="bloco-identidade-crianca">
-        <div class="avatar-perfil-crianca">
-          <img src="/img/game/<%= crianca?.avatar || 'avatar-menino' %>.png" alt="Avatar">
-        </div>
-
-        <div class="info-perfil-crianca">
-          <div class="nome-avatar-box">
-            <h1><%= crianca?.nome_avatar || usuario.nome %></h1>
+      <div class="lado-esquerdo-perfil">
+        <div class="bloco-identidade-crianca">
+          <div class="avatar-perfil-crianca">
+            <img src="/img/game/<%= crianca?.avatar || 'avatar-menino' %>.png" alt="Avatar">
           </div>
 
-          <button type="button" class="btn-editar-avatar">Editar</button>
+          <div class="info-perfil-crianca">
+            <div class="nome-avatar-box">
+              <h1><%= crianca?.nome_avatar || usuario.nome %></h1>
+            </div>
+
+            <button type="button" class="btn-editar-avatar">Editar</button>
+          </div>
+        </div>
+
+        <div class="linha-botoes-perfil">
+          <a href="/game/jogos-salvos/<%= usuario.id %>" class="btn-perfil-acao">
+            JOGOS SALVOS
+          </a>
+
+          <button type="button" class="btn-perfil-acao">
+            SALVAR ALTERAÇÕES
+          </button>
+
+          <a href="/game" class="btn-perfil-acao">
+            SAIR DA CONTA
+          </a>
         </div>
       </div>
 
-      <div class="coluna-acoes-perfil">
+      <div class="lado-direito-perfil">
         <div class="card-avatar-lateral">
           <img src="/img/game/<%= crianca?.avatar || 'avatar-menino' %>.png" alt="Avatar grande">
           <a href="/game/escolha-personagem/<%= usuario.id %>" class="btn-trocar-avatar">TROCAR</a>
         </div>
-
-        <a href="/game/jogos-salvos/<%= usuario.id %>" class="btn-jogos-salvos">
-          JOGOS SALVOS
-        </a>
-
-        <a href="/game" class="btn-sair-conta">
-          SAIR DA CONTA
-        </a>
-
-        <button type="button" class="btn-salvar-alteracoes">
-          SALVAR ALTERAÇÕES
-        </button>
       </div>
     </div>
 

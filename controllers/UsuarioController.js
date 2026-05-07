@@ -2,7 +2,7 @@ import express from "express";
 import bcrypt from "bcryptjs";
 import Usuario from "../models/usuario.js";
 import ResponsavelCrianca from "../models/ResponsavelCrianca.js";
-import Crianca from "../models/crianca.js";
+import Crianca from "../models/criancas.js";
 
 const router = express.Router();
 

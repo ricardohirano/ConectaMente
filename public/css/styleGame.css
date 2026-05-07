@@ -1037,20 +1037,26 @@ body {
 }
 
 .logo-perfil-crianca {
-  width: 380px;
+  width: 360px;
   max-width: 80%;
 }
 
 .cabecalho-perfil-crianca {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 320px;
-  gap: 28px;
-  align-items: start;
+  grid-template-columns: minmax(0, 1fr) 280px;
+  gap: 26px;
   background: rgba(255, 255, 255, 0.92);
   border-radius: 30px;
   padding: 32px;
   box-shadow: 0 10px 18px rgba(0, 0, 0, 0.18);
-  margin-bottom: 28px;
+  margin-bottom: 26px;
+  align-items: start;
+}
+
+.lado-esquerdo-perfil {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
 }
 
 .bloco-identidade-crianca {
@@ -1060,18 +1066,17 @@ body {
   display: flex;
   align-items: center;
   gap: 22px;
-  min-width: 0;
 }
 
 .avatar-perfil-crianca {
-  width: 130px;
-  height: 130px;
+  width: 140px;
+  height: 140px;
   border-radius: 50%;
   background: #ffffff;
   border: 6px solid #ffffff;
   overflow: hidden;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.18);
   flex-shrink: 0;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.18);
 }
 
 .avatar-perfil-crianca img {
@@ -1105,11 +1110,11 @@ body {
 }
 
 .btn-editar-avatar {
-  background: #f6c400;
-  color: #ffffff;
   border: none;
   border-radius: 14px;
-  padding: 18px 38px;
+  background: #f6c400;
+  color: #ffffff;
+  padding: 18px 34px;
   font-family: "Poppins", sans-serif;
   font-size: 18px;
   font-weight: 800;
@@ -1117,40 +1122,73 @@ body {
   box-shadow: 0 6px 10px rgba(0, 0, 0, 0.14);
 }
 
-.coluna-acoes-perfil {
-  width: 320px;
+.linha-botoes-perfil {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.btn-perfil-acao {
+  min-height: 66px;
+  border: none;
+  border-radius: 14px;
+  background: #0f84dc;
+  color: #ffffff;
+  text-decoration: none;
   display: flex;
-  flex-direction: column;
-  gap: 22px;
-  align-items: stretch;
-  justify-self: end;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0 14px;
+  font-family: "Poppins", sans-serif;
+  font-size: 16px;
+  font-weight: 800;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.18);
+  cursor: pointer;
+  transition: 0.2s ease;
+  box-sizing: border-box;
+}
+
+.btn-perfil-acao:hover {
+  transform: translateY(-2px);
+  background: #0a72be;
+}
+
+.lado-direito-perfil {
+  display: flex;
 }
 
 .card-avatar-lateral {
   width: 100%;
+  min-height: 340px;
   background: #e9e9e9;
   border-radius: 28px;
   padding: 24px 18px 20px;
   box-shadow: 0 10px 18px rgba(0, 0, 0, 0.18);
   text-align: center;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .card-avatar-lateral img {
-  width: 150px;
-  height: 210px;
+  width: 160px;
+  height: 220px;
   object-fit: contain;
-  margin-bottom: 16px;
+  margin-top: 10px;
 }
 
-
 .btn-trocar-avatar {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   background: #0b79d0;
   color: #ffffff;
   text-decoration: none;
   border-radius: 14px;
-  padding: 10px 24px;
+  padding: 12px 26px;
   font-family: "Poppins", sans-serif;
   font-size: 18px;
   font-weight: 800;
@@ -1307,41 +1345,9 @@ body {
   color: #ffffff;
 }
 
-.btn-jogos-salvos,
-.btn-sair-conta,
-.btn-salvar-alteracoes {
-  width: 100%;
-  max-width: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 14px;
-  text-decoration: none;
-  border: none;
-  background: #0b79d0;
-  color: #ffffff;
-  border-radius: 14px;
-  padding: 18px 20px;
-  font-family: "Poppins", sans-serif;
-  font-size: 20px;
-  font-weight: 800;
-  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.14);
-  cursor: pointer;
-  box-sizing: border-box;
+@media (max-width: 1100px) {
+ 
 }
-
-
-.btn-jogos-salvos img,
-.btn-sair-conta img {
-  width: 28px;
-  height: 28px;
-  object-fit: contain;
-}
-
-.btn-salvar-alteracoes {
-  margin-top: 18px;
-}
-
 
 /* =======================================================
    RESPONSIVIDADE
@@ -1597,19 +1603,16 @@ body {
     font-size: 28px;
   }
 
-  .box-estrelas {
-    flex-direction: column;
-    text-align: center;
+  .cabecalho-perfil-crianca {
+    grid-template-columns: 1fr;
+  }
+
+  .linha-botoes-perfil {
+    grid-template-columns: 1fr;
   }
 
   .box-fases {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .btn-jogos-salvos,
-  .btn-sair-conta,
-  .btn-salvar-alteracoes {
-    font-size: 18px;
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
