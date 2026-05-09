@@ -294,6 +294,106 @@
   font-weight: 700;
   cursor: pointer;
 }
+
+.modal-fase-concluida {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.modal-fase-concluida.ativo {
+  display: flex;
+}
+
+.modal-fase-concluida__caixa {
+  width: 92%;
+  max-width: 760px;
+  background: #ffffff;
+  border-radius: 28px;
+  padding: 34px 30px;
+  text-align: center;
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.3);
+  border: 6px solid #0f84dc;
+}
+
+.modal-fase-concluida__caixa h2 {
+  margin: 0 0 16px 0;
+  font-family: "Poppins", sans-serif;
+  font-size: 40px;
+  font-weight: 800;
+  color: #111111;
+}
+
+.modal-fase-concluida__caixa p {
+  margin: 0 0 26px 0;
+  font-family: "Poppins", sans-serif;
+  font-size: 24px;
+  font-weight: 600;
+  color: #333333;
+}
+
+.acoes-fase-concluida {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.btn-fase-concluida {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 92px;
+  padding: 18px 16px;
+  border-radius: 18px;
+  text-decoration: none;
+  font-family: "Poppins", sans-serif;
+  font-size: 24px;
+  font-weight: 800;
+  color: #ffffff;
+  border: none;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.btn-fase-concluida:first-child {
+  background: #d8a200;
+}
+
+.btn-fase-concluida.destaque {
+  background: #ef1742;
+}
+
+.btn-fase-concluida:hover {
+  transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+  .modal-fase-concluida__caixa {
+    padding: 24px 20px;
+  }
+
+  .modal-fase-concluida__caixa h2 {
+    font-size: 30px;
+  }
+
+  .modal-fase-concluida__caixa p {
+    font-size: 20px;
+  }
+
+  .acoes-fase-concluida {
+    grid-template-columns: 1fr;
+  }
+
+  .btn-fase-concluida {
+    min-height: 74px;
+    font-size: 20px;
+  }
+}
+
 /* =======================================================
    RESPANSIBILIDADE quarto
 ======================================================= */

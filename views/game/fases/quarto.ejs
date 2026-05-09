@@ -130,20 +130,49 @@
   </div>
   <!-- MODAL ERRO DE ORDEM -->
     <div class="modal-erro" id="modalErro">
-    <div class="modal-erro__caixa">
-        <h2>Ops!</h2>
-        <p id="textoErroOrdem">Tem algo para fazer antes, tente novamente.</p>
+      <div class="modal-erro__caixa">
+          <h2>Ops!</h2>
+          <p id="textoErroOrdem">Tem algo para fazer antes, tente novamente.</p>
 
-        <button type="button" id="fecharErro">
-        Entendi
-        </button>
+          <button type="button" id="fecharErro">
+          Entendi
+          </button>
+      </div>
     </div>
+  <!-- MODAL FASE CONCLUIDA -->
+<div class="modal-fase-concluida" id="modalFaseConcluida">
+  <div class="modal-fase-concluida__caixa">
+    <h2>Fase Concluída!</h2>
+    <p>Você completou todas as ações do quarto.</p>
+
+    <div class="acoes-fase-concluida">
+      <a href="/game/perfil/<%= usuario.id %>" class="btn-fase-concluida">
+        Voltar ao Perfil
+      </a>
+
+      <% if (dificuldade === "facil") { %>
+        <a href="/game/fase/<%= usuario.id %>/quarto/medio" class="btn-fase-concluida destaque">
+          Aumentar Dificuldade
+        </a>
+      <% } else if (dificuldade === "medio") { %>
+        <a href="/game/fase/<%= usuario.id %>/quarto/dificil" class="btn-fase-concluida destaque">
+          Aumentar Dificuldade
+        </a>
+      <% } else { %>
+        <a href="/game/perfil/<%= usuario.id %>" class="btn-fase-concluida destaque">
+          Finalizar
+        </a>
+      <% } %>
     </div>
+  </div>
+</div>
 </main>
+
 
 <script>
   const modalQuiz = document.getElementById("modalQuiz");
   const fecharQuiz = document.getElementById("fecharQuiz");
+
   const modalParabens = document.getElementById("modalParabens");
   const fecharParabens = document.getElementById("fecharParabens");
 
@@ -221,10 +250,18 @@
   };
 
   function valorPorAcerto() {
-    if ("<%= dificuldade %>" === "facil") return 1;
-    if ("<%= dificuldade %>" === "medio") return 2;
-    if ("<%= dificuldade %>" === "dificil") return 3;
-    return 1;
+  const dificuldadeAtual = String("<%= dificuldade %>")
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+
+  if (dificuldadeAtual === "facil") return 1;
+  if (dificuldadeAtual === "medio") return 2;
+  if (dificuldadeAtual === "dificil") return 3;
+
+  return 1;
+
   }
 
   function proximaAcaoEsperada() {
@@ -252,44 +289,13 @@
 
     tentativasTotal++;
     acaoAtual = nomeAcao;
+
     tituloQuiz.textContent = perguntas[nomeAcao].titulo;
     opcaoCorreta.textContent = perguntas[nomeAcao].correta;
     opcaoErrada.textContent = perguntas[nomeAcao].errada;
     textoParabens.textContent = perguntas[nomeAcao].mensagem;
 
     modalQuiz.classList.add("ativo");
-  }
-
-  function concluirAcao(nomeAcao) {
-    estadoAcoes[nomeAcao] = true;
-    acoesConcluidas++;
-
-    totalConquista += valorPorAcerto();
-    contadorConquista.textContent = totalConquista;
-
-    modalQuiz.classList.remove("ativo");
-
-    if (nomeAcao === "cama") {
-      imgCama.src = "/img/game/fases/quarto/objetos/camaDepois.svg";
-      if (estrelaCama) estrelaCama.style.display = "none";
-    }
-
-    if (nomeAcao === "janela") {
-      imgJanela.src = "/img/game/fases/quarto/objetos/janelaDepois.svg";
-      if (estrelaJanela) estrelaJanela.style.display = "none";
-    }
-
-    if (nomeAcao === "armario") {
-      imgArmario.src = "/img/game/fases/quarto/objetos/armarioDepois.svg";
-      if (estrelaArmario) estrelaArmario.style.display = "none";
-    }
-
-    if (nomeAcao === "mesa") {
-      imgMesa.src = "/img/game/fases/quarto/objetos/mesaLivrosDepois.svg";
-      if (estrelaMesa) estrelaMesa.style.display = "none";
-    }
-
-    modalParabens.classList.add("ativo");
   }
 
   async function salvarConclusaoFase() {
@@ -322,7 +328,35 @@
     }
   }
 
-  async function verificarFimDaFase() {
+  async function concluirAcao(nomeAcao) {
+    estadoAcoes[nomeAcao] = true;
+    acoesConcluidas++;
+
+    totalConquista += valorPorAcerto();
+    contadorConquista.textContent = totalConquista;
+
+    modalQuiz.classList.remove("ativo");
+
+    if (nomeAcao === "cama") {
+      imgCama.src = "/img/game/fases/quarto/objetos/camaDepois.svg";
+      if (estrelaCama) estrelaCama.style.display = "none";
+    }
+
+    if (nomeAcao === "janela") {
+      imgJanela.src = "/img/game/fases/quarto/objetos/janelaDepois.svg";
+      if (estrelaJanela) estrelaJanela.style.display = "none";
+    }
+
+    if (nomeAcao === "armario") {
+      imgArmario.src = "/img/game/fases/quarto/objetos/armarioDepois.svg";
+      if (estrelaArmario) estrelaArmario.style.display = "none";
+    }
+
+    if (nomeAcao === "mesa") {
+      imgMesa.src = "/img/game/fases/quarto/objetos/mesaLivrosDepois.svg";
+      if (estrelaMesa) estrelaMesa.style.display = "none";
+    }
+
     const todasConcluidas =
       estadoAcoes.cama &&
       estadoAcoes.janela &&
@@ -331,8 +365,9 @@
 
     if (todasConcluidas) {
       await salvarConclusaoFase();
-      modalParabens.classList.remove("ativo");
       modalFaseConcluida.classList.add("ativo");
+    } else {
+      modalParabens.classList.add("ativo");
     }
   }
 
@@ -373,15 +408,13 @@
     }
   });
 
-  fecharParabens.addEventListener("click", async () => {
+  fecharParabens.addEventListener("click", () => {
     modalParabens.classList.remove("ativo");
-    await verificarFimDaFase();
   });
 
-  modalParabens.addEventListener("click", async (event) => {
+  modalParabens.addEventListener("click", (event) => {
     if (event.target === modalParabens) {
       modalParabens.classList.remove("ativo");
-      await verificarFimDaFase();
     }
   });
 
@@ -394,6 +427,7 @@
       modalErro.classList.remove("ativo");
     }
   });
+</script>
 </script>
 
 </body>

@@ -56,61 +56,56 @@ router.get("/game/perfil/:id", async (req, res) => {
     });
 
     const estruturaBase = [
-      { comodo: "Quarto", slug: "quarto", icone: "icone-quarto.png", ordem: 1, facil: false, medio: false, dificil: false },
-      { comodo: "Banheiro", slug: "banheiro", icone: "icone-banheiro.png", ordem: 2, facil: false, medio: false, dificil: false },
-      { comodo: "Cozinha", slug: "cozinha", icone: "icone-cozinha.png", ordem: 3, facil: false, medio: false, dificil: false },
-      { comodo: "Sala", slug: "sala", icone: "icone-sala.png", ordem: 4, facil: false, medio: false, dificil: false },
-      { comodo: "Extras", slug: "extras", icone: "icone-extras.png", ordem: 5, facil: false, medio: false, dificil: false }
+      { comodo: "Quarto", slug: "quarto", icone: "quarto.svg", facil: false, medio: false, dificil: false, liberado: true },
+      { comodo: "Banheiro", slug: "banheiro", icone: "banheiro.svg", facil: false, medio: false, dificil: false, liberado: false },
+      { comodo: "Cozinha", slug: "cozinha", icone: "cozinha.svg", facil: false, medio: false, dificil: false, liberado: false },
+      { comodo: "Sala", slug: "sala", icone: "sala.svg", facil: false, medio: false, dificil: false, liberado: false },
+      { comodo: "Extras", slug: "extras", icone: "extras.svg", facil: false, medio: false, dificil: false, liberado: false }
     ];
 
     const progressoFases = estruturaBase.map(item => ({ ...item }));
-    let totalEstrelas = 0;
 
     registrosProgresso.forEach(registro => {
-      totalEstrelas += registro.estrelas_coletadas || 0;
+      if (!registro.fase) return;
 
-      if (!registro.fase) {
-        return;
+      const fasePerfil = progressoFases.find(f => f.slug === registro.fase.slug);
+      if (!fasePerfil) return;
+
+      const dificuldade = String(registro.dificuldade)
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
+
+      if (dificuldade === "facil") {
+        fasePerfil.facil = !!registro.concluida;
       }
 
-      const fase = progressoFases.find(f => f.slug === registro.fase.slug);
-
-      if (!fase) {
-        return;
+      if (dificuldade === "medio") {
+        fasePerfil.medio = !!registro.concluida;
       }
 
-      const dificuldade = String(registro.dificuldade).trim().toLowerCase();
-
-      if (dificuldade === "fácil" || dificuldade === "facil") {
-        fase.facil = !!registro.concluida;
-      }
-
-      if (dificuldade === "médio" || dificuldade === "medio") {
-        fase.medio = !!registro.concluida;
-      }
-
-      if (dificuldade === "difícil" || dificuldade === "dificil") {
-        fase.dificil = !!registro.concluida;
+      if (dificuldade === "dificil") {
+        fasePerfil.dificil = !!registro.concluida;
       }
     });
 
-    progressoFases.sort((a, b) => a.ordem - b.ordem);
+    const quartoConcluido = progressoFases[0].facil && progressoFases[0].medio && progressoFases[0].dificil;
+    const banheiroConcluido = progressoFases[1].facil && progressoFases[1].medio && progressoFases[1].dificil;
+    const cozinhaConcluida = progressoFases[2].facil && progressoFases[2].medio && progressoFases[2].dificil;
+    const salaConcluida = progressoFases[3].facil && progressoFases[3].medio && progressoFases[3].dificil;
 
-    progressoFases.forEach((fase, index) => {
-      fase.concluidoTotal = fase.facil && fase.medio && fase.dificil;
+    progressoFases[1].liberado = quartoConcluido;
+    progressoFases[2].liberado = banheiroConcluido;
+    progressoFases[3].liberado = cozinhaConcluida;
+    progressoFases[4].liberado = salaConcluida;
 
-      if (index === 0) {
-        fase.liberado = true;
-      } else {
-        fase.liberado = progressoFases[index - 1].concluidoTotal;
-      }
-    });
+    const totalEstrelas = crianca.total_estrelas || 0;
 
     return res.render("game/perfil", {
-      usuario: usuario,
-      crianca: crianca,
-      totalEstrelas: totalEstrelas,
-      progressoFases: progressoFases
+      usuario,
+      crianca,
+      totalEstrelas,
+      progressoFases
     });
   } catch (error) {
     console.log("Erro ao carregar perfil: " + error);
@@ -681,7 +676,10 @@ router.post("/game/concluir-fase/:idUsuario/:slug/:dificuldade", async (req, res
     });
 
     if (!crianca) {
-      return res.status(404).json({ sucesso: false, mensagem: "Criança não encontrada." });
+      return res.status(404).json({
+        sucesso: false,
+        mensagem: "Criança não encontrada."
+      });
     }
 
     const fase = await Fase.findOne({
@@ -691,25 +689,31 @@ router.post("/game/concluir-fase/:idUsuario/:slug/:dificuldade", async (req, res
     });
 
     if (!fase) {
-      return res.status(404).json({ sucesso: false, mensagem: "Fase não encontrada." });
+      return res.status(404).json({
+        sucesso: false,
+        mensagem: "Fase não encontrada."
+      });
     }
+
+    const estrelasDaRodada = Number(estrelas_ganhas) || 0;
+
+    console.log("DIFICULDADE:", dificuldade);
+    console.log("ESTRELAS DA RODADA:", estrelasDaRodada);
 
     await RelatorioFase.create({
       id_crianca: crianca.id,
       id_fase: fase.id,
       dificuldade: dificuldade,
-      tentativas_total: tentativas_total || 0,
-      erros_resposta: erros_resposta || 0,
-      erros_ordem: erros_ordem || 0,
-      acoes_concluidas: acoes_concluidas || 0,
-      estrelas_ganhas: estrelas_ganhas || 0,
+      tentativas_total: Number(tentativas_total) || 0,
+      erros_resposta: Number(erros_resposta) || 0,
+      erros_ordem: Number(erros_ordem) || 0,
+      acoes_concluidas: Number(acoes_concluidas) || 0,
+      estrelas_ganhas: estrelasDaRodada,
       data_fim: new Date()
     });
 
-    await Crianca.update(
-      {
-        total_estrelas: crianca.total_estrelas + (Number(estrelas_ganhas) || 0)
-      },
+    await Crianca.increment(
+      { total_estrelas: estrelasDaRodada },
       {
         where: {
           id: crianca.id
@@ -742,14 +746,20 @@ router.post("/game/concluir-fase/:idUsuario/:slug/:dificuldade", async (req, res
         id_fase: fase.id,
         dificuldade: dificuldade,
         concluida: true,
-        estrelas_coletadas: 0
+        estrelas_coletadas: estrelasDaRodada
       });
     }
 
-    return res.json({ sucesso: true });
+    return res.json({
+      sucesso: true,
+      mensagem: "Fase concluída com sucesso."
+    });
   } catch (error) {
     console.log("Erro ao concluir fase: " + error);
-    return res.status(500).json({ sucesso: false, mensagem: "Erro ao concluir fase." });
+    return res.status(500).json({
+      sucesso: false,
+      mensagem: "Erro ao concluir fase."
+    });
   }
 });
 export default router;
