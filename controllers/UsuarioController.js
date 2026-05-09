@@ -2,7 +2,7 @@ import express from "express";
 import bcrypt from "bcryptjs";
 import Usuario from "../models/usuario.js";
 import ResponsavelCrianca from "../models/ResponsavelCrianca.js";
-import Crianca from "../models/criancas.js";
+import Crianca from "../models/crianca.js";
 
 const router = express.Router();
 
@@ -79,8 +79,11 @@ router.post("/usuarios/login", async (req, res) => {
       return res.redirect("/game?erro=email_nao_cadastrado");
     }
 
+    console.log("USUARIO LOGIN:", usuario.toJSON());
+
     // 2. senha incorreta
     const senhaCorreta = await bcrypt.compare(senha, usuario.senha);
+    console.log("SENHA CORRETA:", senhaCorreta);
 
     if (!senhaCorreta) {
       return res.redirect("/game?erro=senha_incorreta");
@@ -93,6 +96,12 @@ router.post("/usuarios/login", async (req, res) => {
           id_crianca: usuario.id
         }
       });
+
+      console.log(
+        "VINCULO RESPONSAVEL:",
+        vinculoResponsavel ? vinculoResponsavel.toJSON() : null
+      );
+      console.log("PERMISSAO ATIVA:", usuario.permissao_ativa);
 
       if (!usuario.permissao_ativa) {
         if (!vinculoResponsavel) {

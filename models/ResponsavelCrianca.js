@@ -13,6 +13,6 @@ const ResponsavelCrianca = connection.define("responsavel_crianca", {
   }
 });
 
-ResponsavelCrianca.sync({ force: false });
+
 
 export default ResponsavelCrianca;

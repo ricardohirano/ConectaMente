@@ -27,6 +27,11 @@ const Crianca = connection.define("criancas", {
     type: Sequelize.INTEGER,
     allowNull: false,
     defaultValue: 0
+  },
+  total_estrelas: {
+  type: Sequelize.INTEGER,
+  allowNull: false,
+  defaultValue: 0
   }
 });
 
@@ -38,6 +43,6 @@ Crianca.belongsTo(Usuario, {
   foreignKey: "id_usuario"
 });
 
-Crianca.sync({ force: false });
+
 
 export default Crianca;

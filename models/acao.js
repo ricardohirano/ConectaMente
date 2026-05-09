@@ -41,6 +41,6 @@ const Acao = connection.define("acoes", {
 Fase.hasMany(Acao, { foreignKey: "id_fase" });
 Acao.belongsTo(Fase, { foreignKey: "id_fase" });
 
-Acao.sync({ force: false });
+
 
 export default Acao;

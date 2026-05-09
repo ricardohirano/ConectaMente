@@ -1,6 +1,6 @@
 import Sequelize from "sequelize";
 import connection from "../config/sequelize-config.js";
-import Crianca from "./criancas.js";
+import Crianca from "./crianca.js";
 import Fase from "./fase.js";
 
 const ProgressoFase = connection.define("progresso_fases", {
@@ -42,6 +42,6 @@ ProgressoFase.belongsTo(Crianca, { foreignKey: "id_crianca" });
 Fase.hasMany(ProgressoFase, { foreignKey: "id_fase" });
 ProgressoFase.belongsTo(Fase, { foreignKey: "id_fase" });
 
-ProgressoFase.sync({ force: false });
+
 
 export default ProgressoFase;

@@ -1,0 +1,31 @@
+<svg width="179" height="269" viewBox="0 0 179 269" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g filter="url(#filter0_d_2055_642)">
+<path d="M167.5 64.2608C127.1 80.2608 88 70.9275 73.5 64.2608C78.3 65.0609 85.8333 26.5942 89 7.2608C103.8 -3.9392 137.5 1.2608 152.5 5.2608C156.9 33.6608 164.333 56.4275 167.5 64.2608Z" fill="#FEBA19" stroke="black"/>
+<path d="M150 16.2605C124.8 25.4605 101.334 20.0938 90.5002 16.2605C88.5002 12.2603 90.5002 10.2605 90.5002 10.2605C117.3 -2.53951 141.667 4.59374 151.5 10.2604L150 16.2605Z" fill="#FEF196" stroke="black"/>
+<path d="M95 12.2591C104.5 16.7607 126.5 20.7594 147 12.2589C141 6.75938 114 2.76055 95 12.2591Z" fill="#FEEF37" stroke="black"/>
+<path d="M29.75 259.761H9.75V152.761H29.75V259.761Z" fill="#602716" stroke="black"/>
+<path d="M4.5 153.261V136.761C6.9 136.761 12.1667 115.094 14.5 104.261H174.5V153.261H4.5Z" fill="#C16E3E" stroke="black"/>
+<path d="M151 120.761L152.5 103.261H93.9998C88.3998 103.261 87.9998 116.427 88.4998 123.261C112 130.261 142.667 125.594 151 120.761Z" fill="#AF4D12" stroke="black"/>
+<path d="M156.5 145.761V143.261L157.5 142.261H159.5V147.261H157.5L156.5 145.761Z" fill="#9A4619" stroke="black"/>
+<path d="M91 111.76V104.76C92.6 99.9601 98 97.4269 100.5 96.7604C103.167 96.927 112.5 97.1604 128.5 96.7604C144.5 96.3604 149.5 101.26 150 103.76L149 111.76C127 121.36 101.167 115.76 91 111.76Z" fill="#CF641A" stroke="black"/>
+<path d="M124.5 108.262H113.5L112.5 73.7619C120.5 74.1619 124.833 73.0941 125.5 73.2607L124.5 108.262Z" fill="#C84A18" stroke="#7D3206" stroke-width="3"/>
+<path d="M5 136.761H171" stroke="black"/>
+<rect x="30" y="153.761" width="120" height="66" rx="2" fill="#8A3712"/>
+<path d="M42 164.761C42.4 167.561 39.8333 168.594 38.5 168.761V207.261C42.1 207.261 42.3333 209.927 42 211.261L136 212.261C134 209.461 137.5 207.761 139.5 207.261V169.761C135.9 170.561 135 166.761 135 164.761H42Z" fill="#6E2A18" stroke="black"/>
+<path d="M89 179.261C94.2194 179.261 98.5 183.264 98.5 188.261C98.5 193.258 94.2194 197.261 89 197.261C83.7806 197.261 79.5 193.258 79.5 188.261C79.5 183.264 83.7806 179.261 89 179.261Z" fill="#A2411A" stroke="black"/>
+<path d="M167.25 258.261H149.25V153.261H167.25V258.261Z" fill="#662915" stroke="black"/>
+<path d="M149 234.761H30V219.761H149V234.761Z" fill="#662915" stroke="black"/>
+</g>
+<defs>
+<filter id="filter0_d_2055_642" x="0" y="0" width="179" height="268.261" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dy="4"/>
+<feGaussianBlur stdDeviation="2"/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_2055_642"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_2055_642" result="shape"/>
+</filter>
+</defs>
+</svg>

@@ -26,6 +26,6 @@ const Fase = connection.define("fases", {
   }
 });
 
-Fase.sync({ force: false });
+
 
 export default Fase;

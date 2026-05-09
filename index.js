@@ -5,16 +5,20 @@ import HomeController from "./controllers/HomeController.js";
 import GameController from "./controllers/GameController.js";
 import UsuarioController from "./controllers/UsuarioController.js";
 
+import popularFases from "./utils/popularFases.js";
 const app = express();
 
 
 //importando os models
 import Usuario from "./models/usuario.js";
-import Crianca from "./models/criancas.js";
+import Crianca from "./models/crianca.js";
+import ResponsavelCrianca from "./models/ResponsavelCrianca.js";
 import Fase from "./models/fase.js";
 import Acao from "./models/acao.js";
 import OpcaoResposta from "./models/opcaoResposta.js";
 import ProgressoFase from "./models/ProgressoFase.js";
+import SessaoJogo from "./models/sessaoJogo.js";
+import RelatorioFase from "./models/relatorioFase.js";
 
 // VIEW ENGINE
 app.set("view engine", "ejs");
@@ -31,11 +35,15 @@ connection.authenticate().then(async () => {
   console.log("Conexão com o banco de dados feita com sucesso!");
 
   await Usuario.sync({ force: false });
+  await ResponsavelCrianca.sync({ force: false });
   await Crianca.sync({ force: false });
   await Fase.sync({ force: false });
   await Acao.sync({ force: false });
   await OpcaoResposta.sync({ force: false });
   await ProgressoFase.sync({ force: false });
+  await SessaoJogo.sync({ force: false });
+  await RelatorioFase.sync({ force: false });
+  await popularFases();
 
   console.log("Tabelas sincronizadas com sucesso.");
 }).catch((error) => {

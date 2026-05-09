@@ -1,0 +1,327 @@
+.pagina-fase-game {
+  min-height: 100vh;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.painel-fase {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+
+
+.cenario-fase {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  overflow: hidden;
+}
+
+.imagem-cenario {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.objeto-interativo {
+  position: absolute;
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+}
+
+.objeto-interativo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+/* 1 - CAMA */
+.objeto-cama {
+  left: 12.8%;
+  top: 49.2%;
+  width: 28.5%;
+}
+
+/* 2 - JANELA */
+.objeto-janela {
+  left: 9.8%;
+  top: 2.8%;
+  width: 43.5%;
+}
+
+/* 3 - ARMÁRIO */
+.objeto-armario {
+  left: 57.4%;
+  top: 23.5%;
+  width: 22%;
+  height: 48%;
+}
+
+/* 4 - MESA / LIVROS */
+.objeto-mesa {
+  left: 1.8%;
+  top: 47.2%;
+  width: 11.5%;
+}
+
+/* AVATAR */
+.avatar-fase {
+  position: absolute;
+  left: 69%;
+  top: 45.5%;
+  width: 16%;
+}
+
+.avatar-fase img {
+  width: 100%;
+  display: block;
+}
+
+/* ESTRELAS */
+.estrela-acao {
+  position: absolute;
+  width: 4.8%;
+  max-width: 80px;
+  min-width: 42px;
+  aspect-ratio: 1 / 1;
+}
+
+.estrela-acao img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.estrela-cama {
+  left: 28.2%;
+  top: 55.8%;
+}
+
+.estrela-janela {
+  left: 29%;
+  top: 15%;
+}
+
+.estrela-armario {
+  left: 68.5%;
+  top: 31%;
+}
+
+.estrela-mesa {
+  left: 3.4%;
+  top: 43%;
+}
+.conquista-fase {
+  position: absolute;
+  top: 2.5%;
+  right: 2.5%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  z-index: 20;
+}
+
+.conquista-titulo {
+  font-family: "Poppins", sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: #ffffff;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.35);
+}
+
+.conquista-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.conquista-info img {
+  width: 52px;
+  height: 52px;
+  object-fit: contain;
+}
+
+.conquista-info span {
+  font-family: "Poppins", sans-serif;
+  font-size: 52px;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.35);
+}
+
+
+/* MODAIS */
+.modal-quiz,
+.modal-parabens {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.modal-quiz.ativo,
+.modal-parabens.ativo {
+  display: flex;
+}
+
+.modal-quiz__caixa,
+.modal-parabens__caixa {
+  width: 92%;
+  max-width: 720px;
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 28px;
+  text-align: center;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.25);
+}
+
+.modal-quiz__caixa h2,
+.modal-parabens__caixa h2 {
+  margin: 0 0 20px 0;
+  font-family: "Poppins", sans-serif;
+  font-size: 34px;
+  font-weight: 800;
+  color: #111111;
+}
+
+.opcoes-quiz {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.opcao-quiz {
+  border: none;
+  min-height: 120px;
+  font-family: "Poppins", sans-serif;
+  font-size: 28px;
+  font-weight: 800;
+  color: #ffffff;
+  cursor: pointer;
+  padding: 20px;
+  border-radius: 16px;
+}
+
+#opcaoCorreta {
+  background: #ef1742;
+}
+
+#opcaoErrada {
+  background: #d8a200;
+}
+
+.btn-fechar-quiz,
+.modal-parabens__caixa button {
+  margin-top: 18px;
+  border: none;
+  border-radius: 14px;
+  background: #0f84dc;
+  color: #ffffff;
+  padding: 14px 24px;
+  font-family: "Poppins", sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.modal-parabens__caixa p {
+  font-family: "Poppins", sans-serif;
+  font-size: 20px;
+  color: #333333;
+}
+.modal-erro {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.modal-erro.ativo {
+  display: flex;
+}
+
+.modal-erro__caixa {
+  width: 92%;
+  max-width: 620px;
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 28px;
+  text-align: center;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.25);
+}
+
+.modal-erro__caixa h2 {
+  margin: 0 0 20px 0;
+  font-family: "Poppins", sans-serif;
+  font-size: 34px;
+  font-weight: 800;
+  color: #ef1742;
+}
+
+.modal-erro__caixa p {
+  font-family: "Poppins", sans-serif;
+  font-size: 22px;
+  color: #333333;
+  margin: 0;
+}
+
+.modal-erro__caixa button {
+  margin-top: 18px;
+  border: none;
+  border-radius: 14px;
+  background: #0f84dc;
+  color: #ffffff;
+  padding: 14px 24px;
+  font-family: "Poppins", sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+}
+/* =======================================================
+   RESPANSIBILIDADE quarto
+======================================================= */
+@media (max-width: 768px) {
+ 
+  .opcoes-quiz {
+    grid-template-columns: 1fr;
+  }
+
+  .opcao-quiz {
+    font-size: 22px;
+    min-height: 90px;
+  }
+  .conquista-fase {
+    top: 2%;
+    right: 3%;
+  }
+
+  .conquista-titulo {
+    font-size: 16px;
+  }
+
+  .conquista-info img {
+    width: 34px;
+    height: 34px;
+  }
+
+  .conquista-info span {
+    font-size: 34px;
+  }
+}

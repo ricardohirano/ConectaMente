@@ -25,6 +25,6 @@ const OpcaoResposta = connection.define("opcoes_resposta", {
 Acao.hasMany(OpcaoResposta, { foreignKey: "id_acao" });
 OpcaoResposta.belongsTo(Acao, { foreignKey: "id_acao" });
 
-OpcaoResposta.sync({ force: false });
+
 
 export default OpcaoResposta;

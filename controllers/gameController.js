@@ -1,13 +1,15 @@
 import express from "express";
 import Usuario from "../models/usuario.js";
 import ResponsavelCrianca from "../models/ResponsavelCrianca.js";
-import Crianca from "../models/criancas.js";
+import Crianca from "../models/crianca.js";
 import ProgressoFase from "../models/ProgressoFase.js";
 import Fase from "../models/fase.js"
+import SessaoJogo from "../models/sessaoJogo.js";
+import RelatorioFase from "../models/relatorioFase.js";
 
 const router = express.Router();
 
-
+import bcrypt from "bcryptjs";
 
 // LOGIN
 router.get("/game", (req, res) => {
@@ -122,24 +124,54 @@ router.get("/game/crianca/:id", async (req, res) => {
   const id = req.params.id;
 
   try {
+    console.log("ENTROU NA ROTA CRIANCA:", id);
+
     const usuario = await Usuario.findByPk(id);
+    console.log("USUARIO:", usuario ? usuario.toJSON() : null);
+
+    if (!usuario) {
+      console.log("USUARIO NAO ENCONTRADO");
+      return res.redirect("/game");
+    }
+
     const crianca = await Crianca.findOne({
       where: {
         id_usuario: id
       }
     });
+    console.log("CRIANCA:", crianca ? crianca.toJSON() : null);
+
+    if (!crianca) {
+      console.log("CRIANA NAO ENCONTRADA");
+      return res.redirect("/game");
+    }
 
     const temNovoJogoCriado = !!crianca?.avatar && !!crianca?.nome_avatar;
-    const temJogoSalvo = false;
+    console.log("TEM NOVO JOGO CRIADO:", temNovoJogoCriado);
+
+    let temJogoSalvo = false;
+
+    const sessoesSalvas = await SessaoJogo.findAll({
+      where: {
+        id_crianca: crianca.id,
+        status: "salva"
+      }
+    });
+
+    console.log("SESSOES SALVAS:", sessoesSalvas.length);
+
+    temJogoSalvo = sessoesSalvas.length > 0;
+
+    console.log("VAI RENDERIZAR game/crianca");
 
     return res.render("game/crianca", {
-      usuario: usuario,
-      crianca: crianca,
-      temNovoJogoCriado: temNovoJogoCriado,
-      temJogoSalvo: temJogoSalvo
+      usuario,
+      crianca,
+      temNovoJogoCriado,
+      temJogoSalvo
     });
   } catch (error) {
-    console.log("Ocorreu um erro ao carregar a tela da criança. " + error);
+    console.log("ERRO NA ROTA /game/crianca/:id ->", error);
     return res.redirect("/game");
   }
 });
@@ -147,11 +179,14 @@ router.get("/game/crianca/:id", async (req, res) => {
 //Rota Responsavel
 router.get("/game/responsavel/:id", async (req, res) => {
   const id = req.params.id;
+  console.log("ENTROU /game/responsavel/:id ->", id);
 
   try {
     const usuario = await Usuario.findByPk(id);
+    console.log("USUARIO RESPONSAVEL:", usuario ? usuario.toJSON() : null);
 
     if (!usuario) {
+      console.log("RESPONSAVEL NAO ENCONTRADO");
       return res.redirect("/game");
     }
 
@@ -159,58 +194,105 @@ router.get("/game/responsavel/:id", async (req, res) => {
       usuario: usuario
     });
   } catch (error) {
-    console.log("Ocorreu um erro ao carregar a tela do responsável. " + error);
+    console.log("ERRO ROTA RESPONSAVEL:", error);
     return res.redirect("/game");
   }
 });
+
 // CONTAS ACESSÍVEIS
 router.get("/game/contas-acessiveis/:id", async (req, res) => {
-  const idResponsavel = req.params.id;
+  const id = req.params.id;
+  console.log("ENTROU /game/contas-acessiveis/:id ->", id);
 
   try {
+    const usuario = await Usuario.findByPk(id);
+    console.log("USUARIO CONTAS ACESSIVEIS:", usuario ? usuario.toJSON() : null);
+
+    if (!usuario) {
+      console.log("USUARIO NAO ENCONTRADO EM CONTAS ACESSIVEIS");
+      return res.redirect("/game");
+    }
+
     const vinculos = await ResponsavelCrianca.findAll({
       where: {
-        id_responsavel: idResponsavel
+        id_responsavel: id
       }
     });
 
-    const idsCriancas = vinculos.map(vinculo => vinculo.id_crianca);
+    console.log("VINCULOS ENCONTRADOS:", vinculos.length);
 
-    let contas = [];
+    const contas = [];
 
-    if (idsCriancas.length > 0) {
-      contas = await Usuario.findAll({
+    for (const vinculo of vinculos) {
+      const contaUsuario = await Usuario.findByPk(vinculo.id_crianca);
+      const contaCrianca = await Crianca.findOne({
         where: {
-          id: idsCriancas
+          id_usuario: vinculo.id_crianca
         }
       });
+
+      if (contaUsuario) {
+        contas.push({
+          id: contaUsuario.id,
+          nome: contaUsuario.nome,
+          email: contaUsuario.email,
+          avatar: contaCrianca?.avatar
+            ? `/img/game/avatars/${contaCrianca.avatar}`
+            : "/img/game/avatars/personagem1.svg",
+          permissao_ativa: contaUsuario.permissao_ativa
+        });
+      }
     }
 
+    console.log("CONTAS MONTADAS:", contas);
+
     return res.render("game/contas", {
-      idResponsavel: idResponsavel,
+      usuario: usuario,
+      idResponsavel: id,
       contas: contas
     });
   } catch (error) {
-    console.log("Erro ao carregar contas acessíveis: " + error);
+    console.log("ERRO CONTAS ACESSIVEIS:", error);
     return res.redirect("/game");
   }
 });
-
 // ADICIONAR CONTA
-router.get("/game/adicionar-conta/:id", (req, res) => {
+router.get("/game/adicionar-conta/:id", async (req, res) => {
   const id = req.params.id;
+  console.log("ENTROU /game/adicionar-conta/:id ->", id);
 
-  res.render("game/adicionar-conta", {
-    idResponsavel: id,
-    query: req.query
-  });
+  try {
+    const usuario = await Usuario.findByPk(id);
+    console.log("USUARIO ADICIONAR CONTA:", usuario ? usuario.toJSON() : null);
+
+    if (!usuario) {
+      console.log("RESPONSAVEL NAO ENCONTRADO EM ADICIONAR CONTA");
+      return res.redirect("/game");
+    }
+
+    return res.render("game/adicionar-conta", {
+      idResponsavel: id,
+      usuario: usuario,
+      query: req.query
+    });
+  } catch (error) {
+    console.log("ERRO ADICIONAR CONTA GET:", error);
+    return res.redirect("/game");
+  }
 });
 
 router.post("/game/adicionar-conta/:id", async (req, res) => {
   const idResponsavel = req.params.id;
   const email = req.body.email;
+  const senha = req.body.senha;
 
   try {
+    const responsavel = await Usuario.findByPk(idResponsavel);
+
+    if (!responsavel) {
+      return res.redirect("/game");
+    }
+
     const usuarioEncontrado = await Usuario.findOne({
       where: {
         email: email,
@@ -220,6 +302,12 @@ router.post("/game/adicionar-conta/:id", async (req, res) => {
 
     if (!usuarioEncontrado) {
       return res.redirect(`/game/adicionar-conta/${idResponsavel}?erro=crianca`);
+    }
+
+    const senhaCorreta = await bcrypt.compare(senha, usuarioEncontrado.senha);
+
+    if (!senhaCorreta) {
+      return res.redirect(`/game/adicionar-conta/${idResponsavel}?erro=senha`);
     }
 
     const vinculoExistente = await ResponsavelCrianca.findOne({
@@ -398,10 +486,26 @@ router.post("/game/escolha-personagem/:id", async (req, res) => {
   }
 });
 //Rota fase
-router.get("/game/:slug", async (req, res) => {
-  const slug = req.params.slug;
+router.get("/game/fase/:idUsuario/:slug/:dificuldade", async (req, res) => {
+  const { idUsuario, slug, dificuldade } = req.params;
 
   try {
+    const usuario = await Usuario.findByPk(idUsuario);
+
+    if (!usuario) {
+      return res.redirect("/game");
+    }
+
+    const crianca = await Crianca.findOne({
+      where: {
+        id_usuario: idUsuario
+      }
+    });
+
+    if (!crianca) {
+      return res.redirect(`/game/crianca/${idUsuario}`);
+    }
+
     const fase = await Fase.findOne({
       where: {
         slug: slug
@@ -409,13 +513,243 @@ router.get("/game/:slug", async (req, res) => {
     });
 
     if (!fase) {
-      return res.redirect("/game");
+      return res.redirect(`/game/perfil/${idUsuario}`);
     }
 
-    return res.send(`Fase encontrada: ${fase.nome}`);
+    return res.render(`game/fases/${slug}`, {
+      usuario,
+      crianca,
+      fase,
+      dificuldade
+    });
   } catch (error) {
     console.log("Erro ao carregar fase: " + error);
     return res.redirect("/game");
+  }
+});
+
+//ROTA JOGOS SALVOS
+
+router.get("/game/jogos-salvos/:id", async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    const usuario = await Usuario.findByPk(id);
+
+    if (!usuario) {
+      return res.redirect("/game");
+    }
+
+    const crianca = await Crianca.findOne({
+      where: {
+        id_usuario: id
+      }
+    });
+
+    if (!crianca) {
+      return res.redirect(`/game/crianca/${id}`);
+    }
+
+    const sessoes = await SessaoJogo.findAll({
+      where: {
+        id_crianca: crianca.id,
+        status: "salva"
+      },
+      include: [
+        {
+          model: Fase
+        }
+      ],
+      order: [["updatedAt", "DESC"]]
+    });
+
+    return res.render("game/jogos-salvos", {
+      usuario,
+      crianca,
+      sessoes
+    });
+  } catch (error) {
+    console.log("Erro ao carregar jogos salvos: " + error);
+    return res.redirect("/game");
+  }
+});
+
+//Rota salvar sessao
+
+router.post("/game/salvar-sessao/:idUsuario", async (req, res) => {
+  const idUsuario = req.params.idUsuario;
+  const { nomeSessao, slugFase, dificuldade, acaoAtual, estrelasAcumuladas, dadosEstado } = req.body;
+
+  try {
+    const crianca = await Crianca.findOne({
+      where: {
+        id_usuario: idUsuario
+      }
+    });
+
+    if (!crianca) {
+      return res.redirect("/game");
+    }
+
+    const fase = await Fase.findOne({
+      where: {
+        slug: slugFase
+      }
+    });
+
+    if (!fase) {
+      return res.redirect(`/game/perfil/${idUsuario}`);
+    }
+
+    await SessaoJogo.create({
+      id_crianca: crianca.id,
+      nome_sessao: nomeSessao,
+      id_fase_atual: fase.id,
+      dificuldade_atual: dificuldade,
+      acao_atual: acaoAtual,
+      estrelas_acumuladas: estrelasAcumuladas || 0,
+      dados_estado: dadosEstado ? JSON.stringify(dadosEstado) : null,
+      status: "salva",
+      data_ultima_acao: new Date()
+    });
+
+    return res.redirect(`/game/jogos-salvos/${idUsuario}`);
+  } catch (error) {
+    console.log("Erro ao salvar sessão: " + error);
+    return res.redirect(`/game/perfil/${idUsuario}`);
+  }
+});
+
+// rota carregar sessao
+router.get("/game/carregar-sessao/:idSessao/:idUsuario", async (req, res) => {
+  const { idSessao, idUsuario } = req.params;
+
+  try {
+    const sessao = await SessaoJogo.findByPk(idSessao, {
+      include: [
+        {
+          model: Fase
+        }
+      ]
+    });
+
+    if (!sessao || !sessao.fase) {
+      return res.redirect(`/game/jogos-salvos/${idUsuario}`);
+    }
+
+    return res.redirect(`/game/fase/${idUsuario}/${sessao.fase.slug}/${sessao.dificuldade_atual}`);
+  } catch (error) {
+    console.log("Erro ao carregar sessão: " + error);
+    return res.redirect(`/game/jogos-salvos/${idUsuario}`);
+  }
+});
+
+//ROTA EXCLUIR SESSAO
+router.post("/game/excluir-sessao/:idSessao/:idUsuario", async (req, res) => {
+  const { idSessao, idUsuario } = req.params;
+
+  try {
+    await SessaoJogo.destroy({
+      where: {
+        id: idSessao
+      }
+    });
+
+    return res.redirect(`/game/jogos-salvos/${idUsuario}`);
+  } catch (error) {
+    console.log("Erro ao excluir sessão: " + error);
+    return res.redirect(`/game/jogos-salvos/${idUsuario}`);
+  }
+});
+
+//rota salvarRessultadofase
+router.post("/game/concluir-fase/:idUsuario/:slug/:dificuldade", async (req, res) => {
+  const { idUsuario, slug, dificuldade } = req.params;
+  const {
+    tentativas_total,
+    erros_resposta,
+    erros_ordem,
+    acoes_concluidas,
+    estrelas_ganhas
+  } = req.body;
+
+  try {
+    const crianca = await Crianca.findOne({
+      where: {
+        id_usuario: idUsuario
+      }
+    });
+
+    if (!crianca) {
+      return res.status(404).json({ sucesso: false, mensagem: "Criança não encontrada." });
+    }
+
+    const fase = await Fase.findOne({
+      where: {
+        slug: slug
+      }
+    });
+
+    if (!fase) {
+      return res.status(404).json({ sucesso: false, mensagem: "Fase não encontrada." });
+    }
+
+    await RelatorioFase.create({
+      id_crianca: crianca.id,
+      id_fase: fase.id,
+      dificuldade: dificuldade,
+      tentativas_total: tentativas_total || 0,
+      erros_resposta: erros_resposta || 0,
+      erros_ordem: erros_ordem || 0,
+      acoes_concluidas: acoes_concluidas || 0,
+      estrelas_ganhas: estrelas_ganhas || 0,
+      data_fim: new Date()
+    });
+
+    await Crianca.update(
+      {
+        total_estrelas: crianca.total_estrelas + (Number(estrelas_ganhas) || 0)
+      },
+      {
+        where: {
+          id: crianca.id
+        }
+      }
+    );
+
+    const progressoExistente = await ProgressoFase.findOne({
+      where: {
+        id_crianca: crianca.id,
+        id_fase: fase.id,
+        dificuldade: dificuldade
+      }
+    });
+
+    if (progressoExistente) {
+      await ProgressoFase.update(
+        {
+          concluida: true
+        },
+        {
+          where: {
+            id: progressoExistente.id
+          }
+        }
+      );
+    } else {
+      await ProgressoFase.create({
+        id_crianca: crianca.id,
+        id_fase: fase.id,
+        dificuldade: dificuldade,
+        concluida: true,
+        estrelas_coletadas: 0
+      });
+    }
+
+    return res.json({ sucesso: true });
+  } catch (error) {
+    console.log("Erro ao concluir fase: " + error);
+    return res.status(500).json({ sucesso: false, mensagem: "Erro ao concluir fase." });
   }
 });
 export default router;

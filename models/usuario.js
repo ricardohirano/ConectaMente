@@ -32,6 +32,5 @@ const Usuario = connection.define("usuarios", {
   
 });
 
-Usuario.sync({ force: false });
 
 export default Usuario;
