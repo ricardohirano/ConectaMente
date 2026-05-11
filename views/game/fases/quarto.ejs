@@ -1,9 +1,8 @@
 <%- include('../partials/headerFase') %>
 
 <main class="pagina-fase-game">
-  <a href="/game/perfil/<%= usuario.id %>" class="btn-voltar-site" aria-label="Voltar">
-    <img src="/img/game/voltar.svg" alt="Voltar">
-  </a>
+  <%- include('../partials/navbarFase') %>
+  
 
   <section class="painel-fase">
     <div class="cenario-fase">
@@ -166,6 +165,25 @@
     </div>
   </div>
 </div>
+
+<!-- MODAL SALVAR -->
+<div class="modal-salvar" id="modalSalvar">
+  <div class="modal-salvar__caixa">
+    <h2>Salvar jogo</h2>
+    <p>Deseja salvar seu progresso atual?</p>
+
+    <div class="acoes-fase-concluida">
+      <button type="button" class="btn-fase-concluida" id="cancelarSalvar">
+        Cancelar
+      </button>
+
+      <button type="button" class="btn-fase-concluida destaque" id="confirmarSalvar">
+        Salvar agora
+      </button>
+    </div>
+  </div>
+</div>
+
 </main>
 
 
@@ -203,6 +221,11 @@
   const estrelaMesa = document.getElementById("estrelaMesa");
 
   const contadorConquista = document.getElementById("contadorConquista");
+
+  const btnSalvarJogo = document.getElementById("btnSalvarJogo");
+  const modalSalvar = document.getElementById("modalSalvar");
+  const cancelarSalvar = document.getElementById("cancelarSalvar");
+  const confirmarSalvar = document.getElementById("confirmarSalvar");
 
   const estadoAcoes = {
     cama: false,
@@ -427,8 +450,72 @@
       modalErro.classList.remove("ativo");
     }
   });
+
+// Salvar jogo
+
+if (btnSalvarJogo) {
+  btnSalvarJogo.addEventListener("click", () => {
+    modalSalvar.classList.add("ativo");
+  });
+}
+
+if (cancelarSalvar) {
+  cancelarSalvar.addEventListener("click", () => {
+    modalSalvar.classList.remove("ativo");
+  });
+}
+
+if (modalSalvar) {
+  modalSalvar.addEventListener("click", (event) => {
+    if (event.target === modalSalvar) {
+      modalSalvar.classList.remove("ativo");
+    }
+  });
+}
+
+async function salvarSessaoJogo() {
+  try {
+    const resposta = await fetch("/game/salvar-sessao/<%= usuario.id %>", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        nomeSessao: "Jogo <%= fase.nome %>",
+        slugFase: "<%= fase.slug %>",
+        dificuldade: "<%= dificuldade %>",
+        acaoAtual: typeof proximaAcaoEsperada === "function"
+          ? (proximaAcaoEsperada() || "concluida")
+          : "concluida",
+        estrelasAcumuladas: typeof totalConquista !== "undefined" ? totalConquista : 0,
+        dadosEstado: typeof estadoAcoes !== "undefined" ? estadoAcoes : {}
+      })
+    });
+
+    const resultado = await resposta.json();
+    console.log("RESULTADO SALVAR:", resultado);
+
+    modalSalvar.classList.remove("ativo");
+
+    if (resultado.sucesso) {
+      abrirModalErro("Jogo salvo com sucesso.");
+    } else {
+      abrirModalErro("Não foi possível salvar o jogo.");
+    }
+  } catch (error) {
+    console.log("Erro ao salvar sessão:", error);
+    modalSalvar.classList.remove("ativo");
+    abrirModalErro("Erro ao salvar o jogo.");
+  }
+}
+
+if (confirmarSalvar) {
+  confirmarSalvar.addEventListener("click", async () => {
+    await salvarSessaoJogo();
+  });
+}
 </script>
-</script>
+
 
 </body>
 </html>

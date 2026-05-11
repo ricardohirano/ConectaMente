@@ -1,8 +1,17 @@
-.pagina-fase-game {
-  min-height: 100vh;
-  width: 100%;
+html, body {
   margin: 0;
   padding: 0;
+  width: 100%;
+  min-height: 100%;
+  overflow-x: hidden;
+}
+
+.pagina-fase-game {
+  width: 100%;
+  min-height: 100vh;
+  margin: 0;
+  padding: 86px 0 0 0;
+  background: #34457f;
 }
 
 .painel-fase {
@@ -11,12 +20,10 @@
   padding: 0;
 }
 
-
-
 .cenario-fase {
   position: relative;
   width: 100vw;
-  height: 100vh;
+  height: calc(100vh - 90px);
   margin: 0;
   overflow: hidden;
 }
@@ -335,7 +342,29 @@
   font-weight: 600;
   color: #333333;
 }
+.modal-salvar {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
 
+.modal-salvar.ativo {
+  display: flex;
+}
+
+.modal-salvar__caixa {
+  width: 92%;
+  max-width: 620px;
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 28px;
+  text-align: center;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.25);
+}
 .acoes-fase-concluida {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -370,29 +399,124 @@
 .btn-fase-concluida:hover {
   transform: translateY(-2px);
 }
-
-@media (max-width: 768px) {
-  .modal-fase-concluida__caixa {
-    padding: 24px 20px;
-  }
-
-  .modal-fase-concluida__caixa h2 {
-    font-size: 30px;
-  }
-
-  .modal-fase-concluida__caixa p {
-    font-size: 20px;
-  }
-
-  .acoes-fase-concluida {
-    grid-template-columns: 1fr;
-  }
-
-  .btn-fase-concluida {
-    min-height: 74px;
-    font-size: 20px;
-  }
+.modal-salvar {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
 }
+
+.modal-salvar.ativo {
+  display: flex;
+}
+
+.modal-salvar__caixa {
+  width: 92%;
+  max-width: 620px;
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 28px;
+  text-align: center;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.25);
+  border: 6px solid #0f84dc;
+}
+
+.modal-salvar__caixa h2 {
+  margin: 0 0 18px 0;
+  font-family: "Poppins", sans-serif;
+  font-size: 34px;
+  font-weight: 800;
+  color: #111111;
+}
+
+.modal-salvar__caixa p {
+  margin: 0 0 24px 0;
+  font-family: "Poppins", sans-serif;
+  font-size: 20px;
+  color: #333333;
+}
+
+/* =======================================================
+   navbar fase
+======================================================= */
+.navbar-fase {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  padding: 14px 24px;
+  box-sizing: border-box;
+  background: rgba(9, 35, 88, 0.98);
+  border-bottom: 4px solid #0f84dc;
+}
+
+.navbar-fase__esquerda {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.navbar-fase__fase {
+  font-family: "Poppins", sans-serif;
+  font-size: 28px;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.navbar-fase__dificuldade {
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: #f6c400;
+  color: #5b3200;
+  font-family: "Poppins", sans-serif;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.navbar-fase__direita {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.btn-navbar-fase {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 46px;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 14px;
+  text-decoration: none;
+  background: #d9e4f0;
+  color: #173a63;
+  font-family: "Poppins", sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn-navbar-fase--salvar {
+  background: #0f84dc;
+  color: #ffffff;
+}
+
+.btn-navbar-fase--sair {
+  background: #ef1742;
+  color: #ffffff;
+}
+
+
 
 /* =======================================================
    RESPANSIBILIDADE quarto
@@ -423,5 +547,39 @@
 
   .conquista-info span {
     font-size: 34px;
+  }
+    .navbar-fase {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .navbar-fase__esquerda,
+  .navbar-fase__direita {
+    justify-content: center;
+  }
+
+  .navbar-fase__fase {
+    font-size: 22px;
+    text-align: center;
+  }
+    .modal-fase-concluida__caixa {
+    padding: 24px 20px;
+  }
+
+  .modal-fase-concluida__caixa h2 {
+    font-size: 30px;
+  }
+
+  .modal-fase-concluida__caixa p {
+    font-size: 20px;
+  }
+
+  .acoes-fase-concluida {
+    grid-template-columns: 1fr;
+  }
+
+  .btn-fase-concluida {
+    min-height: 74px;
+    font-size: 20px;
   }
 }

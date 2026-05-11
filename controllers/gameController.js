@@ -572,8 +572,15 @@ router.get("/game/jogos-salvos/:id", async (req, res) => {
 //Rota salvar sessao
 
 router.post("/game/salvar-sessao/:idUsuario", async (req, res) => {
-  const idUsuario = req.params.idUsuario;
-  const { nomeSessao, slugFase, dificuldade, acaoAtual, estrelasAcumuladas, dadosEstado } = req.body;
+  const { idUsuario } = req.params;
+  const {
+    nomeSessao,
+    slugFase,
+    dificuldade,
+    acaoAtual,
+    estrelasAcumuladas,
+    dadosEstado
+  } = req.body;
 
   try {
     const crianca = await Crianca.findOne({
@@ -583,7 +590,10 @@ router.post("/game/salvar-sessao/:idUsuario", async (req, res) => {
     });
 
     if (!crianca) {
-      return res.redirect("/game");
+      return res.status(404).json({
+        sucesso: false,
+        mensagem: "Criança não encontrada."
+      });
     }
 
     const fase = await Fase.findOne({
@@ -593,25 +603,34 @@ router.post("/game/salvar-sessao/:idUsuario", async (req, res) => {
     });
 
     if (!fase) {
-      return res.redirect(`/game/perfil/${idUsuario}`);
+      return res.status(404).json({
+        sucesso: false,
+        mensagem: "Fase não encontrada."
+      });
     }
 
     await SessaoJogo.create({
       id_crianca: crianca.id,
-      nome_sessao: nomeSessao,
+      nome_sessao: nomeSessao || "Jogo salvo",
       id_fase_atual: fase.id,
       dificuldade_atual: dificuldade,
       acao_atual: acaoAtual,
-      estrelas_acumuladas: estrelasAcumuladas || 0,
-      dados_estado: dadosEstado ? JSON.stringify(dadosEstado) : null,
+      estrelas_acumuladas: Number(estrelasAcumuladas) || 0,
+      dados_estado: JSON.stringify(dadosEstado || {}),
       status: "salva",
       data_ultima_acao: new Date()
     });
 
-    return res.redirect(`/game/jogos-salvos/${idUsuario}`);
+    return res.json({
+      sucesso: true,
+      mensagem: "Sessão salva com sucesso."
+    });
   } catch (error) {
     console.log("Erro ao salvar sessão: " + error);
-    return res.redirect(`/game/perfil/${idUsuario}`);
+    return res.status(500).json({
+      sucesso: false,
+      mensagem: "Erro ao salvar sessão."
+    });
   }
 });
 

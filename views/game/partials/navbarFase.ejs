@@ -1,0 +1,31 @@
+<nav class="navbar-fase">
+  <div class="navbar-fase__esquerda">
+    <span class="navbar-fase__fase"><%= fase.nome %></span>
+
+    <span class="navbar-fase__dificuldade">
+      <% if (dificuldade === "facil") { %>
+        Fácil
+      <% } else if (dificuldade === "medio") { %>
+        Médio
+      <% } else if (dificuldade === "dificil") { %>
+        Difícil
+      <% } else { %>
+        <%= dificuldade %>
+      <% } %>
+    </span>
+  </div>
+
+  <div class="navbar-fase__direita">
+    <a href="/game/perfil/<%= usuario.id %>" class="btn-navbar-fase">
+      Voltar ao Painel
+    </a>
+
+    <button type="button" class="btn-navbar-fase btn-navbar-fase--salvar" id="btnSalvarJogo">
+      Salvar
+    </button>
+
+    <a href="/game" class="btn-navbar-fase btn-navbar-fase--sair">
+      Sair do Jogo
+    </a>
+  </div>
+</nav>
