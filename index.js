@@ -5,7 +5,7 @@ import HomeController from "./controllers/HomeController.js";
 import GameController from "./controllers/GameController.js";
 import UsuarioController from "./controllers/UsuarioController.js";
 
-import popularFases from "./utils/popularFases.js";
+
 const app = express();
 
 
@@ -19,6 +19,10 @@ import OpcaoResposta from "./models/opcaoResposta.js";
 import ProgressoFase from "./models/ProgressoFase.js";
 import SessaoJogo from "./models/sessaoJogo.js";
 import RelatorioFase from "./models/relatorioFase.js";
+
+import popularDadosIniciais from "./utils/popularDadosIniciais.js";
+
+
 
 // VIEW ENGINE
 app.set("view engine", "ejs");
@@ -43,7 +47,7 @@ connection.authenticate().then(async () => {
   await ProgressoFase.sync({ force: false });
   await SessaoJogo.sync({ force: false });
   await RelatorioFase.sync({ force: false });
-  await popularFases();
+  await popularDadosIniciais();
 
   console.log("Tabelas sincronizadas com sucesso.");
 }).catch((error) => {

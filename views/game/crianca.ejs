@@ -16,7 +16,7 @@
 
     <h1 class="saudacao-crianca">Olá, <%= usuario.nome %></h1>
 
-      <a href="/game/escolha-personagem/<%= usuario.id %>?origem=novo-jogo" class="card-menu-crianca">
+      <a href="/game/escolha-personagem/<%= usuario.id %>?origem=novo-jogo" class="card-menu-crianca" id="btnNovoJogo">
       <div class="icone-menu-crianca icone-cinza">
         <img src="/img/game/mais.svg" alt="Novo jogo">
       </div>
@@ -56,6 +56,15 @@
       </a>
     <% } %>
   </section>
+  <script>
+    const btnNovoJogo = document.getElementById("btnNovoJogo");
+  
+    if (btnNovoJogo) {
+      btnNovoJogo.addEventListener("click", () => {
+        localStorage.removeItem("saveAtualConectaMente");
+      });
+    }
+  </script>
 </main>
 
 </body>

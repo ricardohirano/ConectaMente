@@ -11,7 +11,7 @@ const OpcaoResposta = connection.define("opcoes_resposta", {
       key: "id"
     }
   },
-  resposta: {
+  texto_opcao: {
     type: Sequelize.STRING,
     allowNull: false
   },
@@ -19,12 +19,15 @@ const OpcaoResposta = connection.define("opcoes_resposta", {
     type: Sequelize.BOOLEAN,
     allowNull: false,
     defaultValue: false
+  },
+  ordem_exibicao: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+    defaultValue: 1
   }
 });
 
 Acao.hasMany(OpcaoResposta, { foreignKey: "id_acao" });
 OpcaoResposta.belongsTo(Acao, { foreignKey: "id_acao" });
-
-
 
 export default OpcaoResposta;

@@ -615,6 +615,8 @@ router.post("/game/salvar-sessao/:idUsuario", async (req, res) => {
       nome_sessao: nomeSessao || "Jogo salvo",
       id_fase_atual: fase.id,
       slug_fase: slugFase,
+      avatar_salvo: crianca.avatar,
+      nome_avatar_salvo: crianca.nome_avatar,
       dificuldade_atual: dificuldade,
       acao_atual: acaoAtual,
       estrelas_acumuladas: Number(estrelasAcumuladas) || 0,
@@ -647,6 +649,26 @@ router.get("/game/carregar-sessao/:idUsuario/:idSessao", async (req, res) => {
       return res.redirect(`/game/jogos-salvos/${idUsuario}`);
     }
 
+    const crianca = await Crianca.findOne({
+      where: {
+        id_usuario: idUsuario
+      }
+    });
+
+    if (crianca) {
+      await Crianca.update(
+        {
+          avatar: sessao.avatar_salvo || crianca.avatar,
+          nome_avatar: sessao.nome_avatar_salvo || crianca.nome_avatar
+        },
+        {
+          where: {
+            id: crianca.id
+          }
+        }
+      );
+    }
+
     return res.redirect(`/game/fase/${idUsuario}/${sessao.slug_fase}/${sessao.dificuldade_atual}`);
   } catch (error) {
     console.log("Erro ao carregar sessão: " + error);
@@ -666,7 +688,9 @@ router.get("/game/escolher-save/:idUsuario/:slug/:dificuldade", async (req, res)
     }
 
     const crianca = await Crianca.findOne({
-      where: { id_usuario: idUsuario }
+      where: {
+        id_usuario: idUsuario
+      }
     });
 
     if (!crianca) {
@@ -689,7 +713,7 @@ router.get("/game/escolher-save/:idUsuario/:slug/:dificuldade", async (req, res)
       dificuldade
     });
   } catch (error) {
-    console.log("Erro ao carregar tela de save: " + error);
+    console.log("Erro ao carregar tela de escolher save: " + error);
     return res.redirect("/game");
   }
 });
@@ -707,22 +731,34 @@ router.post("/game/criar-save/:idUsuario", async (req, res) => {
 
   try {
     const crianca = await Crianca.findOne({
-      where: { id_usuario: idUsuario }
+      where: {
+        id_usuario: idUsuario
+      }
     });
 
     const fase = await Fase.findOne({
-      where: { slug: slugFase }
+      where: {
+        slug: slugFase
+      }
     });
 
     if (!crianca || !fase) {
       return res.status(400).json({ sucesso: false });
     }
+    const totalSaves = await SessaoJogo.count({
+      where: {
+        id_crianca: crianca.id
+      }
+    });
 
+const nomeGerado = `Save ${totalSaves + 1}`;
     await SessaoJogo.create({
       id_crianca: crianca.id,
-      nome_sessao: nomeSessao || "Novo Save",
+      nome_sessao: nomeSessao || "Save 1",
       id_fase_atual: fase.id,
       slug_fase: slugFase,
+      nome_avatar_salvo: crianca.nome_avatar,
+      avatar_salvo: crianca.avatar,
       dificuldade_atual: dificuldade,
       acao_atual: acaoAtual,
       estrelas_acumuladas: Number(estrelasAcumuladas) || 0,
@@ -751,11 +787,15 @@ router.post("/game/sobrescrever-save/:idUsuario/:idSessao", async (req, res) => 
 
   try {
     const crianca = await Crianca.findOne({
-      where: { id_usuario: idUsuario }
+      where: {
+        id_usuario: idUsuario
+      }
     });
 
     const fase = await Fase.findOne({
-      where: { slug: slugFase }
+      where: {
+        slug: slugFase
+      }
     });
 
     if (!crianca || !fase) {
@@ -767,6 +807,8 @@ router.post("/game/sobrescrever-save/:idUsuario/:idSessao", async (req, res) => 
         nome_sessao: nomeSessao || "Jogo salvo",
         id_fase_atual: fase.id,
         slug_fase: slugFase,
+        nome_avatar_salvo: crianca.nome_avatar,
+        avatar_salvo: crianca.avatar,
         dificuldade_atual: dificuldade,
         acao_atual: acaoAtual,
         estrelas_acumuladas: Number(estrelasAcumuladas) || 0,
@@ -912,4 +954,6 @@ router.post("/game/concluir-fase/:idUsuario/:slug/:dificuldade", async (req, res
     });
   }
 });
+
+
 export default router;

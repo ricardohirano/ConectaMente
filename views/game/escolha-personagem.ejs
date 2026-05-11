@@ -85,10 +85,16 @@
 </main>
 
 <script>
+
   const radiosGenero = document.querySelectorAll('input[name="genero"]');
   const grupoMasc = document.getElementById("grupo-masc");
   const grupoFem = document.getElementById("grupo-fem");
+  
+  const origemEscolha = "<%= origem %>";
 
+  if (origemEscolha === "novo-jogo") {
+    localStorage.removeItem("saveAtualConectaMente");
+  }
   function atualizarGenero() {
     const generoSelecionado = document.querySelector('input[name="genero"]:checked').value;
 

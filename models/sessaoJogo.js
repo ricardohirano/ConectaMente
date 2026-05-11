@@ -28,6 +28,14 @@ const SessaoJogo = connection.define("sessoes_jogo", {
     type: Sequelize.STRING,
     allowNull: true
   },
+  avatar_salvo: {
+  type: Sequelize.STRING,
+  allowNull: true
+  },
+  nome_avatar_salvo: {
+    type: Sequelize.STRING,
+    allowNull: true
+  },
   dificuldade_atual: {
     type: Sequelize.STRING,
     allowNull: true

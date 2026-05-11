@@ -26,6 +26,4 @@ const Fase = connection.define("fases", {
   }
 });
 
-
-
 export default Fase;

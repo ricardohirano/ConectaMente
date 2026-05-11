@@ -2,7 +2,6 @@
 
 <main class="pagina-fase-game">
   <%- include('../partials/navbarFase') %>
-  
 
   <section class="painel-fase">
     <div class="cenario-fase">
@@ -11,15 +10,17 @@
         alt="Fundo do quarto"
         class="imagem-cenario"
       >
-        <div class="conquista-fase">
-            <span class="conquista-titulo">Conquista</span>
 
-            <div class="conquista-info">
-                <img src="/img/game/apoio/estrela.svg" alt="Estrela">
-                <span id="contadorConquista">0</span>
-            </div>
+      <div class="conquista-fase">
+        <span class="conquista-titulo">Conquista</span>
+
+        <div class="conquista-info">
+          <img src="/img/game/apoio/estrela.svg" alt="Estrela">
+          <span id="contadorConquista">0</span>
         </div>
-         <!-- 1 - CAMA -->
+      </div>
+
+      <!-- 1 - CAMA -->
       <button type="button" class="objeto-interativo objeto-cama" id="btnCama">
         <img
           src="/img/game/fases/quarto/objetos/camaAntes.png"
@@ -105,10 +106,7 @@
     <div class="modal-quiz__caixa">
       <h2 id="tituloQuiz">Qual é a ação correta?</h2>
 
-      <div class="opcoes-quiz">
-        <button type="button" class="opcao-quiz" id="opcaoCorreta"></button>
-        <button type="button" class="opcao-quiz" id="opcaoErrada"></button>
-      </div>
+      <div class="opcoes-quiz" id="opcoesQuiz"></div>
 
       <button type="button" class="btn-fechar-quiz" id="fecharQuiz">
         Fechar
@@ -127,65 +125,65 @@
       </button>
     </div>
   </div>
-  <!-- MODAL ERRO DE ORDEM -->
-    <div class="modal-erro" id="modalErro">
-      <div class="modal-erro__caixa">
-          <h2>Ops!</h2>
-          <p id="textoErroOrdem">Tem algo para fazer antes, tente novamente.</p>
 
-          <button type="button" id="fecharErro">
-          Entendi
-          </button>
+  <!-- MODAL ERRO -->
+  <div class="modal-erro" id="modalErro">
+    <div class="modal-erro__caixa">
+      <h2>Ops!</h2>
+      <p id="textoErroOrdem">Tem algo para fazer antes, tente novamente.</p>
+
+      <button type="button" id="fecharErro">
+        Entendi
+      </button>
+    </div>
+  </div>
+
+  <!-- MODAL FASE CONCLUÍDA -->
+  <div class="modal-fase-concluida" id="modalFaseConcluida">
+    <div class="modal-fase-concluida__caixa">
+      <h2>Fase Concluída!</h2>
+      <p>Você completou todas as ações do quarto.</p>
+
+      <div class="acoes-fase-concluida">
+        <a href="/game/perfil/<%= usuario.id %>" class="btn-fase-concluida">
+          Voltar ao Perfil
+        </a>
+
+        <% if (dificuldade === "facil") { %>
+          <a href="/game/fase/<%= usuario.id %>/quarto/medio" class="btn-fase-concluida destaque">
+            Aumentar Dificuldade
+          </a>
+        <% } else if (dificuldade === "medio") { %>
+          <a href="/game/fase/<%= usuario.id %>/quarto/dificil" class="btn-fase-concluida destaque">
+            Aumentar Dificuldade
+          </a>
+        <% } else { %>
+          <a href="/game/perfil/<%= usuario.id %>" class="btn-fase-concluida destaque">
+            Finalizar
+          </a>
+        <% } %>
       </div>
     </div>
-  <!-- MODAL FASE CONCLUIDA -->
-<div class="modal-fase-concluida" id="modalFaseConcluida">
-  <div class="modal-fase-concluida__caixa">
-    <h2>Fase Concluída!</h2>
-    <p>Você completou todas as ações do quarto.</p>
+  </div>
 
-    <div class="acoes-fase-concluida">
-      <a href="/game/perfil/<%= usuario.id %>" class="btn-fase-concluida">
-        Voltar ao Perfil
-      </a>
+  <!-- MODAL SALVAR -->
+  <div class="modal-salvar" id="modalSalvar">
+    <div class="modal-salvar__caixa">
+      <h2>Salvar jogo</h2>
+      <p>Deseja salvar seu progresso atual?</p>
 
-      <% if (dificuldade === "facil") { %>
-        <a href="/game/fase/<%= usuario.id %>/quarto/medio" class="btn-fase-concluida destaque">
-          Aumentar Dificuldade
-        </a>
-      <% } else if (dificuldade === "medio") { %>
-        <a href="/game/fase/<%= usuario.id %>/quarto/dificil" class="btn-fase-concluida destaque">
-          Aumentar Dificuldade
-        </a>
-      <% } else { %>
-        <a href="/game/perfil/<%= usuario.id %>" class="btn-fase-concluida destaque">
-          Finalizar
-        </a>
-      <% } %>
+      <div class="acoes-fase-concluida">
+        <button type="button" class="btn-fase-concluida" id="cancelarSalvar">
+          Cancelar
+        </button>
+
+        <button type="button" class="btn-fase-concluida destaque" id="confirmarSalvar">
+          Salvar agora
+        </button>
+      </div>
     </div>
   </div>
-</div>
-
-<!-- MODAL SALVAR -->
-<div class="modal-salvar" id="modalSalvar">
-  <div class="modal-salvar__caixa">
-    <h2>Salvar jogo</h2>
-    <p>Deseja salvar seu progresso atual?</p>
-
-    <div class="acoes-fase-concluida">
-      <button type="button" class="btn-fase-concluida" id="cancelarSalvar">
-        Cancelar
-      </button>
-
-      <button type="button" class="btn-fase-concluida destaque" id="confirmarSalvar">
-        Salvar agora
-      </button>
-    </div>
-  </div>
-</div>
-
 </main>
-
 
 <script>
   const modalQuiz = document.getElementById("modalQuiz");
@@ -201,9 +199,8 @@
   const modalFaseConcluida = document.getElementById("modalFaseConcluida");
 
   const tituloQuiz = document.getElementById("tituloQuiz");
-  const opcaoCorreta = document.getElementById("opcaoCorreta");
-  const opcaoErrada = document.getElementById("opcaoErrada");
   const textoParabens = document.getElementById("textoParabens");
+  const opcoesQuiz = document.getElementById("opcoesQuiz");
 
   const btnCama = document.getElementById("btnCama");
   const btnJanela = document.getElementById("btnJanela");
@@ -248,43 +245,61 @@
   const perguntas = {
     cama: {
       titulo: "Qual é a ação correta?",
-      correta: "Arrumar a cama",
-      errada: "Deitar na cama",
       mensagem: "Você arrumou a cama corretamente."
     },
     janela: {
       titulo: "Qual é a ação correta?",
-      correta: "Abrir a janela",
-      errada: "Fechar a janela",
       mensagem: "Você abriu a janela corretamente."
     },
     armario: {
       titulo: "Qual é a ação correta?",
-      correta: "Trocar de roupa",
-      errada: "Dormir no armário",
       mensagem: "Você trocou de roupa corretamente."
     },
     mesa: {
       titulo: "Qual é a ação correta?",
-      correta: "Guardar livro",
-      errada: "Jogar o livro no chão",
       mensagem: "Você guardou o livro corretamente."
     }
   };
 
+  const opcoesPorAcao = {
+    cama: [
+      { texto_opcao: "Arrumar a cama", correta: true },
+      { texto_opcao: "Deitar na cama", correta: false },
+      { texto_opcao: "Pular na cama", correta: false },
+      { texto_opcao: "Bagunçar o lençol", correta: false }
+    ],
+    janela: [
+      { texto_opcao: "Abrir a janela", correta: true },
+      { texto_opcao: "Fechar a janela", correta: false },
+      { texto_opcao: "Subir na janela", correta: false },
+      { texto_opcao: "Empurrar a cortina", correta: false }
+    ],
+    armario: [
+      { texto_opcao: "Trocar de roupa", correta: true },
+      { texto_opcao: "Dormir no armário", correta: false },
+      { texto_opcao: "Brincar no armário", correta: false },
+      { texto_opcao: "Jogar roupa no chão", correta: false }
+    ],
+    mesa: [
+      { texto_opcao: "Guardar livro", correta: true },
+      { texto_opcao: "Jogar o livro no chão", correta: false },
+      { texto_opcao: "Rasgar o livro", correta: false },
+      { texto_opcao: "Esconder o livro", correta: false }
+    ]
+  };
+
   function valorPorAcerto() {
-  const dificuldadeAtual = String("<%= dificuldade %>")
-    .trim()
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "");
+    const dificuldadeAtual = String("<%= dificuldade %>")
+      .trim()
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
 
-  if (dificuldadeAtual === "facil") return 1;
-  if (dificuldadeAtual === "medio") return 2;
-  if (dificuldadeAtual === "dificil") return 3;
+    if (dificuldadeAtual === "facil") return 1;
+    if (dificuldadeAtual === "medio") return 2;
+    if (dificuldadeAtual === "dificil") return 3;
 
-  return 1;
-
+    return 1;
   }
 
   function proximaAcaoEsperada() {
@@ -295,6 +310,47 @@
     textoErroOrdem.textContent = mensagem;
     modalErro.classList.add("ativo");
   }
+
+  function embaralharArray(array) {
+    const copia = [...array];
+
+    for (let i = copia.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [copia[i], copia[j]] = [copia[j], copia[i]];
+    }
+
+    return copia;
+  }
+
+  function renderizarOpcoes(opcoes) {
+      opcoesQuiz.innerHTML = "";
+
+      const opcoesEmbaralhadas = embaralharArray(opcoes);
+      const classesCores = [
+        "opcao-quiz--azul",
+        "opcao-quiz--verde",
+        "opcao-quiz--rosa",
+        "opcao-quiz--laranja"
+      ];
+
+      opcoesEmbaralhadas.forEach((opcao, index) => {
+        const botao = document.createElement("button");
+        botao.type = "button";
+        botao.className = `opcao-quiz ${classesCores[index]}`;
+        botao.textContent = opcao.texto_opcao;
+
+        botao.addEventListener("click", () => {
+          if (opcao.correta) {
+            concluirAcao(acaoAtual);
+          } else {
+            errosResposta++;
+            abrirModalErro("Resposta incorreta. Tente novamente.");
+          }
+        });
+
+        opcoesQuiz.appendChild(botao);
+      });
+    }
 
   function abrirQuiz(nomeAcao) {
     if (estadoAcoes[nomeAcao]) {
@@ -314,9 +370,9 @@
     acaoAtual = nomeAcao;
 
     tituloQuiz.textContent = perguntas[nomeAcao].titulo;
-    opcaoCorreta.textContent = perguntas[nomeAcao].correta;
-    opcaoErrada.textContent = perguntas[nomeAcao].errada;
     textoParabens.textContent = perguntas[nomeAcao].mensagem;
+
+    renderizarOpcoes(opcoesPorAcao[nomeAcao]);
 
     modalQuiz.classList.add("ativo");
   }
@@ -325,7 +381,7 @@
     if (faseJaSalva) return;
 
     try {
-      const resposta = await fetch("/game/concluir-fase/<%= usuario.id %>/quarto/<%= dificuldade %>", {
+      const resposta = await fetch("/game/concluir-fase/<%= usuario.id %>/<%= fase.slug %>/<%= dificuldade %>", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -410,77 +466,71 @@
     btnMesa.addEventListener("click", () => abrirQuiz("mesa"));
   }
 
-  opcaoCorreta.addEventListener("click", () => {
-    if (acaoAtual) {
-      concluirAcao(acaoAtual);
-    }
-  });
-
-  opcaoErrada.addEventListener("click", () => {
-    errosResposta++;
-    abrirModalErro("Resposta incorreta. Tente novamente.");
-  });
-
-  fecharQuiz.addEventListener("click", () => {
-    modalQuiz.classList.remove("ativo");
-  });
-
-  modalQuiz.addEventListener("click", (event) => {
-    if (event.target === modalQuiz) {
+  if (fecharQuiz) {
+    fecharQuiz.addEventListener("click", () => {
       modalQuiz.classList.remove("ativo");
-    }
-  });
+    });
+  }
 
-  fecharParabens.addEventListener("click", () => {
-    modalParabens.classList.remove("ativo");
-  });
+  if (modalQuiz) {
+    modalQuiz.addEventListener("click", (event) => {
+      if (event.target === modalQuiz) {
+        modalQuiz.classList.remove("ativo");
+      }
+    });
+  }
 
-  modalParabens.addEventListener("click", (event) => {
-    if (event.target === modalParabens) {
+  if (fecharParabens) {
+    fecharParabens.addEventListener("click", () => {
       modalParabens.classList.remove("ativo");
-    }
-  });
+    });
+  }
 
-  fecharErro.addEventListener("click", () => {
-    modalErro.classList.remove("ativo");
-  });
+  if (modalParabens) {
+    modalParabens.addEventListener("click", (event) => {
+      if (event.target === modalParabens) {
+        modalParabens.classList.remove("ativo");
+      }
+    });
+  }
 
-  modalErro.addEventListener("click", (event) => {
-    if (event.target === modalErro) {
+  if (fecharErro) {
+    fecharErro.addEventListener("click", () => {
       modalErro.classList.remove("ativo");
-    }
-  });
+    });
+  }
 
-// Salvar jogo
+  if (modalErro) {
+    modalErro.addEventListener("click", (event) => {
+      if (event.target === modalErro) {
+        modalErro.classList.remove("ativo");
+      }
+    });
+  }
 
-if (btnSalvarJogo) {
-  btnSalvarJogo.addEventListener("click", () => {
-    modalSalvar.classList.add("ativo");
-  });
-}
+  if (btnSalvarJogo && modalSalvar) {
+    btnSalvarJogo.addEventListener("click", () => {
+      modalSalvar.classList.add("ativo");
+    });
+  }
 
-if (cancelarSalvar) {
-  cancelarSalvar.addEventListener("click", () => {
-    modalSalvar.classList.remove("ativo");
-  });
-}
-
-if (modalSalvar) {
-  modalSalvar.addEventListener("click", (event) => {
-    if (event.target === modalSalvar) {
+  if (cancelarSalvar && modalSalvar) {
+    cancelarSalvar.addEventListener("click", () => {
       modalSalvar.classList.remove("ativo");
-    }
-  });
-}
+    });
+  }
 
-async function salvarSessaoJogo() {
-  try {
-    const resposta = await fetch("/game/salvar-sessao/<%= usuario.id %>", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
+  if (modalSalvar) {
+    modalSalvar.addEventListener("click", (event) => {
+      if (event.target === modalSalvar) {
+        modalSalvar.classList.remove("ativo");
+      }
+    });
+  }
+
+  if (confirmarSalvar) {
+    confirmarSalvar.addEventListener("click", () => {
+      const dadosSaveAtual = {
         nomeSessao: "Jogo <%= fase.nome %>",
         slugFase: "<%= fase.slug %>",
         dificuldade: "<%= dificuldade %>",
@@ -489,33 +539,18 @@ async function salvarSessaoJogo() {
           : "concluida",
         estrelasAcumuladas: typeof totalConquista !== "undefined" ? totalConquista : 0,
         dadosEstado: typeof estadoAcoes !== "undefined" ? estadoAcoes : {}
-      })
+      };
+
+      localStorage.setItem("saveAtualConectaMente", JSON.stringify(dadosSaveAtual));
+
+      if (modalSalvar) {
+        modalSalvar.classList.remove("ativo");
+      }
+
+      window.location.href = `/game/escolher-save/<%= usuario.id %>/<%= fase.slug %>/<%= dificuldade %>`;
     });
-
-    const resultado = await resposta.json();
-    console.log("RESULTADO SALVAR:", resultado);
-
-    modalSalvar.classList.remove("ativo");
-
-    if (resultado.sucesso) {
-      abrirModalErro("Jogo salvo com sucesso.");
-    } else {
-      abrirModalErro("Não foi possível salvar o jogo.");
-    }
-  } catch (error) {
-    console.log("Erro ao salvar sessão:", error);
-    modalSalvar.classList.remove("ativo");
-    abrirModalErro("Erro ao salvar o jogo.");
   }
-}
-
-if (confirmarSalvar) {
-  confirmarSalvar.addEventListener("click", async () => {
-    await salvarSessaoJogo();
-  });
-}
 </script>
-
 
 </body>
 </html>

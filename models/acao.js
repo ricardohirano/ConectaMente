@@ -15,32 +15,62 @@ const Acao = connection.define("acoes", {
     type: Sequelize.STRING,
     allowNull: false
   },
+  slug: {
+    type: Sequelize.STRING,
+    allowNull: false
+  },
+  ordem_acao: {
+    type: Sequelize.INTEGER,
+    allowNull: false
+  },
   pergunta: {
     type: Sequelize.STRING,
     allowNull: false
   },
-  objeto_alvo: {
-    type: Sequelize.STRING,
-    allowNull: false
-  },
-  ordem_correta: {
-    type: Sequelize.INTEGER,
-    allowNull: false
-  },
-  imagem_sprite: {
+  mensagem_acerto: {
     type: Sequelize.STRING,
     allowNull: true
   },
-  estrelas_recompensa: {
-    type: Sequelize.INTEGER,
+  imagem_antes: {
+    type: Sequelize.STRING,
+    allowNull: false
+  },
+  imagem_depois: {
+    type: Sequelize.STRING,
+    allowNull: false
+  },
+  posicao_top: {
+    type: Sequelize.STRING,
+    allowNull: true
+  },
+  posicao_left: {
+    type: Sequelize.STRING,
+    allowNull: true
+  },
+  largura: {
+    type: Sequelize.STRING,
+    allowNull: true
+  },
+  altura: {
+    type: Sequelize.STRING,
+    allowNull: true
+  },
+  estrela_top: {
+    type: Sequelize.STRING,
+    allowNull: true
+  },
+  estrela_left: {
+    type: Sequelize.STRING,
+    allowNull: true
+  },
+  ativa: {
+    type: Sequelize.BOOLEAN,
     allowNull: false,
-    defaultValue: 1
+    defaultValue: true
   }
 });
 
 Fase.hasMany(Acao, { foreignKey: "id_fase" });
 Acao.belongsTo(Fase, { foreignKey: "id_fase" });
-
-
 
 export default Acao;

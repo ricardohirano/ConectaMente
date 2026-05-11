@@ -29,14 +29,14 @@
         <div class="card-jogo-salvo">
           <div class="avatar-jogo-salvo">
             <img
-              src="/img/game/avatars/<%= crianca?.avatar || 'personagem1.svg' %>"
+              src="/img/game/avatars/<%= sessao.avatar_salvo || 'personagem1.svg' %>"
               alt="Avatar"
             >
           </div>
 
           <div class="info-jogo-salvo">
-            <h2><%= crianca?.nome_avatar || usuario.nome %></h2>
-            <p><%= sessao.nome_sessao || ('Jogo ' + (index + 1)) %></p>
+            <h2><%= sessao.nome_avatar_salvo || usuario.nome %></h2>
+            <p><%= sessao.nome_sessao || ('Save ' + (index + 1)) %></p>
 
             <p class="data-jogo-salvo">
               Salvo em:
@@ -45,7 +45,8 @@
                 month: '2-digit',
                 year: 'numeric',
                 hour: '2-digit',
-                minute: '2-digit'
+                minute: '2-digit',
+                second: '2-digit'
               }) %>
             </p>
 
