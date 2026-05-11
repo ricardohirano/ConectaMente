@@ -12,6 +12,7 @@
     </div>
 
     <form action="/game/escolha-personagem/<%= usuario.id %>" method="POST" class="form-avatar">
+      <input type="hidden" name="origem" value="<%= origem %>">
       <!-- ESCOLHA DO GÊNERO -->
       <div class="grupo-genero-radio">
         <label class="opcao-genero">

@@ -1332,9 +1332,181 @@ body {
 }
 
 
+/* =======================================================
+   pagina de jogos salvos
+======================================================= */
+.painel-jogos-salvos {
+  width: 100%;
+  max-width: 1240px;
+  margin: 40px auto;
+  background: #f2f2f2;
+  border-radius: 20px;
+  padding: 36px 40px 48px;
+  box-sizing: border-box;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+}
 
+.topo-jogos-salvos {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 30px;
+}
 
+.logo-jogos-salvos {
+  width: 260px;
+  margin-bottom: 12px;
+}
 
+.topo-jogos-salvos h1 {
+  margin: 0;
+  font-family: "Luckiest Guy", cursive;
+  font-size: 56px;
+  color: #2d9cff;
+  letter-spacing: 1px;
+}
+
+.lista-jogos-salvos {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.card-jogo-salvo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  background: #dff2fb;
+  border-radius: 18px;
+  padding: 20px 24px;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+}
+
+.avatar-jogo-salvo {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  border: 5px solid #0d67d6;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.avatar-jogo-salvo img {
+  width: 82px;
+  height: 82px;
+  object-fit: contain;
+}
+
+.info-jogo-salvo {
+  flex: 1;
+}
+
+.info-jogo-salvo h2 {
+  margin: 0 0 10px 0;
+  font-family: "Luckiest Guy", cursive;
+  font-size: 34px;
+  color: #1a57b6;
+}
+
+.info-jogo-salvo p {
+  margin: 0 0 8px 0;
+  font-family: "Luckiest Guy", cursive;
+  font-size: 30px;
+  color: #1a57b6;
+}
+
+.info-jogo-salvo span {
+  font-family: "Poppins", sans-serif;
+  font-size: 16px;
+  font-weight: 300;
+  color: #36507c;
+}
+
+.acoes-jogo-salvo {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.btn-card-jogo {
+  min-width: 140px;
+  border: none;
+  border-radius: 14px;
+  padding: 12px 18px;
+  text-decoration: none;
+  font-family: "Poppins", sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  text-align: center;
+  cursor: pointer;
+}
+
+.btn-carregar-jogo {
+  background: #0f84dc;
+  color: #ffffff;
+}
+
+.btn-excluir-jogo {
+  background: #ef1742;
+  color: #ffffff;
+}
+
+.jogos-salvos-vazio {
+  background: #dff2fb;
+  border-radius: 16px;
+  padding: 28px;
+  text-align: center;
+}
+
+.jogos-salvos-vazio p {
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  color: #36507c;
+}
+
+.data-jogo-salvo {
+  margin: 0 0 8px 0;
+  font-family: "Poppins", sans-serif;
+  font-size: 10px;
+  
+  color: #5a6f91;
+}
+/*
+tela de salvar-jogos
+*/
+.subtitulo-escolher-save {
+  margin: 10px 0 0 0;
+  font-family: "Poppins", sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: #4c6488;
+  text-align: center;
+}
+
+.bloco-novo-save {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+.btn-novo-save {
+  border: none;
+  border-radius: 16px;
+  padding: 16px 28px;
+  background: #0f84dc;
+  color: #ffffff;
+  font-family: "Poppins", sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+}
 /* =======================================================
    RESPONSIVIDADE
 ======================================================= */

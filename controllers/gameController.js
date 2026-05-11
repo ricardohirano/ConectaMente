@@ -421,6 +421,7 @@ router.post("/game/excluir-conta/:idConta/:idResponsavel", async (req, res) => {
 
 router.get("/game/escolha-personagem/:id", async (req, res) => {
   const id = req.params.id;
+  const origem = req.query.origem;
 
   try {
     const usuario = await Usuario.findByPk(id);
@@ -432,7 +433,8 @@ router.get("/game/escolha-personagem/:id", async (req, res) => {
 
     return res.render("game/escolha-personagem", {
       usuario: usuario,
-      crianca: crianca
+      crianca: crianca,
+      origem: origem || "novo-jogo"
     });
   } catch (error) {
     console.log("Erro ao carregar escolha de personagem: " + error);
@@ -444,10 +446,7 @@ router.post("/game/escolha-personagem/:id", async (req, res) => {
   const id = req.params.id;
   const avatarEscolhido = req.body.avatarEscolhido;
   const nomeAvatar = req.body.nomeAvatar;
-
-  console.log("ID usuário:", id);
-  console.log("Avatar escolhido:", avatarEscolhido);
-  console.log("Nome avatar:", nomeAvatar);
+  const origem = req.body.origem;
 
   try {
     const crianca = await Crianca.findOne({
@@ -455,8 +454,6 @@ router.post("/game/escolha-personagem/:id", async (req, res) => {
         id_usuario: id
       }
     });
-
-    console.log("Registro encontrado em criancas:", crianca);
 
     if (!crianca) {
       return res.redirect(`/game/escolha-personagem/${id}`);
@@ -474,12 +471,21 @@ router.post("/game/escolha-personagem/:id", async (req, res) => {
       }
     );
 
+    if (origem === "novo-jogo") {
+      return res.redirect(`/game/fase/${id}/quarto/facil`);
+    }
+
+    if (origem === "perfil") {
+      return res.redirect(`/game/perfil/${id}`);
+    }
+
     return res.redirect(`/game/crianca/${id}`);
   } catch (error) {
     console.log("Erro ao salvar avatar e nome do avatar: " + error);
     return res.redirect(`/game/escolha-personagem/${id}`);
   }
 });
+
 //Rota fase
 router.get("/game/fase/:idUsuario/:slug/:dificuldade", async (req, res) => {
   const { idUsuario, slug, dificuldade } = req.params;
@@ -550,11 +556,6 @@ router.get("/game/jogos-salvos/:id", async (req, res) => {
         id_crianca: crianca.id,
         status: "salva"
       },
-      include: [
-        {
-          model: Fase
-        }
-      ],
       order: [["updatedAt", "DESC"]]
     });
 
@@ -613,6 +614,7 @@ router.post("/game/salvar-sessao/:idUsuario", async (req, res) => {
       id_crianca: crianca.id,
       nome_sessao: nomeSessao || "Jogo salvo",
       id_fase_atual: fase.id,
+      slug_fase: slugFase,
       dificuldade_atual: dificuldade,
       acao_atual: acaoAtual,
       estrelas_acumuladas: Number(estrelasAcumuladas) || 0,
@@ -635,32 +637,161 @@ router.post("/game/salvar-sessao/:idUsuario", async (req, res) => {
 });
 
 // rota carregar sessao
-router.get("/game/carregar-sessao/:idSessao/:idUsuario", async (req, res) => {
-  const { idSessao, idUsuario } = req.params;
+router.get("/game/carregar-sessao/:idUsuario/:idSessao", async (req, res) => {
+  const { idUsuario, idSessao } = req.params;
 
   try {
-    const sessao = await SessaoJogo.findByPk(idSessao, {
-      include: [
-        {
-          model: Fase
-        }
-      ]
-    });
+    const sessao = await SessaoJogo.findByPk(idSessao);
 
-    if (!sessao || !sessao.fase) {
+    if (!sessao) {
       return res.redirect(`/game/jogos-salvos/${idUsuario}`);
     }
 
-    return res.redirect(`/game/fase/${idUsuario}/${sessao.fase.slug}/${sessao.dificuldade_atual}`);
+    return res.redirect(`/game/fase/${idUsuario}/${sessao.slug_fase}/${sessao.dificuldade_atual}`);
   } catch (error) {
     console.log("Erro ao carregar sessão: " + error);
     return res.redirect(`/game/jogos-salvos/${idUsuario}`);
   }
 });
+// rota escolha save
+
+router.get("/game/escolher-save/:idUsuario/:slug/:dificuldade", async (req, res) => {
+  const { idUsuario, slug, dificuldade } = req.params;
+
+  try {
+    const usuario = await Usuario.findByPk(idUsuario);
+
+    if (!usuario) {
+      return res.redirect("/game");
+    }
+
+    const crianca = await Crianca.findOne({
+      where: { id_usuario: idUsuario }
+    });
+
+    if (!crianca) {
+      return res.redirect(`/game/crianca/${idUsuario}`);
+    }
+
+    const sessoes = await SessaoJogo.findAll({
+      where: {
+        id_crianca: crianca.id,
+        status: "salva"
+      },
+      order: [["updatedAt", "DESC"]]
+    });
+
+    return res.render("game/escolher-save", {
+      usuario,
+      crianca,
+      sessoes,
+      slug,
+      dificuldade
+    });
+  } catch (error) {
+    console.log("Erro ao carregar tela de save: " + error);
+    return res.redirect("/game");
+  }
+});
+//rota novo save
+router.post("/game/criar-save/:idUsuario", async (req, res) => {
+  const { idUsuario } = req.params;
+  const {
+    nomeSessao,
+    slugFase,
+    dificuldade,
+    acaoAtual,
+    estrelasAcumuladas,
+    dadosEstado
+  } = req.body;
+
+  try {
+    const crianca = await Crianca.findOne({
+      where: { id_usuario: idUsuario }
+    });
+
+    const fase = await Fase.findOne({
+      where: { slug: slugFase }
+    });
+
+    if (!crianca || !fase) {
+      return res.status(400).json({ sucesso: false });
+    }
+
+    await SessaoJogo.create({
+      id_crianca: crianca.id,
+      nome_sessao: nomeSessao || "Novo Save",
+      id_fase_atual: fase.id,
+      slug_fase: slugFase,
+      dificuldade_atual: dificuldade,
+      acao_atual: acaoAtual,
+      estrelas_acumuladas: Number(estrelasAcumuladas) || 0,
+      dados_estado: JSON.stringify(dadosEstado || {}),
+      status: "salva",
+      data_ultima_acao: new Date()
+    });
+
+    return res.json({ sucesso: true });
+  } catch (error) {
+    console.log("Erro ao criar save: " + error);
+    return res.status(500).json({ sucesso: false });
+  }
+});
+// rota save antigo
+router.post("/game/sobrescrever-save/:idUsuario/:idSessao", async (req, res) => {
+  const { idUsuario, idSessao } = req.params;
+  const {
+    nomeSessao,
+    slugFase,
+    dificuldade,
+    acaoAtual,
+    estrelasAcumuladas,
+    dadosEstado
+  } = req.body;
+
+  try {
+    const crianca = await Crianca.findOne({
+      where: { id_usuario: idUsuario }
+    });
+
+    const fase = await Fase.findOne({
+      where: { slug: slugFase }
+    });
+
+    if (!crianca || !fase) {
+      return res.status(400).json({ sucesso: false });
+    }
+
+    await SessaoJogo.update(
+      {
+        nome_sessao: nomeSessao || "Jogo salvo",
+        id_fase_atual: fase.id,
+        slug_fase: slugFase,
+        dificuldade_atual: dificuldade,
+        acao_atual: acaoAtual,
+        estrelas_acumuladas: Number(estrelasAcumuladas) || 0,
+        dados_estado: JSON.stringify(dadosEstado || {}),
+        status: "salva",
+        data_ultima_acao: new Date()
+      },
+      {
+        where: {
+          id: idSessao,
+          id_crianca: crianca.id
+        }
+      }
+    );
+
+    return res.json({ sucesso: true });
+  } catch (error) {
+    console.log("Erro ao sobrescrever save: " + error);
+    return res.status(500).json({ sucesso: false });
+  }
+});
 
 //ROTA EXCLUIR SESSAO
-router.post("/game/excluir-sessao/:idSessao/:idUsuario", async (req, res) => {
-  const { idSessao, idUsuario } = req.params;
+router.post("/game/excluir-sessao/:idUsuario/:idSessao", async (req, res) => {
+  const { idUsuario, idSessao } = req.params;
 
   try {
     await SessaoJogo.destroy({

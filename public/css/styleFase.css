@@ -52,39 +52,39 @@ html, body {
 
 /* 1 - CAMA */
 .objeto-cama {
-  left: 12.8%;
-  top: 49.2%;
-  width: 28.5%;
+  left: 14.5%;
+  top: 37.5%;
+  width: 21%;
 }
 
 /* 2 - JANELA */
 .objeto-janela {
-  left: 9.8%;
-  top: 2.8%;
-  width: 43.5%;
+  left: 16%;
+  top: 6%;
+  width: 30%;
 }
 
 /* 3 - ARMÁRIO */
 .objeto-armario {
-  left: 57.4%;
-  top: 23.5%;
-  width: 22%;
-  height: 48%;
+  left: 50.5%;
+  top: 25%;
+  width: 30%;
+  height: 50%;
 }
 
 /* 4 - MESA / LIVROS */
 .objeto-mesa {
-  left: 1.8%;
-  top: 47.2%;
-  width: 11.5%;
+  left: 3.5%;
+  top: 45%;
+  width: 8.5%;
 }
 
 /* AVATAR */
 .avatar-fase {
-  position: absolute;
-  left: 69%;
-  top: 45.5%;
-  width: 16%;
+  position:absolute;
+  left: 72%;
+  top: 40%;
+  width: 12%;
 }
 
 .avatar-fase img {
@@ -108,8 +108,8 @@ html, body {
 }
 
 .estrela-cama {
-  left: 28.2%;
-  top: 55.8%;
+  left: 24%;
+  top: 50.8%;
 }
 
 .estrela-janela {
@@ -118,7 +118,7 @@ html, body {
 }
 
 .estrela-armario {
-  left: 68.5%;
+  left: 65.5%;
   top: 31%;
 }
 

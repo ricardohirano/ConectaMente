@@ -1,0 +1,63 @@
+<%- include('partials/headerGame') %>
+
+<main class="pagina-acesso-game">
+  <a href="/game/crianca/<%= usuario.id %>" class="btn-voltar-site" aria-label="Voltar">
+    <img src="/img/game/voltar.svg" alt="Voltar">
+  </a>
+
+  <section class="painel-jogos-salvos">
+    <div class="topo-jogos-salvos">
+      <img src="/img/website/logo-conectamente.png" alt="ConectaMente" class="logo-jogos-salvos">
+      <h1>JOGOS SALVOS</h1>
+    </div>
+
+    <div class="lista-jogos-salvos">
+      <% if (sessoes.length === 0) { %>
+        <div class="jogos-salvos-vazio">
+          <p>Nenhum jogo salvo no momento.</p>
+        </div>
+      <% } %>
+
+      <% sessoes.forEach(function(sessao, index) { %>
+        <div class="card-jogo-salvo">
+          <div class="avatar-jogo-salvo">
+            <img
+              src="/img/game/avatars/<%= crianca?.avatar || 'personagem1.svg' %>"
+              alt="Avatar"
+            >
+          </div>
+
+          <div class="info-jogo-salvo">
+            <h2><%= crianca?.nome_avatar || usuario.nome %></h2>
+            <p><%= sessao.nome_sessao || ('Jogo ' + (index + 1)) %></p>
+
+            <p class="data-jogo-salvo">
+              Salvo em:
+              <%= new Date(sessao.data_ultima_acao || sessao.updatedAt).toLocaleString('pt-BR') %>
+            </p>
+
+            <span>
+              Fase: <%= sessao.slug_fase || 'quarto' %> |
+              Dificuldade: <%= sessao.dificuldade_atual %>
+            </span>
+          </div>
+
+          <div class="acoes-jogo-salvo">
+            <a href="/game/carregar-sessao/<%= usuario.id %>/<%= sessao.id %>" class="btn-card-jogo btn-carregar-jogo">
+              Carregar
+            </a>
+
+            <form action="/game/excluir-sessao/<%= usuario.id %>/<%= sessao.id %>" method="POST">
+              <button type="submit" class="btn-card-jogo btn-excluir-jogo">
+                Excluir
+              </button>
+            </form>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  </section>
+</main>
+
+</body>
+</html>

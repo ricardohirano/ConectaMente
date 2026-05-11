@@ -1,0 +1,160 @@
+<%- include('partials/headerGame') %>
+
+<main class="pagina-acesso-game">
+  <a href="/game/fase/<%= usuario.id %>/<%= slug %>/<%= dificuldade %>" class="btn-voltar-site" aria-label="Voltar">
+    <img src="/img/game/voltar.svg" alt="Voltar">
+  </a>
+
+  <section class="painel-jogos-salvos">
+    <div class="topo-jogos-salvos">
+      <img src="/img/website/logo-conectamente.png" alt="ConectaMente" class="logo-jogos-salvos">
+      <h1>ESCOLHER SAVE</h1>
+      <p class="subtitulo-escolher-save">Escolha uma sessão para sobrescrever ou crie uma nova.</p>
+    </div>
+
+    <div class="bloco-novo-save">
+      <button type="button" class="btn-novo-save" id="btnCriarNovoSave">
+        + Criar novo save
+      </button>
+    </div>
+
+    <div class="lista-jogos-salvos">
+      <% if (sessoes.length === 0) { %>
+        <div class="jogos-salvos-vazio">
+          <p>Nenhum save encontrado. Você pode criar um novo.</p>
+        </div>
+      <% } %>
+
+      <% sessoes.forEach(function(sessao, index) { %>
+        <div class="card-jogo-salvo">
+          <div class="avatar-jogo-salvo">
+            <img
+              src="/img/game/avatars/<%= crianca?.avatar || 'personagem1.svg' %>"
+              alt="Avatar"
+            >
+          </div>
+
+          <div class="info-jogo-salvo">
+            <h2><%= crianca?.nome_avatar || usuario.nome %></h2>
+            <p><%= sessao.nome_sessao || ('Jogo ' + (index + 1)) %></p>
+
+            <p class="data-jogo-salvo">
+              Salvo em:
+              <%= new Date(sessao.data_ultima_acao || sessao.updatedAt).toLocaleString('pt-BR', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+              }) %>
+            </p>
+
+            <span>
+              Fase: <%= sessao.slug_fase || 'quarto' %> |
+              Dificuldade: <%= sessao.dificuldade_atual %>
+            </span>
+          </div>
+
+          <div class="acoes-jogo-salvo">
+            <button
+              type="button"
+              class="btn-card-jogo btn-carregar-jogo btnSobrescreverSave"
+              data-id="<%= sessao.id %>"
+            >
+              Sobrescrever
+            </button>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  </section>
+</main>
+
+<script>
+  const btnCriarNovoSave = document.getElementById("btnCriarNovoSave");
+  const botoesSobrescrever = document.querySelectorAll(".btnSobrescreverSave");
+
+  function obterDadosSaveAtual() {
+    const dados = localStorage.getItem("saveAtualConectaMente");
+
+    if (!dados) {
+      alert("Nenhum dado de save foi encontrado.");
+      return null;
+    }
+
+    try {
+      return JSON.parse(dados);
+    } catch (error) {
+      console.log("Erro ao ler saveAtualConectaMente:", error);
+      return null;
+    }
+  }
+
+  async function criarNovoSave() {
+    const dados = obterDadosSaveAtual();
+    if (!dados) return;
+
+    try {
+      const resposta = await fetch("/game/criar-save/<%= usuario.id %>", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(dados)
+      });
+
+      const resultado = await resposta.json();
+
+      if (resultado.sucesso) {
+        localStorage.removeItem("saveAtualConectaMente");
+        window.location.href = "/game/jogos-salvos/<%= usuario.id %>";
+      } else {
+        alert("Não foi possível criar um novo save.");
+      }
+    } catch (error) {
+      console.log("Erro ao criar novo save:", error);
+      alert("Erro ao criar novo save.");
+    }
+  }
+
+  async function sobrescreverSave(idSessao) {
+    const dados = obterDadosSaveAtual();
+    if (!dados) return;
+
+    try {
+      const resposta = await fetch(`/game/sobrescrever-save/<%= usuario.id %>/${idSessao}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(dados)
+      });
+
+      const resultado = await resposta.json();
+
+      if (resultado.sucesso) {
+        localStorage.removeItem("saveAtualConectaMente");
+        window.location.href = "/game/jogos-salvos/<%= usuario.id %>";
+      } else {
+        alert("Não foi possível sobrescrever o save.");
+      }
+    } catch (error) {
+      console.log("Erro ao sobrescrever save:", error);
+      alert("Erro ao sobrescrever save.");
+    }
+  }
+
+  if (btnCriarNovoSave) {
+    btnCriarNovoSave.addEventListener("click", criarNovoSave);
+  }
+
+  botoesSobrescrever.forEach(botao => {
+    botao.addEventListener("click", () => {
+      const idSessao = botao.dataset.id;
+      sobrescreverSave(idSessao);
+    });
+  });
+</script>
+
+</body>
+</html>

@@ -24,6 +24,10 @@ const SessaoJogo = connection.define("sessoes_jogo", {
       key: "id"
     }
   },
+  slug_fase: {
+    type: Sequelize.STRING,
+    allowNull: true
+  },
   dificuldade_atual: {
     type: Sequelize.STRING,
     allowNull: true
