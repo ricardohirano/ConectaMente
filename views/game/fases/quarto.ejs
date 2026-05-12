@@ -1,13 +1,17 @@
 <%- include('../partials/headerFase') %>
 
+<script>
+  const dadosFase = <%- JSON.stringify(fase) %>;
+</script>
+
 <main class="pagina-fase-game">
   <%- include('../partials/navbarFase') %>
 
   <section class="painel-fase">
     <div class="cenario-fase">
       <img
-        src="/img/game/fases/quarto/fundo/fundoQuarto.svg"
-        alt="Fundo do quarto"
+        src="<%= fase.imagem_fundo %>"
+        alt="Fundo da fase"
         class="imagem-cenario"
       >
 
@@ -20,83 +24,50 @@
         </div>
       </div>
 
-      <!-- 1 - CAMA -->
-      <button type="button" class="objeto-interativo objeto-cama" id="btnCama">
-        <img
-          src="/img/game/fases/quarto/objetos/camaAntes.png"
-          alt="Cama"
-          id="imgCama"
+      <% fase.acoes.forEach(function(acao) { %>
+        <button
+          type="button"
+          class="objeto-interativo objeto-acao"
+          data-slug="<%= acao.slug %>"
+          style="
+            left: <%= acao.posicao_left %>;
+            top: <%= acao.posicao_top %>;
+            width: <%= acao.largura %>;
+            <%= acao.altura ? `height: ${acao.altura};` : '' %>
+          "
         >
-      </button>
+          <img
+            src="<%= acao.imagem_antes %>"
+            alt="<%= acao.nome %>"
+            id="img-<%= acao.slug %>"
+          >
+        </button>
+      <% }) %>
 
-      <!-- 2 - JANELA -->
-      <button type="button" class="objeto-interativo objeto-janela" id="btnJanela">
-        <img
-          src="/img/game/fases/quarto/objetos/janelaAntes.svg"
-          alt="Janela"
-          id="imgJanela"
-        >
-      </button>
-
-      <!-- 3 - ARMÁRIO -->
-      <button type="button" class="objeto-interativo objeto-armario" id="btnArmario">
-        <img
-          src="/img/game/fases/quarto/objetos/armarioAntes.svg"
-          alt="Armário"
-          id="imgArmario"
-        >
-      </button>
-
-      <!-- 4 - MESA / LIVROS -->
-      <button type="button" class="objeto-interativo objeto-mesa" id="btnMesa">
-        <img
-          src="/img/game/fases/quarto/objetos/mesaLivrosAntes.svg"
-          alt="Mesa com livros"
-          id="imgMesa"
-        >
-      </button>
-
-      <!-- AVATAR -->
       <div class="avatar-fase">
-        <img src="/img/game/avatars/personagem1.svg" alt="Personagem">
+        <img
+          src="/img/game/avatars/<%= crianca?.avatar || 'personagem1.svg' %>"
+          alt="Personagem"
+        >
       </div>
 
-      <!-- ESTRELAS FÁCIL -->
-      <% if (dificuldade === "facil") { %>
-        <div class="estrela-acao estrela-cama" id="estrelaCama">
-          <img src="/img/game/apoio/estrela1.svg" alt="Estrela 1">
-        </div>
-
-        <div class="estrela-acao estrela-janela" id="estrelaJanela">
-          <img src="/img/game/apoio/estrela2.svg" alt="Estrela 2">
-        </div>
-
-        <div class="estrela-acao estrela-armario" id="estrelaArmario">
-          <img src="/img/game/apoio/estrela3.svg" alt="Estrela 3">
-        </div>
-
-        <div class="estrela-acao estrela-mesa" id="estrelaMesa">
-          <img src="/img/game/apoio/estrela4.svg" alt="Estrela 4">
-        </div>
-      <% } %>
-
-      <!-- ESTRELAS MÉDIO -->
-      <% if (dificuldade === "medio") { %>
-        <div class="estrela-acao estrela-cama" id="estrelaCama">
-          <img src="/img/game/apoio/estrela.svg" alt="Estrela">
-        </div>
-
-        <div class="estrela-acao estrela-janela" id="estrelaJanela">
-          <img src="/img/game/apoio/estrela.svg" alt="Estrela">
-        </div>
-
-        <div class="estrela-acao estrela-armario" id="estrelaArmario">
-          <img src="/img/game/apoio/estrela.svg" alt="Estrela">
-        </div>
-
-        <div class="estrela-acao estrela-mesa" id="estrelaMesa">
-          <img src="/img/game/apoio/estrela.svg" alt="Estrela">
-        </div>
+      <% if (dificuldade === "facil" || dificuldade === "medio") { %>
+        <% fase.acoes.forEach(function(acao, index) { %>
+          <div
+            class="estrela-acao"
+            id="estrela-<%= acao.slug %>"
+            style="
+              left: <%= acao.estrela_left %>;
+              top: <%= acao.estrela_top %>;
+            "
+          >
+            <% if (dificuldade === "facil") { %>
+              <img src="/img/game/apoio/estrela<%= index + 1 %>.svg" alt="Estrela <%= index + 1 %>">
+            <% } else { %>
+              <img src="/img/game/apoio/estrela.svg" alt="Estrela">
+            <% } %>
+          </div>
+        <% }) %>
       <% } %>
     </div>
   </section>
@@ -202,21 +173,6 @@
   const textoParabens = document.getElementById("textoParabens");
   const opcoesQuiz = document.getElementById("opcoesQuiz");
 
-  const btnCama = document.getElementById("btnCama");
-  const btnJanela = document.getElementById("btnJanela");
-  const btnArmario = document.getElementById("btnArmario");
-  const btnMesa = document.getElementById("btnMesa");
-
-  const imgCama = document.getElementById("imgCama");
-  const imgJanela = document.getElementById("imgJanela");
-  const imgArmario = document.getElementById("imgArmario");
-  const imgMesa = document.getElementById("imgMesa");
-
-  const estrelaCama = document.getElementById("estrelaCama");
-  const estrelaJanela = document.getElementById("estrelaJanela");
-  const estrelaArmario = document.getElementById("estrelaArmario");
-  const estrelaMesa = document.getElementById("estrelaMesa");
-
   const contadorConquista = document.getElementById("contadorConquista");
 
   const btnSalvarJogo = document.getElementById("btnSalvarJogo");
@@ -224,14 +180,15 @@
   const cancelarSalvar = document.getElementById("cancelarSalvar");
   const confirmarSalvar = document.getElementById("confirmarSalvar");
 
-  const estadoAcoes = {
-    cama: false,
-    janela: false,
-    armario: false,
-    mesa: false
-  };
+  const botoesAcoes = document.querySelectorAll(".objeto-acao");
 
-  const ordemCorreta = ["cama", "janela", "armario", "mesa"];
+  const acoesDaFase = [...dadosFase.acoes].sort((a, b) => a.ordem_acao - b.ordem_acao);
+  const ordemCorreta = acoesDaFase.map(acao => acao.slug);
+
+  const estadoAcoes = {};
+  ordemCorreta.forEach(slug => {
+    estadoAcoes[slug] = false;
+  });
 
   let acaoAtual = null;
   let totalConquista = 0;
@@ -241,52 +198,6 @@
   let errosOrdem = 0;
   let acoesConcluidas = 0;
   let faseJaSalva = false;
-
-  const perguntas = {
-    cama: {
-      titulo: "Qual é a ação correta?",
-      mensagem: "Você arrumou a cama corretamente."
-    },
-    janela: {
-      titulo: "Qual é a ação correta?",
-      mensagem: "Você abriu a janela corretamente."
-    },
-    armario: {
-      titulo: "Qual é a ação correta?",
-      mensagem: "Você trocou de roupa corretamente."
-    },
-    mesa: {
-      titulo: "Qual é a ação correta?",
-      mensagem: "Você guardou o livro corretamente."
-    }
-  };
-
-  const opcoesPorAcao = {
-    cama: [
-      { texto_opcao: "Arrumar a cama", correta: true },
-      { texto_opcao: "Deitar na cama", correta: false },
-      { texto_opcao: "Pular na cama", correta: false },
-      { texto_opcao: "Bagunçar o lençol", correta: false }
-    ],
-    janela: [
-      { texto_opcao: "Abrir a janela", correta: true },
-      { texto_opcao: "Fechar a janela", correta: false },
-      { texto_opcao: "Subir na janela", correta: false },
-      { texto_opcao: "Empurrar a cortina", correta: false }
-    ],
-    armario: [
-      { texto_opcao: "Trocar de roupa", correta: true },
-      { texto_opcao: "Dormir no armário", correta: false },
-      { texto_opcao: "Brincar no armário", correta: false },
-      { texto_opcao: "Jogar roupa no chão", correta: false }
-    ],
-    mesa: [
-      { texto_opcao: "Guardar livro", correta: true },
-      { texto_opcao: "Jogar o livro no chão", correta: false },
-      { texto_opcao: "Rasgar o livro", correta: false },
-      { texto_opcao: "Esconder o livro", correta: false }
-    ]
-  };
 
   function valorPorAcerto() {
     const dificuldadeAtual = String("<%= dificuldade %>")
@@ -302,8 +213,12 @@
     return 1;
   }
 
+  function buscarAcao(slugAcao) {
+    return acoesDaFase.find(acao => acao.slug === slugAcao);
+  }
+
   function proximaAcaoEsperada() {
-    return ordemCorreta.find(acao => !estadoAcoes[acao]);
+    return ordemCorreta.find(slug => !estadoAcoes[slug]);
   }
 
   function abrirModalErro(mensagem) {
@@ -323,58 +238,76 @@
   }
 
   function renderizarOpcoes(opcoes) {
-      opcoesQuiz.innerHTML = "";
+    opcoesQuiz.innerHTML = "";
 
-      const opcoesEmbaralhadas = embaralharArray(opcoes);
-      const classesCores = [
-        "opcao-quiz--azul",
-        "opcao-quiz--verde",
-        "opcao-quiz--rosa",
-        "opcao-quiz--laranja"
-      ];
+    const opcoesEmbaralhadas = embaralharArray(opcoes);
+    const classesCores = [
+      "opcao-quiz--azul",
+      "opcao-quiz--verde",
+      "opcao-quiz--rosa",
+      "opcao-quiz--laranja"
+    ];
 
-      opcoesEmbaralhadas.forEach((opcao, index) => {
-        const botao = document.createElement("button");
-        botao.type = "button";
-        botao.className = `opcao-quiz ${classesCores[index]}`;
-        botao.textContent = opcao.texto_opcao;
+    opcoesEmbaralhadas.forEach((opcao, index) => {
+      const botao = document.createElement("button");
+      botao.type = "button";
+      botao.className = `opcao-quiz ${classesCores[index]}`;
+      botao.textContent = opcao.texto_opcao;
 
-        botao.addEventListener("click", () => {
-          if (opcao.correta) {
-            concluirAcao(acaoAtual);
-          } else {
-            errosResposta++;
-            abrirModalErro("Resposta incorreta. Tente novamente.");
-          }
-        });
-
-        opcoesQuiz.appendChild(botao);
+      botao.addEventListener("click", () => {
+        if (opcao.correta) {
+          concluirAcao(acaoAtual);
+        } else {
+          errosResposta++;
+          abrirModalErro("Resposta incorreta. Tente novamente.");
+        }
       });
-    }
 
-  function abrirQuiz(nomeAcao) {
-    if (estadoAcoes[nomeAcao]) {
+      opcoesQuiz.appendChild(botao);
+    });
+  }
+
+  function abrirQuiz(slugAcao) {
+    if (estadoAcoes[slugAcao]) {
       return;
     }
 
     const esperada = proximaAcaoEsperada();
 
-    if (nomeAcao !== esperada) {
+    if (slugAcao !== esperada) {
       errosOrdem++;
       tentativasTotal++;
       abrirModalErro("Tem algo para fazer antes, tente novamente.");
       return;
     }
 
+    const acao = buscarAcao(slugAcao);
+    if (!acao) return;
+
     tentativasTotal++;
-    acaoAtual = nomeAcao;
+    acaoAtual = slugAcao;
 
-    tituloQuiz.textContent = perguntas[nomeAcao].titulo;
-    textoParabens.textContent = perguntas[nomeAcao].mensagem;
+    tituloQuiz.textContent = acao.pergunta;
+    textoParabens.textContent = acao.mensagem_acerto;
 
-    renderizarOpcoes(opcoesPorAcao[nomeAcao]);
-
+    renderizarOpcoes(acao.opcoes_resposta || []);
     modalQuiz.classList.add("ativo");
+  }
+
+  function atualizarImagemAcao(slugAcao) {
+    const acao = buscarAcao(slugAcao);
+    const img = document.getElementById(`img-${slugAcao}`);
+
+    if (acao && img) {
+      img.src = acao.imagem_depois;
+    }
+  }
+
+  function esconderEstrelaAcao(slugAcao) {
+    const estrela = document.getElementById(`estrela-${slugAcao}`);
+    if (estrela) {
+      estrela.style.display = "none";
+    }
   }
 
   async function salvarConclusaoFase() {
@@ -407,8 +340,8 @@
     }
   }
 
-  async function concluirAcao(nomeAcao) {
-    estadoAcoes[nomeAcao] = true;
+  async function concluirAcao(slugAcao) {
+    estadoAcoes[slugAcao] = true;
     acoesConcluidas++;
 
     totalConquista += valorPorAcerto();
@@ -416,31 +349,10 @@
 
     modalQuiz.classList.remove("ativo");
 
-    if (nomeAcao === "cama") {
-      imgCama.src = "/img/game/fases/quarto/objetos/camaDepois.svg";
-      if (estrelaCama) estrelaCama.style.display = "none";
-    }
+    atualizarImagemAcao(slugAcao);
+    esconderEstrelaAcao(slugAcao);
 
-    if (nomeAcao === "janela") {
-      imgJanela.src = "/img/game/fases/quarto/objetos/janelaDepois.svg";
-      if (estrelaJanela) estrelaJanela.style.display = "none";
-    }
-
-    if (nomeAcao === "armario") {
-      imgArmario.src = "/img/game/fases/quarto/objetos/armarioDepois.svg";
-      if (estrelaArmario) estrelaArmario.style.display = "none";
-    }
-
-    if (nomeAcao === "mesa") {
-      imgMesa.src = "/img/game/fases/quarto/objetos/mesaLivrosDepois.svg";
-      if (estrelaMesa) estrelaMesa.style.display = "none";
-    }
-
-    const todasConcluidas =
-      estadoAcoes.cama &&
-      estadoAcoes.janela &&
-      estadoAcoes.armario &&
-      estadoAcoes.mesa;
+    const todasConcluidas = ordemCorreta.every(slug => estadoAcoes[slug]);
 
     if (todasConcluidas) {
       await salvarConclusaoFase();
@@ -450,21 +362,12 @@
     }
   }
 
-  if (btnCama) {
-    btnCama.addEventListener("click", () => abrirQuiz("cama"));
-  }
-
-  if (btnJanela) {
-    btnJanela.addEventListener("click", () => abrirQuiz("janela"));
-  }
-
-  if (btnArmario) {
-    btnArmario.addEventListener("click", () => abrirQuiz("armario"));
-  }
-
-  if (btnMesa) {
-    btnMesa.addEventListener("click", () => abrirQuiz("mesa"));
-  }
+  botoesAcoes.forEach(botao => {
+    botao.addEventListener("click", () => {
+      const slugAcao = botao.dataset.slug;
+      abrirQuiz(slugAcao);
+    });
+  });
 
   if (fecharQuiz) {
     fecharQuiz.addEventListener("click", () => {

@@ -6,6 +6,8 @@ import ProgressoFase from "../models/ProgressoFase.js";
 import Fase from "../models/fase.js"
 import SessaoJogo from "../models/sessaoJogo.js";
 import RelatorioFase from "../models/relatorioFase.js";
+import Acao from "../models/acao.js";
+import OpcaoResposta from "../models/opcaoResposta.js";
 
 const router = express.Router();
 
@@ -504,13 +506,33 @@ router.get("/game/fase/:idUsuario/:slug/:dificuldade", async (req, res) => {
     });
 
     if (!crianca) {
-      return res.redirect(`/game/crianca/${idUsuario}`);
+      return res.redirect("/game");
     }
 
     const fase = await Fase.findOne({
       where: {
-        slug: slug
-      }
+        slug: slug,
+        ativa: true
+      },
+      include: [
+        {
+          model: Acao,
+          where: {
+            ativa: true
+          },
+          required: false,
+          include: [
+            {
+              model: OpcaoResposta,
+              required: false
+            }
+          ]
+        }
+      ],
+      order: [
+        [Acao, "ordem_acao", "ASC"],
+        [Acao, OpcaoResposta, "ordem_exibicao", "ASC"]
+      ]
     });
 
     if (!fase) {
@@ -954,6 +976,82 @@ router.post("/game/concluir-fase/:idUsuario/:slug/:dificuldade", async (req, res
     });
   }
 });
+// rota de rendimento 
+router.get("/game/rendimento-crianca/:idCrianca/:idResponsavel", async (req, res) => {
+  const { idCrianca, idResponsavel } = req.params;
 
+  try {
+    const usuario = await Usuario.findByPk(idCrianca);
+
+    if (!usuario) {
+      return res.redirect(`/game/contas-acessiveis/${idResponsavel}`);
+    }
+
+    const crianca = await Crianca.findOne({
+      where: {
+        id_usuario: idCrianca
+      }
+    });
+
+    if (!crianca) {
+      return res.redirect(`/game/contas-acessiveis/${idResponsavel}`);
+    }
+
+    return res.render("game/rendimento-crianca", {
+      usuario,
+      crianca,
+      idResponsavel
+    });
+  } catch (error) {
+    console.log("Erro ao carregar tela de rendimento da criança: " + error);
+    return res.redirect(`/game/contas-acessiveis/${idResponsavel}`);
+  }
+});
+
+// Rota Rendimento Final
+
+router.get("/game/relatorio-final/:idCrianca/:idResponsavel", async (req, res) => {
+  const { idCrianca, idResponsavel } = req.params;
+
+  try {
+    const usuario = await Usuario.findByPk(idCrianca);
+
+    if (!usuario) {
+      return res.redirect(`/game/rendimento-crianca/${idCrianca}/${idResponsavel}`);
+    }
+
+    const crianca = await Crianca.findOne({
+      where: {
+        id_usuario: idCrianca
+      }
+    });
+
+    if (!crianca) {
+      return res.redirect(`/game/rendimento-crianca/${idCrianca}/${idResponsavel}`);
+    }
+
+    const relatorios = await RelatorioFase.findAll({
+      where: {
+        id_crianca: crianca.id
+      },
+      include: [
+        {
+          model: Fase
+        }
+      ],
+      order: [["createdAt", "DESC"]]
+    });
+
+    return res.render("game/relatorio-final-crianca", {
+      usuario,
+      crianca,
+      relatorios,
+      idResponsavel
+    });
+  } catch (error) {
+    console.log("Erro ao carregar relatório final da criança: " + error);
+    return res.redirect(`/game/rendimento-crianca/${idCrianca}/${idResponsavel}`);
+  }
+});
 
 export default router;

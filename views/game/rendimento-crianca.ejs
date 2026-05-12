@@ -1,0 +1,37 @@
+<%- include('partials/headerGame') %>
+
+<main class="pagina-acesso-game">
+  <a href="/game/administrar-conta/<%= usuario.id %>/<%= idResponsavel %>" class="btn-voltar-site" aria-label="Voltar">
+    <img src="/img/game/voltar.svg" alt="Voltar">
+  </a>
+
+  <section class="painel-rendimento-menu">
+    <img src="/img/website/logo-conectamente.png" alt="ConectaMente" class="logo-painel">
+
+    <h1 class="titulo-rendimento-menu">Rendimento da conta</h1>
+
+    <div class="bloco-rendimento-menu">
+      <button type="button" class="btn-rendimento-menu btn-rendimento-claro">
+        Resumo de atividade
+      </button>
+
+      <button type="button" class="btn-rendimento-menu btn-rendimento-claro">
+        Percentual de acerto
+      </button>
+
+      <button type="button" class="btn-rendimento-menu btn-rendimento-claro">
+        Evolução do progresso
+      </button>
+
+      <a
+        href="/game/relatorio-final/<%= usuario.id %>/<%= idResponsavel %>"
+        class="btn-rendimento-menu btn-rendimento-azul"
+      >
+        Relatório Final
+      </a>
+    </div>
+  </section>
+</main>
+
+</body>
+</html>

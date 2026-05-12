@@ -66,7 +66,7 @@ app.use("/", GameController);
 app.use("/", UsuarioController);
 
 // INICIANDO O SERVIDOR
-const port = 3000;
+const port = 8080;
 app.listen(port, () => {
   console.log(`Servidor rodando em http://localhost:${port}`);
 });
