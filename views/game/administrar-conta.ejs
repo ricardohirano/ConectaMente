@@ -33,20 +33,25 @@
             </p>
           </div>
 
-          <div class="acoes-admin">
+          <div class="acoes-admin-conta">
             <button type="button" class="btn-admin azul" id="abrirModalTempo">
               Limite de tempo por dia
             </button>
 
             <% if (conta.permissao_ativa === true) { %>
-              <a href="/game/desativar-conta/<%= conta.id %>/<%= idResponsavel %>" class="btn-admin azul">
+              <a href="/game/desativar-conta/<%= conta.id %>/<%= idResponsavel %>" class="btn-admin azul btn-admin-link">
                 Desativar Conta
               </a>
             <% } else { %>
-              <a href="/game/ativar-conta/<%= conta.id %>/<%= idResponsavel %>" class="btn-admin azul">
+              <a href="/game/ativar-conta/<%= conta.id %>/<%= idResponsavel %>" class="btn-admin azul btn-admin-link">
                 Ativar Conta
               </a>
             <% } %>
+
+            <button
+              type="button" class="btn-admin azul" onclick="window.location.href='/game/rendimento-crianca/<%= conta.id %>/<%= idResponsavel %>'"            >
+              Rendimento da criança
+            </button>
 
             <button type="button" class="btn-admin vermelho" id="abrirModalExcluir">
               Excluir Conta

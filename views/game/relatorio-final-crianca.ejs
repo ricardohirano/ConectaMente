@@ -1,0 +1,68 @@
+<%- include('partials/headerGame') %>
+
+<main class="pagina-acesso-game">
+  <a href="/game/rendimento-crianca/<%= usuario.id %>/<%= idResponsavel %>" class="btn-voltar-site" aria-label="Voltar">
+    <img src="/img/game/voltar.svg" alt="Voltar">
+  </a>
+
+  <section class="painel-relatorio-final">
+    <img src="/img/website/logo-conectamente.png" alt="ConectaMente" class="logo-painel">
+
+    <h1 class="titulo-rendimento-menu">Relatório Final</h1>
+
+    <div class="bloco-relatorio-final">
+      <div class="resumo-relatorio-final">
+        <div class="card-resumo-final">
+          <h2>Criança</h2>
+          <p><%= crianca?.nome_avatar || usuario.nome %></p>
+        </div>
+
+        <div class="card-resumo-final">
+          <h2>Total de estrelas</h2>
+          <p><%= crianca?.total_estrelas || 0 %></p>
+        </div>
+
+        <div class="card-resumo-final">
+          <h2>Relatórios registrados</h2>
+          <p><%= relatorios.length %></p>
+        </div>
+      </div>
+
+      <div class="lista-relatorios-final">
+        <% if (relatorios.length === 0) { %>
+          <div class="card-relatorio-final vazio">
+            <p>Nenhum relatório encontrado.</p>
+          </div>
+        <% } %>
+
+        <% relatorios.forEach(function(relatorio) { %>
+          <div class="card-relatorio-final">
+            <h2>
+              <%= relatorio.fase?.nome || "Fase" %> - <%= relatorio.dificuldade %>
+            </h2>
+
+            <p><strong>Tentativas:</strong> <%= relatorio.tentativas_total %></p>
+            <p><strong>Erros de resposta:</strong> <%= relatorio.erros_resposta %></p>
+            <p><strong>Erros de ordem:</strong> <%= relatorio.erros_ordem %></p>
+            <p><strong>Ações concluídas:</strong> <%= relatorio.acoes_concluidas %></p>
+            <p><strong>Estrelas ganhas:</strong> <%= relatorio.estrelas_ganhas %></p>
+
+            <p class="data-relatorio-final">
+              <strong>Finalizado em:</strong>
+              <%= new Date(relatorio.data_fim || relatorio.updatedAt).toLocaleString('pt-BR', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+              }) %>
+            </p>
+          </div>
+        <% }) %>
+      </div>
+    </div>
+  </section>
+</main>
+
+</body>
+</html>
