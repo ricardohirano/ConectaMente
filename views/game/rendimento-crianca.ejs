@@ -11,22 +11,19 @@
     <h1 class="titulo-rendimento-menu">Rendimento da conta</h1>
 
     <div class="bloco-rendimento-menu">
-      <button type="button" class="btn-rendimento-menu btn-rendimento-claro">
+      <a href="/game/resumo-atividade/<%= usuario.id %>/<%= idResponsavel %>" class="btn-rendimento-menu btn-rendimento-claro">
         Resumo de atividade
-      </button>
-
-      <button type="button" class="btn-rendimento-menu btn-rendimento-claro">
+      </a>
+      <a href="/game/percentual-acerto/<%= usuario.id %>/<%= idResponsavel %>" class="btn-rendimento-menu btn-rendimento-claro ">
         Percentual de acerto
-      </button>
+      </a>
 
-      <button type="button" class="btn-rendimento-menu btn-rendimento-claro">
+      <a href="/game/evolucao-progresso/<%= usuario.id %>/<%= idResponsavel %>" class="btn-rendimento-menu btn-rendimento-claro">
         Evolução do progresso
-      </button>
+      </a>
 
       <a
-        href="/game/relatorio-final/<%= usuario.id %>/<%= idResponsavel %>"
-        class="btn-rendimento-menu btn-rendimento-azul"
-      >
+        href="/game/relatorio-final/<%= usuario.id %>/<%= idResponsavel %>" class="btn-rendimento-menu btn-rendimento-azul">
         Relatório Final
       </a>
     </div>

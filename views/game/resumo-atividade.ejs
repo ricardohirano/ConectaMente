@@ -1,0 +1,50 @@
+<%- include('partials/headerGame') %>
+
+<main class="pagina-acesso-game">
+  <a href="/game/rendimento-crianca/<%= usuario.id %>/<%= idResponsavel %>" class="btn-voltar-site" aria-label="Voltar">
+    <img src="/img/game/voltar.svg" alt="Voltar">
+  </a>
+
+  <section class="painel-resumo-atividade">
+    <h1 class="titulo-resumo-topo">Rendimento da conta</h1>
+
+    <div class="bloco-resumo-atividade">
+      <div class="titulo-secao-resumo">
+        <span class="barra-titulo-resumo"></span>
+        <h2>Resumo de atividade</h2>
+      </div>
+
+      <div class="cards-resumo-atividade">
+        <div class="card-resumo-atividade">
+          <div class="numero-resumo"><%= totalSessoes || 0 %></div>
+          <div class="texto-resumo">sessões criadas</div>
+        </div>
+
+        <div class="card-resumo-atividade">
+          <div class="numero-resumo"><%= totalEstrelas || 0 %></div>
+          <div class="texto-resumo">Estrelas coletadas</div>
+        </div>
+
+        <div class="card-resumo-atividade">
+          <div class="numero-resumo"><%= frequenciaSemanal || 0 %></div>
+          <div class="texto-resumo">frequência semanal (Minutos)</div>
+        </div>
+      </div>
+
+      <div class="rodape-resumo-atividade">
+        <div class="dados-conta-resumo">
+            <h3>Conta analisada</h3>
+            <p><strong>Criança:</strong> <%= usuario.nome %></p>
+            <p><strong>Total de sessões consideradas:</strong> <%= totalSessoes || 0 %></p>
+        </div>
+
+        <div class="legenda-resumo">
+            <p>Os indicadores mostram a soma dos registros da criança nesta conta.</p>
+        </div>
+        
+    </div>
+  </section>
+</main>
+
+</body>
+</html>

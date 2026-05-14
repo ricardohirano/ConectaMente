@@ -1,0 +1,104 @@
+<%- include('partials/headerGame') %>
+
+<main class="pagina-acesso-game">
+  <a href="/game/rendimento-crianca/<%= usuario.id %>/<%= idResponsavel %>" class="btn-voltar-site" aria-label="Voltar">
+    <img src="/img/game/voltar.svg" alt="Voltar">
+  </a>
+
+  <section class="painel-evolucao-progresso">
+    <h1 class="titulo-evolucao-topo">Rendimento da conta</h1>
+
+    <div class="bloco-evolucao-progresso">
+      <div class="titulo-secao-evolucao">
+        <span class="barra-titulo-evolucao"></span>
+        <h2>Evolução do progresso</h2>
+      </div>
+
+      <div class="grafico-evolucao-box">
+        <canvas id="graficoEvolucao"></canvas>
+      </div>
+
+     <p class="texto-apoio-evolucao">
+        Acompanhamento diário do progresso durante o mês.
+     </p>
+    </div>
+  </section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const ctx = document.getElementById("graficoEvolucao");
+
+  const labels = <%- JSON.stringify(labels) %>;
+  const progressoDiario = <%- JSON.stringify(progressoSemanal) %>;
+  
+
+  new Chart(ctx, {
+    type: "line",
+    data: {
+      labels: labels,
+      datasets: [{
+        label: "Progresso semanal",
+        data: progressoDiario,
+        borderColor: "#0D63D8",
+        backgroundColor: "#0D63D8",
+        pointBackgroundColor: "#F2B900",
+        pointBorderColor: "#F2B900",
+        pointRadius: 6,
+        pointHoverRadius: 7,
+        tension: 0.35,
+        fill: false
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false
+        },
+        tooltip: {
+          enabled: true
+        }
+      },
+      scales: {
+        x: {
+          grid: {
+            display: false
+          },
+          ticks: {
+            color: "#0D63D8",
+            font: {
+              size: 16,
+              weight: "700"
+            }
+          },
+          border: {
+            color: "#0D63D8",
+            width: 3
+          }
+        },
+        y: {
+          beginAtZero: true,
+          ticks: {
+            stepSize: 1,
+            color: "#0D63D8",
+            font: {
+              size: 14,
+              weight: "700"
+            }
+          },
+          grid: {
+            color: "rgba(13, 99, 216, 0.12)"
+          },
+          border: {
+            display: false
+          }
+        }
+      }
+    }
+  });
+</script>
+
+</body>
+</html>

@@ -101,16 +101,27 @@
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify(dados)
+        body: JSON.stringify({
+          nomeSessao: dados.nomeSessao,
+          slugFase: dados.slugFase,
+          dificuldade: dados.dificuldade,
+          acaoAtual: dados.acaoAtual,
+          estrelasAcumuladas: dados.estrelasAcumuladas,
+          dadosEstado: dados.dadosEstado,
+          tempo_total_minutos: dados.tempo_total_minutos,
+          data_inicio: dados.data_inicio,
+          data_ultima_acao: dados.data_ultima_acao
+        })
       });
 
       const resultado = await resposta.json();
+      console.log("RESULTADO CRIAR SAVE:", resultado);
 
       if (resultado.sucesso) {
         localStorage.removeItem("saveAtualConectaMente");
         window.location.href = "/game/jogos-salvos/<%= usuario.id %>";
       } else {
-        alert("Não foi possível criar um novo save.");
+        alert(resultado.mensagem || "Não foi possível criar um novo save.");
       }
     } catch (error) {
       console.log("Erro ao criar novo save:", error);
@@ -128,16 +139,27 @@
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify(dados)
+        body: JSON.stringify({
+          nomeSessao: dados.nomeSessao,
+          slugFase: dados.slugFase,
+          dificuldade: dados.dificuldade,
+          acaoAtual: dados.acaoAtual,
+          estrelasAcumuladas: dados.estrelasAcumuladas,
+          dadosEstado: dados.dadosEstado,
+          tempo_total_minutos: dados.tempo_total_minutos,
+          data_inicio: dados.data_inicio,
+          data_ultima_acao: dados.data_ultima_acao
+        })
       });
 
       const resultado = await resposta.json();
+      console.log("RESULTADO SOBRESCREVER SAVE:", resultado);
 
       if (resultado.sucesso) {
         localStorage.removeItem("saveAtualConectaMente");
         window.location.href = "/game/jogos-salvos/<%= usuario.id %>";
       } else {
-        alert("Não foi possível sobrescrever o save.");
+        alert(resultado.mensagem || "Não foi possível sobrescrever o save.");
       }
     } catch (error) {
       console.log("Erro ao sobrescrever save:", error);

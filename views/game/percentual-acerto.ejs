@@ -1,0 +1,83 @@
+<%- include('partials/headerGame') %>
+
+<main class="pagina-acesso-game">
+  <a href="/game/rendimento-crianca/<%= usuario.id %>/<%= idResponsavel %>" class="btn-voltar-site" aria-label="Voltar">
+    <img src="/img/game/voltar.svg" alt="Voltar">
+  </a>
+
+  <section class="painel-percentual-acerto">
+    <h1 class="titulo-percentual-topo">Rendimento da conta</h1>
+
+    <div class="bloco-percentual-acerto">
+      <div class="titulo-secao-percentual">
+        <span class="barra-titulo-percentual"></span>
+        <h2>Percentual de acertos</h2>
+      </div>
+
+      <div class="conteudo-percentual-acerto">
+        <div class="grafico-percentual-box">
+          <div class="grafico-percentual-wrapper">
+            <canvas id="graficoPercentual"></canvas>
+            <div class="grafico-percentual-centro">
+              <span><%= percentualAcerto %>%</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="legenda-percentual-acerto">
+          <div class="item-legenda-percentual">
+            <span class="cor-legenda azul"></span>
+            <span>Respostas corretas</span>
+          </div>
+
+          <div class="item-legenda-percentual">
+            <span class="cor-legenda amarelo"></span>
+            <span>Respostas incorretas</span>
+          </div>
+
+          <div class="dados-percentual-extra">
+            <p><strong>Corretas:</strong> <%= totalCorretas %></p>
+            <p><strong>Incorretas:</strong> <%= totalIncorretas %></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const ctx = document.getElementById("graficoPercentual");
+
+  const totalCorretas = <%= totalCorretas %>;
+  const totalIncorretas = <%= totalIncorretas %>;
+
+  new Chart(ctx, {
+    type: "doughnut",
+    data: {
+      labels: ["Respostas corretas", "Respostas incorretas"],
+      datasets: [{
+        data: [totalCorretas, totalIncorretas],
+        backgroundColor: ["#0D63D8", "#F3B64F"],
+        borderWidth: 0,
+        hoverOffset: 6
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: "62%",
+      plugins: {
+        legend: {
+          display: false
+        },
+        tooltip: {
+          enabled: true
+        }
+      }
+    }
+  });
+</script>
+
+</body>
+</html>

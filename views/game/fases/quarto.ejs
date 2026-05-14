@@ -1,7 +1,7 @@
 <%- include('../partials/headerFase') %>
 
 <script>
-  const dadosFase = <%- JSON.stringify(fase) %>;
+  const dadosFase = <%- JSON.stringify(fase || {}) %>;
 </script>
 
 <main class="pagina-fase-game">
@@ -10,7 +10,7 @@
   <section class="painel-fase">
     <div class="cenario-fase">
       <img
-        src="<%= fase.imagem_fundo %>"
+        src="<%= fase && fase.imagem_fundo ? fase.imagem_fundo : '/img/game/fases/quarto/fundo/fundoQuarto.svg' %>"
         alt="Fundo da fase"
         class="imagem-cenario"
       >
@@ -24,16 +24,16 @@
         </div>
       </div>
 
-      <% fase.acoes.forEach(function(acao) { %>
+      <% (fase.acoes || []).forEach(function(acao) { %>
         <button
           type="button"
           class="objeto-interativo objeto-acao"
           data-slug="<%= acao.slug %>"
           style="
-            left: <%= acao.posicao_left %>;
-            top: <%= acao.posicao_top %>;
-            width: <%= acao.largura %>;
-            <%= acao.altura ? `height: ${acao.altura};` : '' %>
+            left: <%= acao.posicao_left || '0%' %>;
+            top: <%= acao.posicao_top || '0%' %>;
+            width: <%= acao.largura || '10%' %>;
+            <% if (acao.altura) { %>height: <%= acao.altura %>;<% } %>
           "
         >
           <img
@@ -46,19 +46,19 @@
 
       <div class="avatar-fase">
         <img
-          src="/img/game/avatars/<%= crianca?.avatar || 'personagem1.svg' %>"
+          src="/img/game/avatars/<%= crianca && crianca.avatar ? crianca.avatar : 'personagem1.svg' %>"
           alt="Personagem"
         >
       </div>
 
       <% if (dificuldade === "facil" || dificuldade === "medio") { %>
-        <% fase.acoes.forEach(function(acao, index) { %>
+        <% (fase.acoes || []).forEach(function(acao, index) { %>
           <div
             class="estrela-acao"
             id="estrela-<%= acao.slug %>"
             style="
-              left: <%= acao.estrela_left %>;
-              top: <%= acao.estrela_top %>;
+              left: <%= acao.estrela_left || '0%' %>;
+              top: <%= acao.estrela_top || '0%' %>;
             "
           >
             <% if (dificuldade === "facil") { %>
@@ -199,6 +199,8 @@
   let acoesConcluidas = 0;
   let faseJaSalva = false;
 
+  const inicioFase = new Date();
+
   function valorPorAcerto() {
     const dificuldadeAtual = String("<%= dificuldade %>")
       .trim()
@@ -314,6 +316,10 @@
     if (faseJaSalva) return;
 
     try {
+      const fimFase = new Date();
+      const diferencaMs = fimFase - inicioFase;
+      const tempoTotalMinutos = Math.max(1, Math.ceil(diferencaMs / 60000));
+
       const resposta = await fetch("/game/concluir-fase/<%= usuario.id %>/<%= fase.slug %>/<%= dificuldade %>", {
         method: "POST",
         headers: {
@@ -324,7 +330,10 @@
           erros_resposta: errosResposta,
           erros_ordem: errosOrdem,
           acoes_concluidas: acoesConcluidas,
-          estrelas_ganhas: totalConquista
+          estrelas_ganhas: totalConquista,
+          tempo_total_minutos: tempoTotalMinutos,
+          data_inicio: inicioFase.toISOString(),
+          data_fim: fimFase.toISOString()
         })
       });
 
@@ -433,6 +442,10 @@
 
   if (confirmarSalvar) {
     confirmarSalvar.addEventListener("click", () => {
+      const agora = new Date();
+      const diferencaMs = agora - inicioFase;
+      const tempoTotalMinutos = Math.max(1, Math.ceil(diferencaMs / 60000));
+
       const dadosSaveAtual = {
         nomeSessao: "Jogo <%= fase.nome %>",
         slugFase: "<%= fase.slug %>",
@@ -441,7 +454,10 @@
           ? (proximaAcaoEsperada() || "concluida")
           : "concluida",
         estrelasAcumuladas: typeof totalConquista !== "undefined" ? totalConquista : 0,
-        dadosEstado: typeof estadoAcoes !== "undefined" ? estadoAcoes : {}
+        dadosEstado: typeof estadoAcoes !== "undefined" ? estadoAcoes : {},
+        tempo_total_minutos: tempoTotalMinutos,
+        data_inicio: inicioFase.toISOString(),
+        data_ultima_acao: agora.toISOString()
       };
 
       localStorage.setItem("saveAtualConectaMente", JSON.stringify(dadosSaveAtual));

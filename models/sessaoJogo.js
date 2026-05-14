@@ -66,6 +66,11 @@ const SessaoJogo = connection.define("sessoes_jogo", {
   data_ultima_acao: {
     type: Sequelize.DATE,
     allowNull: true
+  },
+  tempo_total_minutos: {
+  type: Sequelize.INTEGER,
+  allowNull: false,
+  defaultValue: 0
   }
 });
 

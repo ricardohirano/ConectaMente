@@ -1,4 +1,5 @@
 import express from "express";
+import { Op } from "sequelize";
 import Usuario from "../models/usuario.js";
 import ResponsavelCrianca from "../models/ResponsavelCrianca.js";
 import Crianca from "../models/crianca.js";
@@ -742,13 +743,17 @@ router.get("/game/escolher-save/:idUsuario/:slug/:dificuldade", async (req, res)
 //rota novo save
 router.post("/game/criar-save/:idUsuario", async (req, res) => {
   const { idUsuario } = req.params;
+
   const {
     nomeSessao,
     slugFase,
     dificuldade,
     acaoAtual,
     estrelasAcumuladas,
-    dadosEstado
+    dadosEstado,
+    tempo_total_minutos,
+    data_inicio,
+    data_ultima_acao
   } = req.body;
 
   try {
@@ -758,25 +763,37 @@ router.post("/game/criar-save/:idUsuario", async (req, res) => {
       }
     });
 
+    if (!crianca) {
+      return res.status(404).json({
+        sucesso: false,
+        mensagem: "Criança não encontrada."
+      });
+    }
+
     const fase = await Fase.findOne({
       where: {
         slug: slugFase
       }
     });
 
-    if (!crianca || !fase) {
-      return res.status(400).json({ sucesso: false });
+    if (!fase) {
+      return res.status(404).json({
+        sucesso: false,
+        mensagem: "Fase não encontrada."
+      });
     }
+
     const totalSaves = await SessaoJogo.count({
       where: {
         id_crianca: crianca.id
       }
     });
 
-const nomeGerado = `Save ${totalSaves + 1}`;
-    await SessaoJogo.create({
+    const nomeGerado = `Save ${totalSaves + 1}`;
+
+    const novaSessao = await SessaoJogo.create({
       id_crianca: crianca.id,
-      nome_sessao: nomeSessao || "Save 1",
+      nome_sessao: nomeSessao || nomeGerado,
       id_fase_atual: fase.id,
       slug_fase: slugFase,
       nome_avatar_salvo: crianca.nome_avatar,
@@ -786,25 +803,38 @@ const nomeGerado = `Save ${totalSaves + 1}`;
       estrelas_acumuladas: Number(estrelasAcumuladas) || 0,
       dados_estado: JSON.stringify(dadosEstado || {}),
       status: "salva",
-      data_ultima_acao: new Date()
+      data_inicio: data_inicio ? new Date(data_inicio) : new Date(),
+      data_ultima_acao: data_ultima_acao ? new Date(data_ultima_acao) : new Date(),
+      tempo_total_minutos: Number(tempo_total_minutos) || 0
     });
 
-    return res.json({ sucesso: true });
+    return res.json({
+      sucesso: true,
+      mensagem: "Save criado com sucesso.",
+      sessao: novaSessao
+    });
   } catch (error) {
     console.log("Erro ao criar save: " + error);
-    return res.status(500).json({ sucesso: false });
+    return res.status(500).json({
+      sucesso: false,
+      mensagem: "Erro ao criar save."
+    });
   }
 });
 // rota save antigo
 router.post("/game/sobrescrever-save/:idUsuario/:idSessao", async (req, res) => {
   const { idUsuario, idSessao } = req.params;
+
   const {
     nomeSessao,
     slugFase,
     dificuldade,
     acaoAtual,
     estrelasAcumuladas,
-    dadosEstado
+    dadosEstado,
+    tempo_total_minutos,
+    data_inicio,
+    data_ultima_acao
   } = req.body;
 
   try {
@@ -814,19 +844,43 @@ router.post("/game/sobrescrever-save/:idUsuario/:idSessao", async (req, res) => 
       }
     });
 
+    if (!crianca) {
+      return res.status(404).json({
+        sucesso: false,
+        mensagem: "Criança não encontrada."
+      });
+    }
+
     const fase = await Fase.findOne({
       where: {
         slug: slugFase
       }
     });
 
-    if (!crianca || !fase) {
-      return res.status(400).json({ sucesso: false });
+    if (!fase) {
+      return res.status(404).json({
+        sucesso: false,
+        mensagem: "Fase não encontrada."
+      });
+    }
+
+    const sessao = await SessaoJogo.findOne({
+      where: {
+        id: idSessao,
+        id_crianca: crianca.id
+      }
+    });
+
+    if (!sessao) {
+      return res.status(404).json({
+        sucesso: false,
+        mensagem: "Sessão não encontrada."
+      });
     }
 
     await SessaoJogo.update(
       {
-        nome_sessao: nomeSessao || "Jogo salvo",
+        nome_sessao: nomeSessao || sessao.nome_sessao,
         id_fase_atual: fase.id,
         slug_fase: slugFase,
         nome_avatar_salvo: crianca.nome_avatar,
@@ -836,7 +890,9 @@ router.post("/game/sobrescrever-save/:idUsuario/:idSessao", async (req, res) => 
         estrelas_acumuladas: Number(estrelasAcumuladas) || 0,
         dados_estado: JSON.stringify(dadosEstado || {}),
         status: "salva",
-        data_ultima_acao: new Date()
+        data_inicio: data_inicio ? new Date(data_inicio) : sessao.data_inicio,
+        data_ultima_acao: data_ultima_acao ? new Date(data_ultima_acao) : new Date(),
+        tempo_total_minutos: Number(tempo_total_minutos) || 0
       },
       {
         where: {
@@ -846,10 +902,16 @@ router.post("/game/sobrescrever-save/:idUsuario/:idSessao", async (req, res) => 
       }
     );
 
-    return res.json({ sucesso: true });
+    return res.json({
+      sucesso: true,
+      mensagem: "Save sobrescrito com sucesso."
+    });
   } catch (error) {
     console.log("Erro ao sobrescrever save: " + error);
-    return res.status(500).json({ sucesso: false });
+    return res.status(500).json({
+      sucesso: false,
+      mensagem: "Erro ao sobrescrever save."
+    });
   }
 });
 
@@ -874,12 +936,16 @@ router.post("/game/excluir-sessao/:idUsuario/:idSessao", async (req, res) => {
 //rota salvarRessultadofase
 router.post("/game/concluir-fase/:idUsuario/:slug/:dificuldade", async (req, res) => {
   const { idUsuario, slug, dificuldade } = req.params;
+
   const {
     tentativas_total,
     erros_resposta,
     erros_ordem,
     acoes_concluidas,
-    estrelas_ganhas
+    estrelas_ganhas,
+    tempo_total_minutos,
+    data_inicio,
+    data_fim
   } = req.body;
 
   try {
@@ -909,11 +975,6 @@ router.post("/game/concluir-fase/:idUsuario/:slug/:dificuldade", async (req, res
       });
     }
 
-    const estrelasDaRodada = Number(estrelas_ganhas) || 0;
-
-    console.log("DIFICULDADE:", dificuldade);
-    console.log("ESTRELAS DA RODADA:", estrelasDaRodada);
-
     await RelatorioFase.create({
       id_crianca: crianca.id,
       id_fase: fase.id,
@@ -922,12 +983,16 @@ router.post("/game/concluir-fase/:idUsuario/:slug/:dificuldade", async (req, res
       erros_resposta: Number(erros_resposta) || 0,
       erros_ordem: Number(erros_ordem) || 0,
       acoes_concluidas: Number(acoes_concluidas) || 0,
-      estrelas_ganhas: estrelasDaRodada,
-      data_fim: new Date()
+      estrelas_ganhas: Number(estrelas_ganhas) || 0,
+      tempo_total_minutos: Number(tempo_total_minutos) || 0,
+      data_inicio: data_inicio ? new Date(data_inicio) : new Date(),
+      data_fim: data_fim ? new Date(data_fim) : new Date()
     });
 
-    await Crianca.increment(
-      { total_estrelas: estrelasDaRodada },
+    await Crianca.update(
+      {
+        total_estrelas: Number(crianca.total_estrelas || 0) + Number(estrelas_ganhas || 0)
+      },
       {
         where: {
           id: crianca.id
@@ -935,44 +1000,14 @@ router.post("/game/concluir-fase/:idUsuario/:slug/:dificuldade", async (req, res
       }
     );
 
-    const progressoExistente = await ProgressoFase.findOne({
-      where: {
-        id_crianca: crianca.id,
-        id_fase: fase.id,
-        dificuldade: dificuldade
-      }
-    });
-
-    if (progressoExistente) {
-      await ProgressoFase.update(
-        {
-          concluida: true
-        },
-        {
-          where: {
-            id: progressoExistente.id
-          }
-        }
-      );
-    } else {
-      await ProgressoFase.create({
-        id_crianca: crianca.id,
-        id_fase: fase.id,
-        dificuldade: dificuldade,
-        concluida: true,
-        estrelas_coletadas: estrelasDaRodada
-      });
-    }
-
     return res.json({
-      sucesso: true,
-      mensagem: "Fase concluída com sucesso."
+      sucesso: true
     });
   } catch (error) {
     console.log("Erro ao concluir fase: " + error);
     return res.status(500).json({
       sucesso: false,
-      mensagem: "Erro ao concluir fase."
+      mensagem: "Erro ao salvar relatório da fase."
     });
   }
 });
@@ -1007,7 +1042,66 @@ router.get("/game/rendimento-crianca/:idCrianca/:idResponsavel", async (req, res
     return res.redirect(`/game/contas-acessiveis/${idResponsavel}`);
   }
 });
+// rota resumo-atividade
+router.get("/game/resumo-atividade/:idCrianca/:idResponsavel", async (req, res) => {
+  const { idCrianca, idResponsavel } = req.params;
 
+  try {
+    const usuario = await Usuario.findByPk(idCrianca);
+
+    if (!usuario) {
+      return res.redirect(`/game/rendimento-crianca/${idCrianca}/${idResponsavel}`);
+    }
+
+    const crianca = await Crianca.findOne({
+      where: {
+        id_usuario: idCrianca
+      }
+    });
+
+    if (!crianca) {
+      return res.redirect(`/game/rendimento-crianca/${idCrianca}/${idResponsavel}`);
+    }
+
+    const totalSessoes = await SessaoJogo.count({
+      where: {
+        id_crianca: crianca.id
+      }
+    });
+
+    const totalEstrelas = crianca.total_estrelas || 0;
+
+    const seteDiasAtras = new Date();
+    seteDiasAtras.setDate(seteDiasAtras.getDate() - 7);
+
+    const relatoriosSemana = await RelatorioFase.findAll({
+      where: {
+        id_crianca: crianca.id,
+        createdAt: {
+          [Op.gte]: seteDiasAtras
+        }
+      }
+    });
+
+    let frequenciaSemanal = 0;
+
+    relatoriosSemana.forEach(relatorio => {
+      frequenciaSemanal += Number(relatorio.tempo_total_minutos || 0);
+    });
+
+    return res.render("game/resumo-atividade", {
+      usuario,
+      crianca,
+      idResponsavel,
+      totalSessoes,
+      totalEstrelas,
+      frequenciaSemanal
+    });
+  } catch (error) {
+    console.log("Erro ao carregar resumo de atividade: " + error);
+    return res.redirect(`/game/rendimento-crianca/${idCrianca}/${idResponsavel}`);
+  }
+});
 // Rota Rendimento Final
 
 router.get("/game/relatorio-final/:idCrianca/:idResponsavel", async (req, res) => {
@@ -1030,6 +1124,10 @@ router.get("/game/relatorio-final/:idCrianca/:idResponsavel", async (req, res) =
       return res.redirect(`/game/rendimento-crianca/${idCrianca}/${idResponsavel}`);
     }
 
+    const fases = await Fase.findAll({
+      order: [["ordem_fase", "ASC"]]
+    });
+
     const relatorios = await RelatorioFase.findAll({
       where: {
         id_crianca: crianca.id
@@ -1042,16 +1140,210 @@ router.get("/game/relatorio-final/:idCrianca/:idResponsavel", async (req, res) =
       order: [["createdAt", "DESC"]]
     });
 
+    const totalEstrelas = Number(crianca.total_estrelas || 0);
+
+    let totalCorretas = 0;
+    let totalIncorretas = 0;
+    let totalMinutos = 0;
+
+    relatorios.forEach((relatorio) => {
+      totalCorretas += Number(relatorio.acoes_concluidas || 0);
+      totalIncorretas += Number(relatorio.erros_resposta || 0) + Number(relatorio.erros_ordem || 0);
+      totalMinutos += Number(relatorio.tempo_total_minutos || 0);
+    });
+
+    const totalRespostas = totalCorretas + totalIncorretas;
+    const percentualAcerto = totalRespostas > 0
+      ? Math.round((totalCorretas / totalRespostas) * 100)
+      : 0;
+
+    const mediaTempo = relatorios.length > 0
+      ? Math.round(totalMinutos / relatorios.length)
+      : 0;
+
+    const progressoLabels = [];
+    const progressoValores = [];
+
+    const hoje = new Date();
+    const ano = hoje.getFullYear();
+    const mes = hoje.getMonth();
+    const ultimoDiaDoMes = new Date(ano, mes + 1, 0).getDate();
+
+    for (let dia = 1; dia <= ultimoDiaDoMes; dia++) {
+      progressoLabels.push(String(dia).padStart(2, "0"));
+      progressoValores.push(0);
+    }
+
+    relatorios.forEach((relatorio) => {
+      const data = new Date(relatorio.createdAt);
+      if (data.getMonth() === mes && data.getFullYear() === ano) {
+        const dia = data.getDate();
+        progressoValores[dia - 1] += Number(relatorio.acoes_concluidas || 0);
+      }
+    });
+
+    const statusFases = fases.map((fase) => {
+      const relatoriosDaFase = relatorios.filter((r) => r.id_fase === fase.id);
+
+      if (relatoriosDaFase.length === 0) {
+        return {
+          nome: fase.nome,
+          data: "--",
+          status: "nao_comecou",
+          dificuldade: ""
+        };
+      }
+
+      const maisRecente = relatoriosDaFase[0];
+      const concluiu = Number(maisRecente.acoes_concluidas || 0) > 0;
+
+      return {
+        nome: fase.nome,
+        data: new Date(maisRecente.updatedAt || maisRecente.createdAt).toLocaleDateString("pt-BR"),
+        status: concluiu ? "concluido" : "em_andamento",
+        dificuldade: maisRecente.dificuldade || ""
+      };
+    });
+
     return res.render("game/relatorio-final-crianca", {
       usuario,
       crianca,
-      relatorios,
-      idResponsavel
+      idResponsavel,
+      totalEstrelas,
+      percentualAcerto,
+      mediaTempo,
+      progressoLabels,
+      progressoValores,
+      statusFases
     });
   } catch (error) {
-    console.log("Erro ao carregar relatório final da criança: " + error);
+    console.log("Erro ao carregar relatório final: " + error);
+    return res.redirect(`/game/rendimento-crianca/${idCrianca}/${idResponsavel}`);
+  }
+});
+// rota percentual
+router.get("/game/percentual-acerto/:idCrianca/:idResponsavel", async (req, res) => {
+  const { idCrianca, idResponsavel } = req.params;
+
+  try {
+    const usuario = await Usuario.findByPk(idCrianca);
+
+    if (!usuario) {
+      return res.redirect(`/game/rendimento-crianca/${idCrianca}/${idResponsavel}`);
+    }
+
+    const crianca = await Crianca.findOne({
+      where: {
+        id_usuario: idCrianca
+      }
+    });
+
+    if (!crianca) {
+      return res.redirect(`/game/rendimento-crianca/${idCrianca}/${idResponsavel}`);
+    }
+
+    const relatorios = await RelatorioFase.findAll({
+      where: {
+        id_crianca: crianca.id
+      }
+    });
+
+    let totalCorretas = 0;
+    let totalIncorretas = 0;
+
+    relatorios.forEach((relatorio) => {
+      totalCorretas += Number(relatorio.acoes_concluidas || 0);
+      totalIncorretas +=
+        Number(relatorio.erros_resposta || 0) +
+        Number(relatorio.erros_ordem || 0);
+    });
+
+    const totalRespostas = totalCorretas + totalIncorretas;
+
+    const percentualAcerto =
+      totalRespostas > 0
+        ? Math.round((totalCorretas / totalRespostas) * 100)
+        : 0;
+
+    return res.render("game/percentual-acerto", {
+      usuario,
+      crianca,
+      idResponsavel,
+      totalCorretas,
+      totalIncorretas,
+      percentualAcerto
+    });
+  } catch (error) {
+    console.log("Erro ao carregar percentual de acerto: " + error);
     return res.redirect(`/game/rendimento-crianca/${idCrianca}/${idResponsavel}`);
   }
 });
 
+//rota evolucao da crianca
+router.get("/game/evolucao-progresso/:idCrianca/:idResponsavel", async (req, res) => {
+  const { idCrianca, idResponsavel } = req.params;
+
+  try {
+    const usuario = await Usuario.findByPk(idCrianca);
+
+    if (!usuario) {
+      return res.redirect(`/game/rendimento-crianca/${idCrianca}/${idResponsavel}`);
+    }
+
+    const crianca = await Crianca.findOne({
+      where: {
+        id_usuario: idCrianca
+      }
+    });
+
+    if (!crianca) {
+      return res.redirect(`/game/rendimento-crianca/${idCrianca}/${idResponsavel}`);
+    }
+
+    const hoje = new Date();
+    const ano = hoje.getFullYear();
+    const mes = hoje.getMonth();
+
+    const inicioMes = new Date(ano, mes, 1, 0, 0, 0, 0);
+    const fimMes = new Date(ano, mes + 1, 0, 23, 59, 59, 999);
+
+    const relatorios = await RelatorioFase.findAll({
+      where: {
+        id_crianca: crianca.id,
+        createdAt: {
+          [Op.between]: [inicioMes, fimMes]
+        }
+      },
+      order: [["createdAt", "ASC"]]
+    });
+
+    const ultimoDiaDoMes = new Date(ano, mes + 1, 0).getDate();
+
+    const labels = [];
+    const progressoDiario = [];
+
+    for (let dia = 1; dia <= ultimoDiaDoMes; dia++) {
+      labels.push(String(dia).padStart(2, "0"));
+      progressoDiario.push(0);
+    }
+
+    relatorios.forEach((relatorio) => {
+      const data = new Date(relatorio.createdAt);
+      const dia = data.getDate();
+
+      progressoDiario[dia - 1] += Number(relatorio.acoes_concluidas || 0);
+    });
+
+    return res.render("game/evolucao-progresso", {
+      usuario,
+      crianca,
+      idResponsavel,
+      labels,
+      progressoSemanal: progressoDiario
+    });
+  } catch (error) {
+    console.log("Erro ao carregar evolução do progresso: " + error);
+    return res.redirect(`/game/rendimento-crianca/${idCrianca}/${idResponsavel}`);
+  }
+});
 export default router;

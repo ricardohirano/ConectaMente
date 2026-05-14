@@ -49,6 +49,11 @@ const RelatorioFase = connection.define("relatorios_fase", {
     allowNull: false,
     defaultValue: 0
   },
+  tempo_total_minutos: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+    defaultValue: 0
+  },
   data_inicio: {
     type: Sequelize.DATE,
     allowNull: false,
