@@ -7,7 +7,7 @@
 
   <section class="painel-jogos-salvos">
     <div class="topo-jogos-salvos">
-      <img src="/img/website/logo-conectamente.png" alt="ConectaMente" class="logo-jogos-salvos">
+      <img src="/img/website/index/logoConectamente.svg" alt="ConectaMente" class="logo-jogos-salvos">
       <h1>JOGOS SALVOS</h1>
     </div>
 
@@ -40,6 +40,14 @@
               Fase: <%= sessao.slug_fase || 'quarto' %> |
               Dificuldade: <%= sessao.dificuldade_atual %>
             </span>
+            <span>
+  <% if (sessao.slug_fase === "perfil") { %>
+    Tipo: Perfil
+  <% } else { %>
+    Fase: <%= sessao.slug_fase || 'quarto' %> |
+    Dificuldade: <%= sessao.dificuldade_atual %>
+  <% } %>
+</span>
           </div>
 
           <div class="acoes-jogo-salvo">

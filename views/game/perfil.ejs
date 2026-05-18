@@ -7,8 +7,14 @@
 
   <section class="painel-perfil-crianca">
     <div class="topo-perfil-crianca">
-      <img src="/img/website/logo-conectamente.png" alt="ConectaMente" class="logo-perfil-crianca">
+      <img src="/img/website/index/logoConectamente.svg" alt="ConectaMente" class="logo-perfil-crianca">
     </div>
+
+    <% if (typeof limiteAtingido !== "undefined" && limiteAtingido) { %>
+      <div class="alerta-limite-jogo">
+        O limite de tempo diário desta conta foi atingido.
+      </div>
+    <% } %>
 
     <div class="cabecalho-perfil-crianca">
       <div class="lado-esquerdo-perfil">
@@ -31,8 +37,8 @@
             JOGOS SALVOS
           </a>
 
-          <button type="button" class="btn-perfil-acao">
-            SALVAR ALTERAÇÕES
+          <button type="button" class="btn-perfil-acao" id="btnSalvarPerfil">
+            SALVAR
           </button>
 
           <a href="/game" class="btn-perfil-acao">
@@ -44,7 +50,6 @@
       <div class="lado-direito-perfil">
         <div class="card-avatar-lateral">
           <img src="/img/game/<%= crianca?.avatar || 'avatar-menino' %>.png" alt="Avatar grande">
-          <a href="/game/escolha-personagem/<%= usuario.id %>" class="btn-trocar-avatar">TROCAR</a>
         </div>
       </div>
     </div>
@@ -100,6 +105,31 @@
     </div>
   </section>
 </main>
+<script>
+  const btnSalvarPerfil = document.getElementById("btnSalvarPerfil");
 
+  if (btnSalvarPerfil) {
+    btnSalvarPerfil.addEventListener("click", () => {
+      const dadosSavePerfil = {
+        nomeSessao: "Perfil",
+        slugFase: "perfil",
+        dificuldade: "perfil",
+        acaoAtual: "perfil",
+        estrelasAcumuladas: <%= totalEstrelas || 0 %>,
+        dadosEstado: {
+          tipo: "perfil",
+          avatar: "<%= crianca && crianca.avatar ? crianca.avatar : '' %>",
+          nomeAvatar: "<%= crianca && crianca.nome_avatar ? crianca.nome_avatar : usuario.nome %>"
+        },
+        tempo_total_minutos: 0,
+        data_inicio: new Date().toISOString(),
+        data_ultima_acao: new Date().toISOString()
+      };
+
+      localStorage.setItem("saveAtualConectaMente", JSON.stringify(dadosSavePerfil));
+      window.location.href = "/game/escolher-save/<%= usuario.id %>/perfil/perfil";
+    });
+  }
+</script>
 </body>
 </html>

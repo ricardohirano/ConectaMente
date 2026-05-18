@@ -103,12 +103,14 @@ router.get("/game/perfil/:id", async (req, res) => {
     progressoFases[4].liberado = salaConcluida;
 
     const totalEstrelas = crianca.total_estrelas || 0;
+    const limiteAtingido = req.query.limite === "atingido";
 
     return res.render("game/perfil", {
       usuario,
       crianca,
       totalEstrelas,
-      progressoFases
+      progressoFases,
+      limiteAtingido
     });
   } catch (error) {
     console.log("Erro ao carregar perfil: " + error);
@@ -510,6 +512,15 @@ router.get("/game/fase/:idUsuario/:slug/:dificuldade", async (req, res) => {
       return res.redirect("/game");
     }
 
+    const limiteTempoDiario = Number(crianca.limite_tempo_diario || 0);
+
+    if (limiteTempoDiario > 0) {
+      const tempoUsadoHoje = await calcularTempoUsadoHoje(crianca.id);
+
+      if (tempoUsadoHoje >= limiteTempoDiario) {
+        return res.redirect(`/game/perfil/${idUsuario}?limite=atingido`);
+      }
+    }
     const fase = await Fase.findOne({
       where: {
         slug: slug,
@@ -551,6 +562,8 @@ router.get("/game/fase/:idUsuario/:slug/:dificuldade", async (req, res) => {
     return res.redirect("/game");
   }
 });
+
+
 
 //ROTA JOGOS SALVOS
 
@@ -692,6 +705,10 @@ router.get("/game/carregar-sessao/:idUsuario/:idSessao", async (req, res) => {
       );
     }
 
+    if (sessao.slug_fase === "perfil") {
+      return res.redirect(`/game/perfil/${idUsuario}`);
+    }
+
     return res.redirect(`/game/fase/${idUsuario}/${sessao.slug_fase}/${sessao.dificuldade_atual}`);
   } catch (error) {
     console.log("Erro ao carregar sessão: " + error);
@@ -722,8 +739,7 @@ router.get("/game/escolher-save/:idUsuario/:slug/:dificuldade", async (req, res)
 
     const sessoes = await SessaoJogo.findAll({
       where: {
-        id_crianca: crianca.id,
-        status: "salva"
+        id_crianca: crianca.id
       },
       order: [["updatedAt", "DESC"]]
     });
@@ -736,8 +752,8 @@ router.get("/game/escolher-save/:idUsuario/:slug/:dificuldade", async (req, res)
       dificuldade
     });
   } catch (error) {
-    console.log("Erro ao carregar tela de escolher save: " + error);
-    return res.redirect("/game");
+    console.log("Erro ao abrir escolher save: " + error);
+    return res.redirect(`/game/perfil/${idUsuario}`);
   }
 });
 //rota novo save
@@ -770,17 +786,21 @@ router.post("/game/criar-save/:idUsuario", async (req, res) => {
       });
     }
 
-    const fase = await Fase.findOne({
-      where: {
-        slug: slugFase
-      }
-    });
+    let fase = null;
 
-    if (!fase) {
-      return res.status(404).json({
-        sucesso: false,
-        mensagem: "Fase não encontrada."
+    if (slugFase !== "perfil") {
+      fase = await Fase.findOne({
+        where: {
+          slug: slugFase
+        }
       });
+
+      if (!fase) {
+        return res.status(404).json({
+          sucesso: false,
+          mensagem: "Fase não encontrada."
+        });
+      }
     }
 
     const totalSaves = await SessaoJogo.count({
@@ -794,7 +814,7 @@ router.post("/game/criar-save/:idUsuario", async (req, res) => {
     const novaSessao = await SessaoJogo.create({
       id_crianca: crianca.id,
       nome_sessao: nomeSessao || nomeGerado,
-      id_fase_atual: fase.id,
+      id_fase_atual: fase ? fase.id : null,
       slug_fase: slugFase,
       nome_avatar_salvo: crianca.nome_avatar,
       avatar_salvo: crianca.avatar,
@@ -851,17 +871,21 @@ router.post("/game/sobrescrever-save/:idUsuario/:idSessao", async (req, res) => 
       });
     }
 
-    const fase = await Fase.findOne({
-      where: {
-        slug: slugFase
-      }
-    });
+    let fase = null;
 
-    if (!fase) {
-      return res.status(404).json({
-        sucesso: false,
-        mensagem: "Fase não encontrada."
+    if (slugFase !== "perfil") {
+      fase = await Fase.findOne({
+        where: {
+          slug: slugFase
+        }
       });
+
+      if (!fase) {
+        return res.status(404).json({
+          sucesso: false,
+          mensagem: "Fase não encontrada."
+        });
+      }
     }
 
     const sessao = await SessaoJogo.findOne({
@@ -881,7 +905,7 @@ router.post("/game/sobrescrever-save/:idUsuario/:idSessao", async (req, res) => 
     await SessaoJogo.update(
       {
         nome_sessao: nomeSessao || sessao.nome_sessao,
-        id_fase_atual: fase.id,
+        id_fase_atual: fase ? fase.id : null,
         slug_fase: slugFase,
         nome_avatar_salvo: crianca.nome_avatar,
         avatar_salvo: crianca.avatar,
@@ -999,6 +1023,34 @@ router.post("/game/concluir-fase/:idUsuario/:slug/:dificuldade", async (req, res
         }
       }
     );
+
+    const progressoExistente = await ProgressoFase.findOne({
+      where: {
+        id_crianca: crianca.id,
+        id_fase: fase.id,
+        dificuldade: dificuldade
+      }
+    });
+
+    if (progressoExistente) {
+      await ProgressoFase.update(
+        {
+          concluida: true
+        },
+        {
+          where: {
+            id: progressoExistente.id
+          }
+        }
+      );
+    } else {
+      await ProgressoFase.create({
+        id_crianca: crianca.id,
+        id_fase: fase.id,
+        dificuldade: dificuldade,
+        concluida: true
+      });
+    }
 
     return res.json({
       sucesso: true
