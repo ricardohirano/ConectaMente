@@ -1,5 +1,14 @@
 <%- include('partials/headerGame') %>
+<%
+  const avatarBase = crianca && crianca.avatar ? crianca.avatar : "personagem1";
 
+  let avatarPequeno = "/img/game/avatars/perfil1.svg";
+
+  if (avatarBase === "personagem1") avatarPequeno = "/img/game/avatars/perfil1.svg";
+  if (avatarBase === "personagem2") avatarPequeno = "/img/game/avatars/perfil2.svg";
+  if (avatarBase === "personagem3") avatarPequeno = "/img/game/avatars/perfil3.png";
+  if (avatarBase === "personagem4") avatarPequeno = "/img/game/avatars/perfil4.png";
+%>
 <main class="pagina-acesso-game">
   <a href="/game/crianca/<%= usuario.id %>" class="btn-voltar-site" aria-label="Voltar">
     <img src="/img/game/voltar.svg" alt="Voltar">
@@ -21,10 +30,7 @@
       <% sessoes.forEach(function(sessao, index) { %>
         <div class="card-jogo-salvo">
           <div class="avatar-jogo-salvo">
-            <img
-              src="/img/game/avatars/<%= sessao.avatar_salvo || 'personagem1.svg' %>"
-              alt="Avatar"
-            >
+            <img src="<%= avatarPequeno %>" alt="Avatar da criança">
           </div>
 
           <div class="info-jogo-salvo">

@@ -4,6 +4,28 @@
   const dadosFase = <%- JSON.stringify(fase || {}) %>;
 </script>
 
+<%
+  const avatarBase = crianca && crianca.avatar ? crianca.avatar : "personagem1";
+
+  let avatarJogo = "/img/game/avatars/personagem1.svg";
+
+  if (avatarBase === "personagem1") {
+    avatarJogo = "/img/game/avatars/personagem1.svg";
+  }
+
+  if (avatarBase === "personagem2") {
+    avatarJogo = "/img/game/avatars/personagem2.svg";
+  }
+
+  if (avatarBase === "personagem3") {
+    avatarJogo = "/img/game/avatars/personagem3.png";
+  }
+
+  if (avatarBase === "personagem4") {
+    avatarJogo = "/img/game/avatars/personagem4.png";
+  }
+%>
+
 <main class="pagina-fase-game">
   <%- include('../partials/navbarFase') %>
 
@@ -45,10 +67,7 @@
       <% }) %>
 
       <div class="avatar-fase">
-        <img
-          src="/img/game/avatars/<%= crianca && crianca.avatar ? crianca.avatar : 'personagem1.svg' %>"
-          alt="Personagem"
-        >
+        <img src="<%= avatarJogo %>" alt="Personagem">
       </div>
 
       <% if (dificuldade === "facil" || dificuldade === "medio") { %>

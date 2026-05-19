@@ -1,5 +1,32 @@
 <%- include('partials/headerGame') %>
 
+<%
+  const avatarBase = crianca && crianca.avatar ? crianca.avatar : "personagem1";
+
+  let avatarPequeno = "/img/game/avatars/perfil1.svg";
+  let avatarGrande = "/img/game/avatars/personagem1.svg";
+
+  if (avatarBase === "personagem1") {
+    avatarPequeno = "/img/game/avatars/perfil1.svg";
+    avatarGrande = "/img/game/avatars/personagem1.svg";
+  }
+
+  if (avatarBase === "personagem2") {
+    avatarPequeno = "/img/game/avatars/perfil2.svg";
+    avatarGrande = "/img/game/avatars/personagem2.svg";
+  }
+
+  if (avatarBase === "personagem3") {
+    avatarPequeno = "/img/game/avatars/perfil3.png";
+    avatarGrande = "/img/game/avatars/personagem3.png";
+  }
+
+  if (avatarBase === "personagem4") {
+    avatarPequeno = "/img/game/avatars/perfil4.png";
+    avatarGrande = "/img/game/avatars/personagem4.png";
+  }
+%>
+
 <main class="pagina-acesso-game">
   <a href="/game/crianca/<%= usuario.id %>" class="btn-voltar-site" aria-label="Voltar">
     <img src="/img/game/voltar.svg" alt="Voltar">
@@ -20,7 +47,7 @@
       <div class="lado-esquerdo-perfil">
         <div class="bloco-identidade-crianca">
           <div class="avatar-perfil-crianca">
-            <img src="/img/game/<%= crianca?.avatar || 'avatar-menino' %>.png" alt="Avatar">
+            <img src="<%= avatarPequeno %>" alt="Avatar pequeno">
           </div>
 
           <div class="info-perfil-crianca">
@@ -28,7 +55,9 @@
               <h1><%= crianca?.nome_avatar || usuario.nome %></h1>
             </div>
 
-            <button type="button" class="btn-editar-avatar">Editar</button>
+            <a href="/game/escolha-personagem/<%= usuario.id %>?origem=perfil" class="btn-editar-avatar">
+              Editar
+            </a>
           </div>
         </div>
 
@@ -49,7 +78,7 @@
 
       <div class="lado-direito-perfil">
         <div class="card-avatar-lateral">
-          <img src="/img/game/<%= crianca?.avatar || 'avatar-menino' %>.png" alt="Avatar grande">
+          <img src="<%= avatarGrande %>" alt="Avatar grande">
         </div>
       </div>
     </div>

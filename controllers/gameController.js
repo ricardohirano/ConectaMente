@@ -426,7 +426,7 @@ router.post("/game/excluir-conta/:idConta/:idResponsavel", async (req, res) => {
 
 router.get("/game/escolha-personagem/:id", async (req, res) => {
   const id = req.params.id;
-  const origem = req.query.origem;
+  const origem = req.query.origem || "";
 
   try {
     const usuario = await Usuario.findByPk(id);
@@ -451,7 +451,7 @@ router.post("/game/escolha-personagem/:id", async (req, res) => {
   const id = req.params.id;
   const avatarEscolhido = req.body.avatarEscolhido;
   const nomeAvatar = req.body.nomeAvatar;
-  const origem = req.body.origem;
+  const origem = req.body.origem || "";
 
   try {
     const crianca = await Crianca.findOne({
@@ -461,17 +461,17 @@ router.post("/game/escolha-personagem/:id", async (req, res) => {
     });
 
     if (!crianca) {
-      return res.redirect(`/game/escolha-personagem/${id}`);
+      return res.redirect(`/game/escolha-personagem/${id}?origem=${origem}`);
     }
 
     await Crianca.update(
       {
         avatar: avatarEscolhido,
-        nome_avatar: nomeAvatar
+        nome_avatar: req.body.nomeAvatar
       },
       {
         where: {
-          id_usuario: id
+          id_usuario: req.params.id
         }
       }
     );

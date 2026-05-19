@@ -11,7 +11,7 @@
       <h2>Personagem</h2>
     </div>
 
-    <form action="/game/escolha-personagem/<%= usuario.id %>" method="POST" class="form-avatar">
+    <form action="/game/escolha-personagem/<%= usuario.id %>?origem=<%= origem || '' %>" method="POST" class="form-avatar">
       <input type="hidden" name="origem" value="<%= origem %>">
       <!-- ESCOLHA DO GÊNERO -->
       <div class="grupo-genero-radio">
@@ -31,17 +31,17 @@
       <!-- AVATARES MASCULINOS -->
       <div class="grupo-avatares" id="grupo-masc">
         <label class="card-avatar-radio">
-          <input type="radio" name="avatarEscolhido" value="masc1" checked>
+          <input type="radio" name="avatarEscolhido" value="personagem1" checked>
           <span class="card-avatar-radio__box">
-            <img src="/img/game/avatar-masc-1.png" alt="Personagem masculino 1">
+            <img src="/img/game/avatars/personagem1.svg" alt="Personagem 1">
             <span class="card-avatar-radio__nome">Personagem 1</span>
           </span>
         </label>
 
         <label class="card-avatar-radio">
-          <input type="radio" name="avatarEscolhido" value="masc2">
+         <input type="radio" name="avatarEscolhido" value="personagem2">
           <span class="card-avatar-radio__box">
-            <img src="/img/game/avatar-masc-2.png" alt="Personagem masculino 2">
+            <img src="/img/game/avatars/personagem2.svg" alt="Personagem 2">
             <span class="card-avatar-radio__nome">Personagem 2</span>
           </span>
         </label>
@@ -50,17 +50,17 @@
       <!-- AVATARES FEMININOS -->
       <div class="grupo-avatares grupo-avatares--oculto" id="grupo-fem">
         <label class="card-avatar-radio">
-          <input type="radio" name="avatarEscolhido" value="fem1">
+          <input type="radio" name="avatarEscolhido" value="personagem3">
           <span class="card-avatar-radio__box">
-            <img src="/img/game/avatar-fem-1.png" alt="Personagem feminino 1">
+            <img src="/img/game/avatars/personagem3.png" alt="Personagem 3">
             <span class="card-avatar-radio__nome">Personagem 3</span>
           </span>
         </label>
 
         <label class="card-avatar-radio">
-          <input type="radio" name="avatarEscolhido" value="fem2">
+          <input type="radio" name="avatarEscolhido" value="personagem4">
           <span class="card-avatar-radio__box">
-            <img src="/img/game/avatar-fem-2.png" alt="Personagem feminino 2">
+            <img src="/img/game/avatars/personagem4.png" alt="Personagem 4">
             <span class="card-avatar-radio__nome">Personagem 4</span>
           </span>
         </label>

@@ -1,5 +1,15 @@
 <%- include('partials/headerGame') %>
 
+<%
+  const avatarBase = crianca && crianca.avatar ? crianca.avatar : "personagem1";
+
+  let avatarPequeno = "/img/game/avatars/perfil1.svg";
+
+  if (avatarBase === "personagem1") avatarPequeno = "/img/game/avatars/perfil1.svg";
+  if (avatarBase === "personagem2") avatarPequeno = "/img/game/avatars/perfil2.svg";
+  if (avatarBase === "personagem3") avatarPequeno = "/img/game/avatars/perfil3.png";
+  if (avatarBase === "personagem4") avatarPequeno = "/img/game/avatars/perfil4.png";
+%>
 <main class="pagina-acesso-game">
   <a href="/game" class="btn-voltar-site" aria-label="Sair da conta">
     <img src="/img/game/voltar.svg" alt="Sair da conta">
@@ -10,7 +20,7 @@
       <img src="/img/website/index/logoConectamente.svg" alt="ConectaMente" class="logo-crianca">
 
       <div class="avatar-topo-crianca">
-        <img src="/img/game/avatars/<%= crianca?.avatar || 'personagem1.svg' %>" alt="Avatar da criança">
+       <img src="<%= avatarPequeno %>" alt="Avatar da criança">
       </div>
     </div>
 
@@ -21,7 +31,7 @@
         <img src="/img/game/mais.svg" alt="Novo jogo">
       </div>
 
-      <div class="texto-menu-crianca">Novo Jogo</div>
+      
 
       <div class="seta-menu-crianca">
         <img src="/img/game/seta-direita.svg" alt="Abrir">
