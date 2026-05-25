@@ -59,7 +59,7 @@ router.get("/game/perfil/:id", async (req, res) => {
     });
 
     const estruturaBase = [
-      { comodo: "Quarto", slug: "quarto", icone: "quarto.svg", facil: false, medio: false, dificil: false, liberado: true },
+      { comodo: "Quarto", slug: "quarto", icone: "quarto.png", facil: false, medio: false, dificil: false, liberado: true },
       { comodo: "Banheiro", slug: "banheiro", icone: "banheiro.svg", facil: false, medio: false, dificil: false, liberado: false },
       { comodo: "Cozinha", slug: "cozinha", icone: "cozinha.svg", facil: false, medio: false, dificil: false, liberado: false },
       { comodo: "Sala", slug: "sala", icone: "sala.svg", facil: false, medio: false, dificil: false, liberado: false },

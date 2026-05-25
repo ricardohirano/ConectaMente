@@ -27,27 +27,27 @@
     <h1 class="saudacao-crianca">Olá, <%= usuario.nome %></h1>
 
       <a href="/game/escolha-personagem/<%= usuario.id %>?origem=novo-jogo" class="card-menu-crianca" id="btnNovoJogo">
-      <div class="icone-menu-crianca icone-cinza">
-        <img src="/img/game/mais.svg" alt="Novo jogo">
+      <div class="icone-menu-crianca icone-azul">
+        <img src="/img/game/apoio/mais.svg" alt="Novo jogo">
       </div>
 
-      
+      <div class="texto-menu-crianca">Novo Jogo</div>
 
       <div class="seta-menu-crianca">
-        <img src="/img/game/seta-direita.svg" alt="Abrir">
+        <img src="/img/game/apoio/seta-direita.svg" alt="Abrir">
       </div>
     </a>
 
     <% if (temNovoJogoCriado) { %>
       <a href="/game/perfil/<%= usuario.id %>" class="card-menu-crianca">
         <div class="icone-menu-crianca icone-azul">
-          <img src="/img/game/icone-usuario.svg" alt="Perfil">
+          <img src="/img/game/apoio/icone-usuario.svg" alt="Perfil">
         </div>
 
         <div class="texto-menu-crianca">Perfil</div>
 
         <div class="seta-menu-crianca">
-          <img src="/img/game/seta-direita.svg" alt="Abrir">
+          <img src="/img/game/apoio/seta-direita.svg" alt="Abrir">
         </div>
       </a>
     <% } %>
@@ -55,13 +55,13 @@
     <% if (temJogoSalvo) { %>
       <a href="/game/jogos-salvos/<%= usuario.id %>" class="card-menu-crianca">
         <div class="icone-menu-crianca icone-azul">
-          <img src="/img/game/carregar.svg" alt="Carregar jogo">
+          <img src="/img/game/apoio/carregar.svg" alt="Carregar jogo">
         </div>
 
         <div class="texto-menu-crianca">Carregar Jogo</div>
 
         <div class="seta-menu-crianca">
-          <img src="/img/game/seta-direita.svg" alt="Abrir">
+          <img src="/img/game/apoio/seta-direita.svg" alt="Abrir">
         </div>
       </a>
     <% } %>

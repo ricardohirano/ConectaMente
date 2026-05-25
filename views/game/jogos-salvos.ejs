@@ -1,14 +1,5 @@
 <%- include('partials/headerGame') %>
-<%
-  const avatarBase = crianca && crianca.avatar ? crianca.avatar : "personagem1";
 
-  let avatarPequeno = "/img/game/avatars/perfil1.svg";
-
-  if (avatarBase === "personagem1") avatarPequeno = "/img/game/avatars/perfil1.svg";
-  if (avatarBase === "personagem2") avatarPequeno = "/img/game/avatars/perfil2.svg";
-  if (avatarBase === "personagem3") avatarPequeno = "/img/game/avatars/perfil3.png";
-  if (avatarBase === "personagem4") avatarPequeno = "/img/game/avatars/perfil4.png";
-%>
 <main class="pagina-acesso-game">
   <a href="/game/crianca/<%= usuario.id %>" class="btn-voltar-site" aria-label="Voltar">
     <img src="/img/game/voltar.svg" alt="Voltar">
@@ -28,9 +19,20 @@
       <% } %>
 
       <% sessoes.forEach(function(sessao, index) { %>
+        <%
+          const avatarSaveBase = sessao && sessao.avatar_salvo ? sessao.avatar_salvo : "personagem1";
+
+          let avatarPequenoSave = "/img/game/avatars/perfil1.svg";
+
+          if (avatarSaveBase === "personagem1") avatarPequenoSave = "/img/game/avatars/perfil1.svg";
+          if (avatarSaveBase === "personagem2") avatarPequenoSave = "/img/game/avatars/perfil2.svg";
+          if (avatarSaveBase === "personagem3") avatarPequenoSave = "/img/game/avatars/perfil3.png";
+          if (avatarSaveBase === "personagem4") avatarPequenoSave = "/img/game/avatars/perfil4.png";
+        %>
+
         <div class="card-jogo-salvo">
           <div class="avatar-jogo-salvo">
-            <img src="<%= avatarPequeno %>" alt="Avatar da criança">
+            <img src="<%= avatarPequenoSave %>" alt="Avatar da criança">
           </div>
 
           <div class="info-jogo-salvo">
@@ -43,17 +45,13 @@
             </p>
 
             <span>
-              Fase: <%= sessao.slug_fase || 'quarto' %> |
-              Dificuldade: <%= sessao.dificuldade_atual %>
+              <% if (sessao.slug_fase === "perfil") { %>
+                Tipo: Perfil
+              <% } else { %>
+                Fase: <%= sessao.slug_fase || 'quarto' %> |
+                Dificuldade: <%= sessao.dificuldade_atual %>
+              <% } %>
             </span>
-            <span>
-  <% if (sessao.slug_fase === "perfil") { %>
-    Tipo: Perfil
-  <% } else { %>
-    Fase: <%= sessao.slug_fase || 'quarto' %> |
-    Dificuldade: <%= sessao.dificuldade_atual %>
-  <% } %>
-</span>
           </div>
 
           <div class="acoes-jogo-salvo">

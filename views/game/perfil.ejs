@@ -86,7 +86,7 @@
     <div class="bloco-progresso-visual">
       <div class="box-estrelas">
         <div class="icone-estrela-box">
-          <img src="/img/game/estrela.svg" alt="Estrela">
+          <img src="/img/game/apoio/estrela.svg" alt="Estrela">
         </div>
 
         <div class="conteudo-estrelas-box">
@@ -97,39 +97,39 @@
 
       <div class="box-fases">
         <% progressoFases.forEach(function(fase) { %>
-          <div class="card-fase-perfil <%= !fase.liberado ? 'bloqueada' : '' %>">
-            <div class="icone-fase-perfil">
-              <img src="/img/game/<%= fase.icone %>" alt="<%= fase.comodo %>">
-            </div>
-
-            <div class="nome-fase-perfil <%= fase.concluidoTotal ? 'concluida' : '' %>">
-              <%= fase.comodo %>
-            </div>
-
-            <div class="dificuldades-fase-perfil">
-              <% if (fase.liberado) { %>
-                <a href="/game/fase/<%= usuario.id %>/<%= fase.slug %>/facil"
-                   class="tag-dificuldade-botao <%= fase.facil ? 'concluida' : '' %>">
-                  Fácil
-                </a>
-
-                <a href="/game/fase/<%= usuario.id %>/<%= fase.slug %>/medio"
-                   class="tag-dificuldade-botao <%= fase.medio ? 'concluida' : '' %>">
-                  Médio
-                </a>
-
-                <a href="/game/fase/<%= usuario.id %>/<%= fase.slug %>/dificil"
-                   class="tag-dificuldade-botao <%= fase.dificil ? 'concluida' : '' %>">
-                  Difícil
-                </a>
-              <% } else { %>
-                <span class="tag-dificuldade-botao bloqueado">Fácil</span>
-                <span class="tag-dificuldade-botao bloqueado">Médio</span>
-                <span class="tag-dificuldade-botao bloqueado">Difícil</span>
-              <% } %>
-            </div>
+        <div class="card-fase-perfil <%= !fase.liberado ? 'bloqueada' : '' %>">
+          <div class="icone-fase-perfil">
+            <img src="/img/game/<%= fase.icone %>" alt="<%= fase.comodo %>">
           </div>
-        <% }) %>
+
+          <div class="nome-fase-perfil">
+            <%= fase.comodo %>
+          </div>
+
+          <div class="dificuldades-fase-perfil">
+            <% if (fase.liberado) { %>
+              <a href="/game/fase/<%= usuario.id %>/<%= fase.slug %>/facil"
+                class="tag-dificuldade-botao <%= fase.facil ? 'concluida' : '' %>">
+                Fácil
+              </a>
+
+              <a href="/game/fase/<%= usuario.id %>/<%= fase.slug %>/medio"
+                class="tag-dificuldade-botao <%= fase.medio ? 'concluida' : '' %>">
+                Médio
+              </a>
+
+              <a href="/game/fase/<%= usuario.id %>/<%= fase.slug %>/dificil"
+                class="tag-dificuldade-botao <%= fase.dificil ? 'concluida' : '' %>">
+                Difícil
+              </a>
+            <% } else { %>
+              <span class="tag-dificuldade-botao bloqueado">Fácil</span>
+              <span class="tag-dificuldade-botao bloqueado">Médio</span>
+              <span class="tag-dificuldade-botao bloqueado">Difícil</span>
+            <% } %>
+          </div>
+        </div>
+      <% }) %>
       </div>
     </div>
   </section>
