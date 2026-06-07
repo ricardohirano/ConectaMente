@@ -22,9 +22,31 @@
       <% } %>
 
       <% contas.forEach(function(conta) { %>
+        <%
+          const avatarBase = conta && conta.avatar ? conta.avatar : "personagem1";
+
+          let avatarPequeno = "/img/game/avatars/perfil1.svg";
+
+          if (avatarBase === "personagem1") {
+            avatarPequeno = "/img/game/avatars/perfil1.svg";
+          }
+
+          if (avatarBase === "personagem2") {
+            avatarPequeno = "/img/game/avatars/perfil2.svg";
+          }
+
+          if (avatarBase === "personagem3") {
+            avatarPequeno = "/img/game/avatars/perfil3.png";
+          }
+
+          if (avatarBase === "personagem4") {
+            avatarPequeno = "/img/game/avatars/perfil4.png";
+          }
+        %>
+
         <a href="/game/administrar-conta/<%= conta.id %>/<%= idResponsavel %>" class="card-conta">
           <div class="avatar-conta">
-            <img src="<%= conta.avatar %>" alt="Avatar">
+            <img src="<%= avatarPequeno %>" alt="Avatar">
           </div>
 
           <div class="info-conta">
@@ -33,7 +55,7 @@
           </div>
 
           <div class="ver-conta">
-            <img src="/img/game/olho.svg" alt="Visualizar">
+            <img src="/img/game/apoio/olho.svg" alt="Visualizar">
           </div>
         </a>
       <% }) %>

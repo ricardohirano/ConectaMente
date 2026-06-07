@@ -1,4 +1,5 @@
 import express from "express";
+import session from "express-session";
 import connection from "./config/sequelize-config.js";
 
 import HomeController from "./controllers/HomeController.js";
@@ -34,6 +35,14 @@ app.use(express.static("public"));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
+app.use(session({
+  secret: "conectamente_secret",
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    maxAge: 1000 * 60 * 60 * 2
+  }
+}));
 
 connection.authenticate().then(async () => {
   console.log("Conexão com o banco de dados feita com sucesso!");

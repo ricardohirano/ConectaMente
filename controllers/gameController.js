@@ -9,6 +9,12 @@ import SessaoJogo from "../models/sessaoJogo.js";
 import RelatorioFase from "../models/relatorioFase.js";
 import Acao from "../models/acao.js";
 import OpcaoResposta from "../models/opcaoResposta.js";
+import verificarLimiteTempo from "../middleware/vericarLimiteTempo.js";
+import verificarLogin from "../middleware/verificarLogin.js";
+import verificarCrianca from "../middleware/verificarCrianca.js";
+import verificarResponsavel from "../middleware/verificarResponsavel.js";
+import verificarCriancaDonaDaConta from "../middleware/verificarCriancaDonaDaConta.js";
+import PDFDocument from "pdfkit";
 
 const router = express.Router();
 
@@ -16,8 +22,11 @@ import bcrypt from "bcryptjs";
 
 // LOGIN
 router.get("/game", (req, res) => {
+  const limiteAtingido = req.query.limite === "atingido";
+
   res.render("game/login", {
-    query: req.query
+    query: req.query,
+    limiteAtingido
   });
 });
 
@@ -27,7 +36,7 @@ router.get("/game/criar-conta", (req, res) => {
 });
 
 // PERFIL
-router.get("/game/perfil/:id", async (req, res) => {
+router.get("/game/perfil/:id", verificarLimiteTempo, async (req, res) => {
   const id = req.params.id;
 
   try {
@@ -60,10 +69,10 @@ router.get("/game/perfil/:id", async (req, res) => {
 
     const estruturaBase = [
       { comodo: "Quarto", slug: "quarto", icone: "quarto.png", facil: false, medio: false, dificil: false, liberado: true },
-      { comodo: "Banheiro", slug: "banheiro", icone: "banheiro.svg", facil: false, medio: false, dificil: false, liberado: false },
-      { comodo: "Cozinha", slug: "cozinha", icone: "cozinha.svg", facil: false, medio: false, dificil: false, liberado: false },
-      { comodo: "Sala", slug: "sala", icone: "sala.svg", facil: false, medio: false, dificil: false, liberado: false },
-      { comodo: "Extras", slug: "extras", icone: "extras.svg", facil: false, medio: false, dificil: false, liberado: false }
+      { comodo: "Banheiro", slug: "banheiro", icone: "banheiro.png", facil: false, medio: false, dificil: false, liberado: false },
+      { comodo: "Cozinha", slug: "cozinha", icone: "cozinha.png", facil: false, medio: false, dificil: false, liberado: false },
+      { comodo: "Sala", slug: "sala", icone: "sala.png", facil: false, medio: false, dificil: false, liberado: false },
+      { comodo: "Extras", slug: "extras", icone: "extras.png", facil: false, medio: false, dificil: false, liberado: false }
     ];
 
     const progressoFases = estruturaBase.map(item => ({ ...item }));
@@ -120,17 +129,13 @@ router.get("/game/perfil/:id", async (req, res) => {
 
 
 // CRIANÇA
-router.get("/game/crianca/:id", async (req, res) => {
+router.get("/game/crianca/:id",verificarCriancaDonaDaConta, verificarLimiteTempo, async (req, res) => {
   const id = req.params.id;
 
   try {
-    console.log("ENTROU NA ROTA CRIANCA:", id);
-
     const usuario = await Usuario.findByPk(id);
-    console.log("USUARIO:", usuario ? usuario.toJSON() : null);
 
     if (!usuario) {
-      console.log("USUARIO NAO ENCONTRADO");
       return res.redirect("/game");
     }
 
@@ -139,30 +144,35 @@ router.get("/game/crianca/:id", async (req, res) => {
         id_usuario: id
       }
     });
-    console.log("CRIANCA:", crianca ? crianca.toJSON() : null);
 
     if (!crianca) {
-      console.log("CRIANA NAO ENCONTRADA");
       return res.redirect("/game");
     }
 
-    const temNovoJogoCriado = !!crianca?.avatar && !!crianca?.nome_avatar;
-    console.log("TEM NOVO JOGO CRIADO:", temNovoJogoCriado);
+    if (!req.session.usuarioLogado) {
+      req.session.usuarioLogado = {
+        id: usuario.id,
+        tipo: "crianca"
+      };
+    }
 
-    let temJogoSalvo = false;
+    if (!req.session.criancaLogada || req.session.criancaLogada.id_usuario != id) {
+      req.session.criancaLogada = {
+        id_usuario: usuario.id,
+        hora_inicio: new Date().toISOString(),
+        limite_tempo_diario: Number(usuario.limite_tempo_diario || 0)
+      };
+    }
 
-    const sessoesSalvas = await SessaoJogo.findAll({
+    const totalSessoesSalvas = await SessaoJogo.count({
       where: {
         id_crianca: crianca.id,
         status: "salva"
       }
     });
 
-    console.log("SESSOES SALVAS:", sessoesSalvas.length);
-
-    temJogoSalvo = sessoesSalvas.length > 0;
-
-    console.log("VAI RENDERIZAR game/crianca");
+    const temNovoJogoCriado = !!crianca.nome_avatar;
+    const temJogoSalvo = totalSessoesSalvas > 0;
 
     return res.render("game/crianca", {
       usuario,
@@ -171,13 +181,13 @@ router.get("/game/crianca/:id", async (req, res) => {
       temJogoSalvo
     });
   } catch (error) {
-    console.log("ERRO NA ROTA /game/crianca/:id ->", error);
+    console.log("Erro ao carregar tela da criança: " + error);
     return res.redirect("/game");
   }
 });
 
 //Rota Responsavel
-router.get("/game/responsavel/:id", async (req, res) => {
+router.get("/game/responsavel/:id", verificarResponsavel, async (req, res) => {
   const id = req.params.id;
   console.log("ENTROU /game/responsavel/:id ->", id);
 
@@ -200,7 +210,7 @@ router.get("/game/responsavel/:id", async (req, res) => {
 });
 
 // CONTAS ACESSÍVEIS
-router.get("/game/contas-acessiveis/:id", async (req, res) => {
+router.get("/game/contas-acessiveis/:id", verificarResponsavel, async (req, res) => {
   const id = req.params.id;
   console.log("ENTROU /game/contas-acessiveis/:id ->", id);
 
@@ -236,9 +246,7 @@ router.get("/game/contas-acessiveis/:id", async (req, res) => {
           id: contaUsuario.id,
           nome: contaUsuario.nome,
           email: contaUsuario.email,
-          avatar: contaCrianca?.avatar
-            ? `/img/game/avatars/${contaCrianca.avatar}`
-            : "/img/game/avatars/personagem1.svg",
+          avatar: contaCrianca?.avatar || "personagem1",
           permissao_ativa: contaUsuario.permissao_ativa
         });
       }
@@ -257,7 +265,7 @@ router.get("/game/contas-acessiveis/:id", async (req, res) => {
   }
 });
 // ADICIONAR CONTA
-router.get("/game/adicionar-conta/:id", async (req, res) => {
+router.get("/game/adicionar-conta/:id", verificarResponsavel, async (req, res) => {
   const id = req.params.id;
   console.log("ENTROU /game/adicionar-conta/:id ->", id);
 
@@ -333,25 +341,56 @@ router.post("/game/adicionar-conta/:id", async (req, res) => {
 });
 
 // ADMINISTRAR CONTA
-router.get("/game/administrar-conta/:idConta/:idResponsavel", async (req, res) => {
-  const idConta = req.params.idConta;
-  const idResponsavel = req.params.idResponsavel;
+router.get("/game/administrar-conta/:idConta/:idResponsavel", verificarResponsavel, async (req, res) => {
+  const { idConta, idResponsavel } = req.params;
 
   try {
-    const conta = await Usuario.findByPk(idConta);
+    const usuarioResponsavel = await Usuario.findByPk(idResponsavel);
+
+    if (!usuarioResponsavel) {
+      return res.redirect("/game");
+    }
+
+    const usuarioCrianca = await Usuario.findByPk(idConta);
+
+    if (!usuarioCrianca) {
+      return res.redirect(`/game/contas-acessiveis/${idResponsavel}`);
+    }
+
+    const crianca = await Crianca.findOne({
+      where: {
+        id_usuario: idConta
+      }
+    });
+
+    if (!crianca) {
+      return res.redirect(`/game/contas-acessiveis/${idResponsavel}`);
+    }
+
+    const conta = {
+      id: usuarioCrianca.id,
+      nome: usuarioCrianca.nome,
+      email: usuarioCrianca.email,
+      avatar: crianca.avatar || "personagem1",
+      limite_tempo_diario: Number(usuarioCrianca.limite_tempo_diario || 0),
+      permissao_ativa: !!usuarioCrianca.permissao_ativa
+    };
+
+    console.log("ADMIN CONTA:", conta);
 
     return res.render("game/administrar-conta", {
-      conta: conta,
-      idResponsavel: idResponsavel
+      conta,
+      crianca,
+      idResponsavel
     });
   } catch (error) {
-    console.log("Erro ao carregar conta: " + error);
-    return res.redirect("/game");
+    console.log("Erro ao carregar administrar conta: " + error);
+    return res.redirect(`/game/contas-acessiveis/${idResponsavel}`);
   }
 });
 
 // ATIVAR CONTA
-router.get("/game/ativar-conta/:idConta/:idResponsavel", async (req, res) => {
+router.get("/game/ativar-conta/:idConta/:idResponsavel", verificarResponsavel, async (req, res) => {
   const idConta = req.params.idConta;
   const idResponsavel = req.params.idResponsavel;
 
@@ -367,7 +406,25 @@ router.get("/game/ativar-conta/:idConta/:idResponsavel", async (req, res) => {
     return res.redirect("/game");
   }
 });
-router.post("/game/limite-tempo/:idConta/:idResponsavel", async (req, res) => {
+// DESATIVAR CONTA
+router.get("/game/desativar-conta/:idConta/:idResponsavel", verificarResponsavel, async (req, res) => {
+  const idConta = req.params.idConta;
+  const idResponsavel = req.params.idResponsavel;
+
+  try {
+    await Usuario.update(
+      { permissao_ativa: false },
+      { where: { id: idConta } }
+    );
+
+    return res.redirect(`/game/administrar-conta/${idConta}/${idResponsavel}`);
+  } catch (error) {
+    console.log("Erro ao desativar conta: " + error);
+    return res.redirect("/game");
+  }
+});
+//LIMIETRE DE TEMPO
+router.post("/game/limite-tempo/:idConta/:idResponsavel", verificarResponsavel, async (req, res) => {
   const idConta = req.params.idConta;
   const idResponsavel = req.params.idResponsavel;
   const limite = req.body.limite;
@@ -384,26 +441,9 @@ router.post("/game/limite-tempo/:idConta/:idResponsavel", async (req, res) => {
     return res.redirect("/game");
   }
 });
-// DESATIVAR CONTA
-router.get("/game/desativar-conta/:idConta/:idResponsavel", async (req, res) => {
-  const idConta = req.params.idConta;
-  const idResponsavel = req.params.idResponsavel;
-
-  try {
-    await Usuario.update(
-      { permissao_ativa: false },
-      { where: { id: idConta } }
-    );
-
-    return res.redirect(`/game/administrar-conta/${idConta}/${idResponsavel}`);
-  } catch (error) {
-    console.log("Erro ao desativar conta: " + error);
-    return res.redirect("/game");
-  }
-});
 
 // EXCLUIR CONTA VINCULADA
-router.post("/game/excluir-conta/:idConta/:idResponsavel", async (req, res) => {
+router.post("/game/excluir-conta/:idConta/:idResponsavel", verificarResponsavel, async (req, res) => {
   const idConta = req.params.idConta;
   const idResponsavel = req.params.idResponsavel;
 
@@ -421,10 +461,56 @@ router.post("/game/excluir-conta/:idConta/:idResponsavel", async (req, res) => {
     return res.redirect("/game");
   }
 });
+//rota logout criança
+router.get("/game/sair",verificarCriancaDonaDaConta,verificarLimiteTempo, async (req, res) => {
+  try {
+    if (req.session && req.session.criancaLogada) {
+      const { id_usuario, hora_inicio } = req.session.criancaLogada;
 
+      const usuario = await Usuario.findByPk(id_usuario);
+
+      if (usuario) {
+        const hoje = new Date().toISOString().slice(0, 10);
+
+        if (usuario.data_controle_tempo !== hoje) {
+          await Usuario.update(
+            {
+              tempo_usado_hoje: 0,
+              data_controle_tempo: hoje
+            },
+            {
+              where: { id: usuario.id }
+            }
+          );
+
+          usuario.tempo_usado_hoje = 0;
+        }
+
+        const minutosSessao = Math.floor((new Date() - new Date(hora_inicio)) / 60000);
+
+        await Usuario.update(
+          {
+            tempo_usado_hoje: Number(usuario.tempo_usado_hoje || 0) + minutosSessao,
+            data_controle_tempo: hoje
+          },
+          {
+            where: { id: usuario.id }
+          }
+        );
+      }
+    }
+
+    req.session.destroy(() => {
+      return res.redirect("/game");
+    });
+  } catch (error) {
+    console.log("Erro ao sair: " + error);
+    return res.redirect("/game");
+  }
+});
 // ROTA ESCOLHA-PERSONAGEM
 
-router.get("/game/escolha-personagem/:id", async (req, res) => {
+router.get("/game/escolha-personagem/:id", verificarCriancaDonaDaConta, verificarLimiteTempo, async (req, res) => {
   const id = req.params.id;
   const origem = req.query.origem || "";
 
@@ -492,7 +578,7 @@ router.post("/game/escolha-personagem/:id", async (req, res) => {
 });
 
 //Rota fase
-router.get("/game/fase/:idUsuario/:slug/:dificuldade", async (req, res) => {
+router.get("/game/fase/:idUsuario/:slug/:dificuldade",verificarCriancaDonaDaConta, verificarLimiteTempo, async (req, res) => {
   const { idUsuario, slug, dificuldade } = req.params;
 
   try {
@@ -509,41 +595,33 @@ router.get("/game/fase/:idUsuario/:slug/:dificuldade", async (req, res) => {
     });
 
     if (!crianca) {
-      return res.redirect("/game");
+      return res.redirect(`/game/crianca/${idUsuario}`);
     }
 
-    const limiteTempoDiario = Number(crianca.limite_tempo_diario || 0);
-
-    if (limiteTempoDiario > 0) {
-      const tempoUsadoHoje = await calcularTempoUsadoHoje(crianca.id);
-
-      if (tempoUsadoHoje >= limiteTempoDiario) {
-        return res.redirect(`/game/perfil/${idUsuario}?limite=atingido`);
-      }
+    if (slug === "banheiro") {
+      return res.render("game/em-construcao", {
+        usuario,
+        crianca,
+        tituloModulo: "Banheiro",
+        dificuldade
+      });
     }
+
     const fase = await Fase.findOne({
       where: {
-        slug: slug,
-        ativa: true
+        slug: slug
       },
       include: [
         {
           model: Acao,
-          where: {
-            ativa: true
-          },
-          required: false,
+          as: "acoes",
           include: [
             {
               model: OpcaoResposta,
-              required: false
+              as: "opcoes_resposta"
             }
           ]
         }
-      ],
-      order: [
-        [Acao, "ordem_acao", "ASC"],
-        [Acao, OpcaoResposta, "ordem_exibicao", "ASC"]
       ]
     });
 
@@ -567,7 +645,7 @@ router.get("/game/fase/:idUsuario/:slug/:dificuldade", async (req, res) => {
 
 //ROTA JOGOS SALVOS
 
-router.get("/game/jogos-salvos/:id", async (req, res) => {
+router.get("/game/jogos-salvos/:id", verificarCriancaDonaDaConta, verificarLimiteTempo, async (req, res) => {
   const id = req.params.id;
 
   try {
@@ -608,7 +686,7 @@ router.get("/game/jogos-salvos/:id", async (req, res) => {
 
 //Rota salvar sessao
 
-router.post("/game/salvar-sessao/:idUsuario", async (req, res) => {
+router.post("/game/salvar-sessao/:idUsuario", verificarCriancaDonaDaConta, verificarLimiteTempo, async (req, res) => {
   const { idUsuario } = req.params;
   const {
     nomeSessao,
@@ -675,7 +753,7 @@ router.post("/game/salvar-sessao/:idUsuario", async (req, res) => {
 });
 
 // rota carregar sessao
-router.get("/game/carregar-sessao/:idUsuario/:idSessao", async (req, res) => {
+router.get("/game/carregar-sessao/:idUsuario/:idSessao", verificarCriancaDonaDaConta, verificarLimiteTempo, async (req, res) => {
   const { idUsuario, idSessao } = req.params;
 
   try {
@@ -717,7 +795,7 @@ router.get("/game/carregar-sessao/:idUsuario/:idSessao", async (req, res) => {
 });
 // rota escolha save
 
-router.get("/game/escolher-save/:idUsuario/:slug/:dificuldade", async (req, res) => {
+router.get("/game/escolher-save/:idUsuario/:slug/:dificuldade", verificarCriancaDonaDaConta, verificarLimiteTempo, async (req, res) => {
   const { idUsuario, slug, dificuldade } = req.params;
 
   try {
@@ -757,7 +835,7 @@ router.get("/game/escolher-save/:idUsuario/:slug/:dificuldade", async (req, res)
   }
 });
 //rota novo save
-router.post("/game/criar-save/:idUsuario", async (req, res) => {
+router.post("/game/criar-save/:idUsuario", verificarCriancaDonaDaConta, verificarLimiteTempo, async (req, res) => {
   const { idUsuario } = req.params;
 
   const {
@@ -842,7 +920,7 @@ router.post("/game/criar-save/:idUsuario", async (req, res) => {
   }
 });
 // rota save antigo
-router.post("/game/sobrescrever-save/:idUsuario/:idSessao", async (req, res) => {
+router.post("/game/sobrescrever-save/:idUsuario/:idSessao", verificarCriancaDonaDaConta, verificarLimiteTempo, async (req, res) => {
   const { idUsuario, idSessao } = req.params;
 
   const {
@@ -940,7 +1018,7 @@ router.post("/game/sobrescrever-save/:idUsuario/:idSessao", async (req, res) => 
 });
 
 //ROTA EXCLUIR SESSAO
-router.post("/game/excluir-sessao/:idUsuario/:idSessao", async (req, res) => {
+router.post("/game/excluir-sessao/:idUsuario/:idSessao", verificarCriancaDonaDaConta, verificarLimiteTempo, async (req, res) => {
   const { idUsuario, idSessao } = req.params;
 
   try {
@@ -1064,7 +1142,7 @@ router.post("/game/concluir-fase/:idUsuario/:slug/:dificuldade", async (req, res
   }
 });
 // rota de rendimento 
-router.get("/game/rendimento-crianca/:idCrianca/:idResponsavel", async (req, res) => {
+router.get("/game/rendimento-crianca/:idCrianca/:idResponsavel",verificarResponsavel, async (req, res) => {
   const { idCrianca, idResponsavel } = req.params;
 
   try {
@@ -1095,7 +1173,7 @@ router.get("/game/rendimento-crianca/:idCrianca/:idResponsavel", async (req, res
   }
 });
 // rota resumo-atividade
-router.get("/game/resumo-atividade/:idCrianca/:idResponsavel", async (req, res) => {
+router.get("/game/resumo-atividade/:idCrianca/:idResponsavel", verificarResponsavel, async (req, res) => {
   const { idCrianca, idResponsavel } = req.params;
 
   try {
@@ -1156,7 +1234,7 @@ router.get("/game/resumo-atividade/:idCrianca/:idResponsavel", async (req, res) 
 });
 // Rota Rendimento Final
 
-router.get("/game/relatorio-final/:idCrianca/:idResponsavel", async (req, res) => {
+router.get("/game/relatorio-final/:idCrianca/:idResponsavel", verificarResponsavel, async (req, res) => {
   const { idCrianca, idResponsavel } = req.params;
 
   try {
@@ -1274,7 +1352,7 @@ router.get("/game/relatorio-final/:idCrianca/:idResponsavel", async (req, res) =
   }
 });
 // rota percentual
-router.get("/game/percentual-acerto/:idCrianca/:idResponsavel", async (req, res) => {
+router.get("/game/percentual-acerto/:idCrianca/:idResponsavel", verificarResponsavel, async (req, res) => {
   const { idCrianca, idResponsavel } = req.params;
 
   try {
@@ -1332,7 +1410,7 @@ router.get("/game/percentual-acerto/:idCrianca/:idResponsavel", async (req, res)
 });
 
 //rota evolucao da crianca
-router.get("/game/evolucao-progresso/:idCrianca/:idResponsavel", async (req, res) => {
+router.get("/game/evolucao-progresso/:idCrianca/:idResponsavel", verificarResponsavel, async (req, res) => {
   const { idCrianca, idResponsavel } = req.params;
 
   try {
@@ -1396,6 +1474,175 @@ router.get("/game/evolucao-progresso/:idCrianca/:idResponsavel", async (req, res
   } catch (error) {
     console.log("Erro ao carregar evolução do progresso: " + error);
     return res.redirect(`/game/rendimento-crianca/${idCrianca}/${idResponsavel}`);
+  }
+});
+
+//Rota atualizacao de tempo
+
+router.post("/game/atualizar-tempo/:idUsuario", async (req, res) => {
+  const { idUsuario } = req.params;
+  const { minutos } = req.body;
+
+  try {
+    const hoje = new Date().toISOString().slice(0, 10);
+
+    const usuario = await Usuario.findByPk(idUsuario);
+
+    if (!usuario) {
+      return res.json({ sucesso: false });
+    }
+
+    if (usuario.data_controle_tempo !== hoje) {
+      await Usuario.update(
+        {
+          tempo_usado_hoje: Number(minutos || 0),
+          data_controle_tempo: hoje
+        },
+        { where: { id: idUsuario } }
+      );
+    } else {
+      await Usuario.update(
+        {
+          tempo_usado_hoje: Number(minutos || 0)
+        },
+        { where: { id: idUsuario } }
+      );
+    }
+
+    return res.json({ sucesso: true });
+  } catch (error) {
+    console.log("Erro ao atualizar tempo:", error);
+    return res.json({ sucesso: false });
+  }
+});
+
+//Rota pdf
+router.get("/game/relatorio-final-pdf/:idCrianca/:idResponsavel", async (req, res) => {
+  const { idCrianca, idResponsavel } = req.params;
+
+  try {
+    const usuario = await Usuario.findByPk(idCrianca);
+
+    if (!usuario) {
+      return res.redirect(`/game/relatorio-final/${idCrianca}/${idResponsavel}`);
+    }
+
+    const crianca = await Crianca.findOne({
+      where: {
+        id_usuario: idCrianca
+      }
+    });
+
+    if (!crianca) {
+      return res.redirect(`/game/relatorio-final/${idCrianca}/${idResponsavel}`);
+    }
+
+    const fases = await Fase.findAll({
+      order: [["ordem_fase", "ASC"]]
+    });
+
+    const relatorios = await RelatorioFase.findAll({
+      where: {
+        id_crianca: crianca.id
+      },
+      include: [
+        {
+          model: Fase
+        }
+      ],
+      order: [["createdAt", "DESC"]]
+    });
+
+    const totalEstrelas = Number(crianca.total_estrelas || 0);
+
+    let totalCorretas = 0;
+    let totalIncorretas = 0;
+    let totalMinutos = 0;
+
+    relatorios.forEach((relatorio) => {
+      totalCorretas += Number(relatorio.acoes_concluidas || 0);
+      totalIncorretas += Number(relatorio.erros_resposta || 0) + Number(relatorio.erros_ordem || 0);
+      totalMinutos += Number(relatorio.tempo_total_minutos || 0);
+    });
+
+    const totalRespostas = totalCorretas + totalIncorretas;
+    const percentualAcerto = totalRespostas > 0
+      ? Math.round((totalCorretas / totalRespostas) * 100)
+      : 0;
+
+    const mediaTempo = relatorios.length > 0
+      ? Math.round(totalMinutos / relatorios.length)
+      : 0;
+
+    const statusFases = fases.map((fase) => {
+      const relatoriosDaFase = relatorios.filter((r) => r.id_fase === fase.id);
+
+      if (relatoriosDaFase.length === 0) {
+        return {
+          nome: fase.nome,
+          data: "--",
+          status: "Não começou",
+          dificuldade: ""
+        };
+      }
+
+      const maisRecente = relatoriosDaFase[0];
+      const concluiu = Number(maisRecente.acoes_concluidas || 0) > 0;
+
+      return {
+        nome: fase.nome,
+        data: new Date(maisRecente.updatedAt || maisRecente.createdAt).toLocaleDateString("pt-BR"),
+        status: concluiu ? "Concluído" : "Em andamento",
+        dificuldade: maisRecente.dificuldade || ""
+      };
+    });
+
+    const doc = new PDFDocument({
+      size: "A4",
+      margin: 50
+    });
+
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader(
+      "Content-Disposition",
+      `inline; filename=relatorio-${usuario.nome}.pdf`
+    );
+
+    doc.pipe(res);
+
+    doc.fontSize(24).text("Relatório Final", { align: "center" });
+    doc.moveDown(1);
+
+    doc.fontSize(16).text(`Criança: ${usuario.nome}`);
+    doc.fontSize(12).text(`E-mail: ${usuario.email}`);
+    doc.moveDown(1);
+
+    doc.fontSize(18).text("Resumo do progresso");
+    doc.moveDown(0.5);
+
+    doc.fontSize(12).text(`Estrelas coletadas: ${totalEstrelas}`);
+    doc.text(`Média de acertos: ${percentualAcerto}%`);
+    doc.text(`Tempo médio de jogo: ${mediaTempo} min`);
+    doc.moveDown(1);
+
+    doc.fontSize(18).text("Status dos módulos");
+    doc.moveDown(0.5);
+
+    statusFases.forEach((fase) => {
+      const linha = `${fase.nome} | ${fase.data} | ${fase.status}${fase.dificuldade ? ` (${fase.dificuldade})` : ""}`;
+      doc.fontSize(12).text(linha);
+    });
+
+    doc.moveDown(1);
+    doc.fontSize(10).text(
+      `Relatório gerado em ${new Date().toLocaleString("pt-BR")}`,
+      { align: "right" }
+    );
+
+    doc.end();
+  } catch (error) {
+    console.log("Erro ao gerar PDF do relatório final: " + error);
+    return res.redirect(`/game/relatorio-final/${idCrianca}/${idResponsavel}`);
   }
 });
 export default router;

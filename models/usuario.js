@@ -28,8 +28,16 @@ const Usuario = connection.define("usuarios", {
     type: Sequelize.INTEGER,
     allowNull: false,
     defaultValue: 0
+  },
+  tempo_usado_hoje: {
+  type: Sequelize.INTEGER,
+  allowNull: false,
+  defaultValue: 0
+  },
+  data_controle_tempo: {
+  type: Sequelize.DATEONLY,
+  allowNull: true
   }
-  
 });
 
 

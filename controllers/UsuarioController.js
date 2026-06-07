@@ -46,7 +46,10 @@ router.post("/usuarios/new", async (req, res) => {
       email: email,
       senha: senhaHash,
       tipoConta: tipoConta,
-      permissao_ativa: permissaoAtiva
+      permissao_ativa: permissaoAtiva,
+      limite_tempo_diario: 0,
+      tempo_usado_hoje: 0,
+      data_controle_tempo: null
     });
 
     if (tipoConta === "crianca") {
@@ -74,14 +77,12 @@ router.post("/usuarios/login", async (req, res) => {
       }
     });
 
-    // 1. e-mail não cadastrado
     if (!usuario) {
       return res.redirect("/game?erro=email_nao_cadastrado");
     }
 
     console.log("USUARIO LOGIN:", usuario.toJSON());
 
-    // 2. senha incorreta
     const senhaCorreta = await bcrypt.compare(senha, usuario.senha);
     console.log("SENHA CORRETA:", senhaCorreta);
 
@@ -89,7 +90,6 @@ router.post("/usuarios/login", async (req, res) => {
       return res.redirect("/game?erro=senha_incorreta");
     }
 
-    // 3. login da criança
     if (usuario.tipoConta === "crianca") {
       const vinculoResponsavel = await ResponsavelCrianca.findOne({
         where: {
@@ -111,11 +111,47 @@ router.post("/usuarios/login", async (req, res) => {
         return res.redirect("/game?erro=ativacao_responsavel");
       }
 
+      const hoje = new Date().toISOString().slice(0, 10);
+
+      if (usuario.data_controle_tempo !== hoje) {
+        await Usuario.update(
+          {
+            tempo_usado_hoje: 0,
+            data_controle_tempo: hoje
+          },
+          {
+            where: { id: usuario.id }
+          }
+        );
+
+        usuario.tempo_usado_hoje = 0;
+        usuario.data_controle_tempo = hoje;
+      }
+
+      req.session.usuarioLogado = {
+        id: usuario.id,
+        tipo: "crianca"
+      };
+
+      req.session.criancaLogada = {
+        id_usuario: usuario.id,
+        hora_inicio: new Date().toISOString(),
+        limite_tempo_diario: Number(usuario.limite_tempo_diario || 0)
+      };
+
       return res.redirect(`/game/crianca/${usuario.id}`);
     }
 
-    // 4. login do responsável
     if (usuario.tipoConta === "responsavel") {
+      req.session.usuarioLogado = {
+        id: usuario.id,
+        tipo: "responsavel"
+      };
+
+      req.session.responsavelLogado = {
+        id_usuario: usuario.id
+      };
+
       return res.redirect(`/game/responsavel/${usuario.id}`);
     }
 

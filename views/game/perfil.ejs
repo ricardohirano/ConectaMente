@@ -70,7 +70,7 @@
             SALVAR
           </button>
 
-          <a href="/game" class="btn-perfil-acao">
+          <a href="/game/sair" class="btn-perfil-acao">
             SAIR DA CONTA
           </a>
         </div>
@@ -97,43 +97,44 @@
 
       <div class="box-fases">
         <% progressoFases.forEach(function(fase) { %>
-        <div class="card-fase-perfil <%= !fase.liberado ? 'bloqueada' : '' %>">
-          <div class="icone-fase-perfil">
-            <img src="/img/game/<%= fase.icone %>" alt="<%= fase.comodo %>">
+          <div class="card-fase-perfil <%= !fase.liberado ? 'bloqueada' : '' %>">
+            <div class="icone-fase-perfil">
+              <img src="/img/game/<%= fase.icone %>" alt="<%= fase.comodo %>">
+            </div>
+
+            <div class="nome-fase-perfil">
+              <%= fase.comodo %>
+            </div>
+
+            <div class="dificuldades-fase-perfil">
+              <% if (fase.liberado) { %>
+                <a href="/game/fase/<%= usuario.id %>/<%= fase.slug %>/facil"
+                   class="tag-dificuldade-botao <%= fase.facil ? 'concluida' : '' %>">
+                  Fácil
+                </a>
+
+                <a href="/game/fase/<%= usuario.id %>/<%= fase.slug %>/medio"
+                   class="tag-dificuldade-botao <%= fase.medio ? 'concluida' : '' %>">
+                  Médio
+                </a>
+
+                <a href="/game/fase/<%= usuario.id %>/<%= fase.slug %>/dificil"
+                   class="tag-dificuldade-botao <%= fase.dificil ? 'concluida' : '' %>">
+                  Difícil
+                </a>
+              <% } else { %>
+                <span class="tag-dificuldade-botao bloqueado">Fácil</span>
+                <span class="tag-dificuldade-botao bloqueado">Médio</span>
+                <span class="tag-dificuldade-botao bloqueado">Difícil</span>
+              <% } %>
+            </div>
           </div>
-
-          <div class="nome-fase-perfil">
-            <%= fase.comodo %>
-          </div>
-
-          <div class="dificuldades-fase-perfil">
-            <% if (fase.liberado) { %>
-              <a href="/game/fase/<%= usuario.id %>/<%= fase.slug %>/facil"
-                class="tag-dificuldade-botao <%= fase.facil ? 'concluida' : '' %>">
-                Fácil
-              </a>
-
-              <a href="/game/fase/<%= usuario.id %>/<%= fase.slug %>/medio"
-                class="tag-dificuldade-botao <%= fase.medio ? 'concluida' : '' %>">
-                Médio
-              </a>
-
-              <a href="/game/fase/<%= usuario.id %>/<%= fase.slug %>/dificil"
-                class="tag-dificuldade-botao <%= fase.dificil ? 'concluida' : '' %>">
-                Difícil
-              </a>
-            <% } else { %>
-              <span class="tag-dificuldade-botao bloqueado">Fácil</span>
-              <span class="tag-dificuldade-botao bloqueado">Médio</span>
-              <span class="tag-dificuldade-botao bloqueado">Difícil</span>
-            <% } %>
-          </div>
-        </div>
-      <% }) %>
+        <% }) %>
       </div>
     </div>
   </section>
 </main>
+
 <script>
   const btnSalvarPerfil = document.getElementById("btnSalvarPerfil");
 
@@ -147,7 +148,7 @@
         estrelasAcumuladas: <%= totalEstrelas || 0 %>,
         dadosEstado: {
           tipo: "perfil",
-          avatar: "<%= crianca && crianca.avatar ? crianca.avatar : '' %>",
+          avatar: "<%= crianca && crianca.avatar ? crianca.avatar : 'personagem1' %>",
           nomeAvatar: "<%= crianca && crianca.nome_avatar ? crianca.nome_avatar : usuario.nome %>"
         },
         tempo_total_minutos: 0,
@@ -160,5 +161,6 @@
     });
   }
 </script>
+
 </body>
 </html>

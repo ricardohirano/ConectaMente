@@ -33,6 +33,11 @@
     <% if (erro === "servidor") { %>
       <p class="mensagem-erro">Ocorreu um erro interno. Tente novamente.</p>
     <% } %>
+    <% if (typeof limiteAtingido !== "undefined" && limiteAtingido) { %>
+      <div class="alerta-limite-jogo">
+        O tempo de uso desta conta terminou. Faça login novamente depois.
+      </div>
+    <% } %>
     <form class="form-login" action="/usuarios/login" method="POST">
       <div class="campo-login">
         <label for="email">E-mail</label>

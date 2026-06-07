@@ -1,29 +1,46 @@
 <%- include('partials/headerGame') %>
+<%
+  const avatarBase = crianca && crianca.avatar ? crianca.avatar : "personagem1";
 
+  let avatarPequeno = "/img/game/avatars/perfil1.svg";
+
+  if (avatarBase === "personagem1") {
+    avatarPequeno = "/img/game/avatars/perfil1.svg";
+  }
+
+  if (avatarBase === "personagem2") {
+    avatarPequeno = "/img/game/avatars/perfil2.svg";
+  }
+
+  if (avatarBase === "personagem3") {
+    avatarPequeno = "/img/game/avatars/perfil3.png";
+  }
+
+  if (avatarBase === "personagem4") {
+    avatarPequeno = "/img/game/avatars/perfil4.png";
+  }
+%>
 <main class="pagina-acesso-game">
   <a href="/game/rendimento-crianca/<%= usuario.id %>/<%= idResponsavel %>" class="btn-voltar-site" aria-label="Voltar">
     <img src="/img/game/voltar.svg" alt="Voltar">
   </a>
 
-  <section class="painel-relatorio-final-v2">
-    <h1 class="titulo-relatorio-final-v2">Relatório</h1>
+  <section class="painel-relatorio-final">
+    <h1 class="titulo-relatorio-final">Relatório</h1>
 
-    <div class="bloco-relatorio-final-v2">
+    <div class="bloco-relatorio-final">
       <div class="coluna-relatorio-esquerda">
         <div class="topo-identificacao-relatorio">
           <div class="avatar-relatorio-final">
-            <img
-              src="/img/game/avatars/<%= crianca && crianca.avatar ? crianca.avatar : 'personagem1.svg' %>"
-              alt="Avatar"
-            >
+            <img src="<%= avatarPequeno %>" alt="Avatar">
           </div>
 
           <div class="dados-topo-relatorio">
             <h2><%= usuario.nome %></h2>
 
-            <button type="button" class="btn-gerar-pdf-relatorio">
+            <a href="/game/relatorio-final-pdf/<%= usuario.id %>/<%= idResponsavel %>" class="btn-gerar-pdf" target="_blank">
               Gerar relatório em PDF
-            </button>
+            </a>
           </div>
         </div>
 

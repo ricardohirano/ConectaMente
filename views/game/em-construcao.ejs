@@ -1,0 +1,26 @@
+<%- include('partials/headerGame') %>
+
+<main class="pagina-acesso-game">
+  <a href="/game/perfil/<%= usuario.id %>" class="btn-voltar-site" aria-label="Voltar">
+    <img src="/img/game/voltar.svg" alt="Voltar">
+  </a>
+
+  <section class="painel-em-construcao">
+    <img src="/img/website/index/logoConectamente.svg" alt="ConectaMente" class="logo-em-construcao">
+
+    <div class="box-em-construcao">
+      <h1><%= tituloModulo %></h1>
+      <h2><%= dificuldade.charAt(0).toUpperCase() + dificuldade.slice(1) %></h2>
+
+      <p>Esta fase ainda está em construção.</p>
+      <p>Em breve ela estará disponível no jogo.</p>
+
+      <a href="/game/perfil/<%= usuario.id %>" class="btn-voltar-perfil">
+        Voltar ao perfil
+      </a>
+    </div>
+  </section>
+</main>
+
+</body>
+</html>

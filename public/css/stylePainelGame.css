@@ -147,6 +147,19 @@ body {
   font-weight: 600;
   text-align: center;
 }
+.alerta-limite-jogo {
+  max-width: 900px;
+  margin: 0 auto 20px;
+  background: #ffe4e4;
+  border: 4px solid #d80000;
+  color: #b30000;
+  font-family: "Poppins", sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  text-align: center;
+  padding: 18px 22px;
+  border-radius: 16px;
+}
 /* =======================================================
    TELA DE CRIAR CONTA
 ======================================================= */
@@ -1281,21 +1294,18 @@ body {
 
 .icone-fase-perfil {
   width: 100%;
-  min-height: 108px;
-  background: #f2f2f2;
-  border: 4px solid #35538f;
-  border-radius: 14px;
+  height: 150px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 10px;
-  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .icone-fase-perfil img {
-  width: 54px;
-  height: 54px;
+  width: 100%;
+  height: 100%;
   object-fit: contain;
+  display: block;
 }
 
 .nome-fase-perfil {
@@ -1346,10 +1356,7 @@ body {
   background: #9eabc0;
 }
 
-.tag-dificuldade-botao.concluida {
-  background: #1f8b2e;
-  color: #ffffff;
-}
+
 
 .tag-dificuldade-botao.bloqueado {
   background: #c9ced8;
@@ -1983,16 +1990,16 @@ tela de salvar-jogos
 }
 
 /* =======================================================
-   RELATÓRIO FINAL V2
+   RELATÓRIO FINAL 
 ======================================================= */
 
-.painel-relatorio-final-v2 {
+.painel-relatorio-final {
   width: 100%;
   max-width: 1380px;
   margin: 0 auto;
 }
 
-.titulo-relatorio-final-v2 {
+.titulo-relatorio-final {
   text-align: center;
   font-family: "Luckiest Guy", cursive;
   font-size: 72px;
@@ -2000,7 +2007,7 @@ tela de salvar-jogos
   margin: 10px 0 26px;
 }
 
-.bloco-relatorio-final-v2 {
+.bloco-relatorio-final {
   background: #f2f2f2;
   border: 8px solid #0d63d8;
   border-radius: 12px;
@@ -2206,7 +2213,20 @@ tela de salvar-jogos
 .status-nao-comecou {
   color: #e20000;
 }
-
+.btn-gerar-pdf {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 260px;
+  height: 56px;
+  padding: 0 20px;
+  border-radius: 14px;
+  background: #2f4f9d;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 20px;
+}
 
 /* =======================================================
    EVOLUÇÃO DO PROGRESSO
@@ -2270,7 +2290,65 @@ tela de salvar-jogos
   font-size: 24px;
   color: #0d63d8;
 }
+.painel-em-construcao {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  text-align: center;
+  padding-top: 40px;
+}
 
+.logo-em-construcao {
+  width: 260px;
+  max-width: 80%;
+  margin-bottom: 30px;
+}
+
+.box-em-construcao {
+  background: #f2f2f2;
+  border: 8px solid #0d63d8;
+  border-radius: 24px;
+  padding: 50px 30px;
+  box-shadow: 0 10px 18px rgba(0, 0, 0, 0.18);
+}
+
+.box-em-construcao h1 {
+  margin: 0 0 10px;
+  font-family: "Luckiest Guy", cursive;
+  font-size: 56px;
+  color: #0d63d8;
+}
+
+.box-em-construcao h2 {
+  margin: 0 0 24px;
+  font-family: "Poppins", sans-serif;
+  font-size: 32px;
+  color: #f2b900;
+}
+
+.box-em-construcao p {
+  margin: 8px 0;
+  font-family: "Poppins", sans-serif;
+  font-size: 22px;
+  color: #36507c;
+}
+
+.btn-voltar-perfil {
+  margin-top: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 220px;
+  min-height: 58px;
+  padding: 0 24px;
+  border-radius: 14px;
+  background: #0d63d8;
+  color: #ffffff;
+  text-decoration: none;
+  font-family: "Poppins", sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+}
 
 /* =======================================================
    RESPONSIVIDADE
